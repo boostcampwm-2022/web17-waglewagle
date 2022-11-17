@@ -1,7 +1,11 @@
-import React from 'react';
+import HomeLayout from '@components/home/HomeLayout';
 
-const Home: React.FC = () => {
-  return <div>개쩌는 와글와글 앱</div>;
+const Home = () => {
+  return (
+    <HomeLayout>
+      <h1>개쩌는 와글와글 앱</h1>
+    </HomeLayout>
+  );
 };
 
 export default Home;
