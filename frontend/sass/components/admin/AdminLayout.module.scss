@@ -1,0 +1,13 @@
+.layout {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+
+  aside {
+    width: 300px;
+  }
+
+  main {
+    flex: 1;
+  }
+}
