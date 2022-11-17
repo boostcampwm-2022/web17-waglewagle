@@ -12,7 +12,7 @@ import axios from 'axios';
 const Home = () => {
   const handleClickStartButton = () => {
     axios
-      .get('http://waglewagle.link/demo')
+      .get('http://www.waglewagle.link/demo')
       .then((response) => {
         alert(`서버에서 값을 잘 받아왔습니다. 값 : ${response.data.TestKey}`);
       })
