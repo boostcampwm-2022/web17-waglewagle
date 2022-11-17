@@ -1,16 +1,21 @@
 import { ADMIN_PAGE_TAB } from '../../constants/constants';
+import classnames from 'classnames/bind';
+import styles from '@sass/components/admin/AdminSidebar.module.scss';
+const cx = classnames.bind(styles);
 
 interface AdminSidebarProps {
+  tab: number;
   title: string;
   handleClickTab: (tabData: number) => void;
 }
 
-const AdminSideBar = ({ title, handleClickTab }: AdminSidebarProps) => {
+const AdminSideBar = ({ tab, title, handleClickTab }: AdminSidebarProps) => {
   return (
-    <aside>
+    <aside className={cx('sidebar')}>
       <h2>{title}</h2>
       <ul>
         <li
+          className={cx({ active: tab === ADMIN_PAGE_TAB.USER_CONTROL })}
           onClick={() => {
             handleClickTab(ADMIN_PAGE_TAB.USER_CONTROL);
           }}
@@ -18,6 +23,7 @@ const AdminSideBar = ({ title, handleClickTab }: AdminSidebarProps) => {
           유저 관리
         </li>
         <li
+          className={cx({ active: tab === ADMIN_PAGE_TAB.KEYWORD_CONTROL })}
           onClick={() => {
             handleClickTab(ADMIN_PAGE_TAB.KEYWORD_CONTROL);
           }}

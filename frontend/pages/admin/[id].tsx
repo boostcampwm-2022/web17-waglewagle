@@ -21,7 +21,7 @@ const Admin = () => {
 
   return (
     <AdminLayout>
-      <AdminSideBar title={title} handleClickTab={handleClickTab} />
+      <AdminSideBar title={title} handleClickTab={handleClickTab} tab={tab} />
       <AdminMain title={title} tab={tab}>
         {tab === ADMIN_PAGE_TAB.USER_CONTROL ? (
           <UserControl />
