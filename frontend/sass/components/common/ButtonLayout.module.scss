@@ -1,0 +1,12 @@
+.default {
+  background-color: #fcfcfc;
+  border-radius: 50px;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
