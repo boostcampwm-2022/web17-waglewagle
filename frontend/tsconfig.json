@@ -18,6 +18,7 @@
     "incremental": true,
     "paths": {
       "@components/*": ["./components/*"],
+      "@constants/*": ["./constants/*"],
       "@public/*": ["./public/*"],
       "@sass/*": ["./sass/*"]
     }
