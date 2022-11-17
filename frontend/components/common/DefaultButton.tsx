@@ -7,6 +7,7 @@ interface DefaultButtonProps {
   width: number;
   height: number;
   fontSize: number;
+  handleClick: () => void;
 }
 
 const DefaultButton = ({
@@ -14,9 +15,14 @@ const DefaultButton = ({
   width,
   height,
   fontSize,
+  handleClick,
 }: DefaultButtonProps) => {
   return (
-    <button className={cx('default')} style={{ width, height, fontSize }}>
+    <button
+      onClick={handleClick}
+      className={cx('default')}
+      style={{ width, height, fontSize }}
+    >
       {children}
     </button>
   );

@@ -7,14 +7,31 @@ import {
   HomeChevronDown,
 } from '@components/home';
 import { DefaultButton } from '@components/common';
+import axios from 'axios';
 
 const Home = () => {
+  const handleClickStartButton = () => {
+    axios
+      .get('http://waglewagle.link/demo')
+      .then((response) => {
+        alert(response.data.TestKey);
+      })
+      .catch(() => {
+        alert('서버 통신에 실패했습니다.');
+      });
+  };
+
   return (
     <HomeLayout>
       <HomeMainLayout>
         <HomeTitle />
         <HomeHero />
-        <DefaultButton width={200} height={40} fontSize={18}>
+        <DefaultButton
+          handleClick={handleClickStartButton}
+          width={200}
+          height={40}
+          fontSize={18}
+        >
           시작하기
         </DefaultButton>
         <HomeChevronDown />
