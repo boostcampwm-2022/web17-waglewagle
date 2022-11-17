@@ -1,9 +1,14 @@
 @import '@sass/normalize';
 
+@font-face {
+  font-family: 'Nanum BugGeugSeong';
+  src: url('../public/fonts/nanum buggeugseong.ttf');
+}
+
 * {
-	box-sizing: border-box;
-	margin: 0;
-	padding: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 html,

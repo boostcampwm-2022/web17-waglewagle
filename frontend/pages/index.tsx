@@ -1,9 +1,10 @@
 import HomeLayout from '@components/home/HomeLayout';
+import HomeTitle from '@components/home/HomeTitle';
 
 const Home = () => {
   return (
     <HomeLayout>
-      <h1>개쩌는 와글와글 앱</h1>
+      <HomeTitle />
     </HomeLayout>
   );
 };
