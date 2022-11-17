@@ -1,3 +1,3 @@
-import ButtonLayout from './ButtonLayout';
+import DefaultButton from './DefaultButton';
 
-export { ButtonLayout };
+export { DefaultButton };

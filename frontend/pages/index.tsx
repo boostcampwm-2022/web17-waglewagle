@@ -1,7 +1,12 @@
-import HomeHero from '@components/home/HomeHero';
-import HomeLayout from '@components/home/HomeLayout';
-import HomeMainLayout from '@components/home/HomeMainLayout';
-import HomeTitle from '@components/home/HomeTitle';
+import {
+  HomeHero,
+  HomeLayout,
+  HomeMainLayout,
+  HomeTitle,
+  HomeDescriptionLayout,
+  HomeChevronDown,
+} from '@components/home';
+import { DefaultButton } from '@components/common';
 
 const Home = () => {
   return (
@@ -9,7 +14,14 @@ const Home = () => {
       <HomeMainLayout>
         <HomeTitle />
         <HomeHero />
+        <DefaultButton width={200} height={40} fontSize={18}>
+          시작하기
+        </DefaultButton>
+        <HomeChevronDown />
       </HomeMainLayout>
+      <HomeDescriptionLayout>
+        <p>설명</p>
+      </HomeDescriptionLayout>
     </HomeLayout>
   );
 };

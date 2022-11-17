@@ -1,20 +1,20 @@
 import classnames from 'classnames/bind';
-import styles from '@sass/components/common/ButtonLayout.module.scss';
+import styles from '@sass/components/common/DefaultButton.module.scss';
 const cx = classnames.bind(styles);
 
-interface ButtonLayoutProps {
+interface DefaultButtonProps {
   children: React.ReactNode;
   width: number;
   height: number;
   fontSize: number;
 }
 
-const ButtonLayout = ({
+const DefaultButton = ({
   children,
   width,
   height,
   fontSize,
-}: ButtonLayoutProps) => {
+}: DefaultButtonProps) => {
   return (
     <button className={cx('default')} style={{ width, height, fontSize }}>
       {children}
@@ -22,4 +22,4 @@ const ButtonLayout = ({
   );
 };
 
-export default ButtonLayout;
+export default DefaultButton;
