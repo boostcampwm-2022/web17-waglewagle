@@ -10,14 +10,13 @@
   ul {
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 20px;
   }
 
   ul li {
     width: 150px;
-    padding-bottom: 10px;
-
-    font-size: 1.1rem;
+    padding-bottom: 8px;
+    font-size: 1rem;
     border-bottom: 1px solid #000000;
     transition: all 0.1s linear;
 
