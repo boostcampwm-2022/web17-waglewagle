@@ -15,18 +15,18 @@
   position: relative;
   overflow: hidden;
   width: 100%;
-  margin-bottom: 15%;
+  margin-bottom: 5%;
   border-radius: 10%;
 
   &::after {
-    content: '';
     display: block;
     padding-top: 100%;
+    content: '';
   }
 }
 
 .title {
-  margin-bottom: 5%;
+  margin-bottom: 2%;
   font-weight: 400;
 }
 
