@@ -1,0 +1,35 @@
+.community-item {
+  transition: all 0.1s linear;
+
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.01);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.profile-wrapper {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  margin-bottom: 15%;
+  border-radius: 10%;
+
+  &::after {
+    content: '';
+    display: block;
+    padding-top: 100%;
+  }
+}
+
+.title {
+  margin-bottom: 5%;
+  font-weight: 400;
+}
+
+.user-count {
+  color: #cccccc;
+}
