@@ -6,38 +6,24 @@ import {
   HomeDescriptionLayout,
   HomeChevronDown,
 } from '@components/home';
-import { DefaultButton } from '@components/common';
-import axios from 'axios';
+import HomeProblem from '@components/home/HomeProblem';
+import HomeIntroduce from '@components/home/HomeIntroduce';
+import HomeManual from '@components/home/HomeManual';
+import StartButton from '@components/common/StartButton';
 
 const Home = () => {
-  const handleClickStartButton = () => {
-    axios
-      .get('http://www.waglewagle.link/demo')
-      .then((response) => {
-        alert(`서버에서 값을 잘 받아왔습니다. 값 : ${response.data.TestKey}`);
-      })
-      .catch(() => {
-        alert('서버 통신에 실패했습니다.');
-      });
-  };
-
   return (
     <HomeLayout>
       <HomeMainLayout>
         <HomeTitle />
         <HomeHero />
-        <DefaultButton
-          handleClick={handleClickStartButton}
-          width={200}
-          height={40}
-          fontSize={18}
-        >
-          시작하기
-        </DefaultButton>
+        <StartButton />
         <HomeChevronDown />
       </HomeMainLayout>
       <HomeDescriptionLayout>
-        <p>설명</p>
+        <HomeProblem />
+        <HomeIntroduce />
+        <HomeManual />
       </HomeDescriptionLayout>
     </HomeLayout>
   );
