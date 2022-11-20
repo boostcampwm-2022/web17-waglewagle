@@ -20,7 +20,9 @@
       "@components/*": ["./components/*"],
       "@constants/*": ["./constants/*"],
       "@public/*": ["./public/*"],
-      "@sass/*": ["./sass/*"]
+      "@sass/*": ["./sass/*"],
+      "@hooks/*": ["./hooks/*"],
+      "@utils/*": ["./utils/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

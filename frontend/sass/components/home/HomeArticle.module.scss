@@ -1,0 +1,31 @@
+.color-default {
+  color: black;
+}
+
+.color-changed {
+  color: blue;
+}
+
+.svg-drawing {
+  fill: none;
+  stroke-width: 0px;
+  path {
+    fill: none;
+  }
+}
+
+.svg-active {
+  stroke-width: 1px;
+  path {
+    stroke: black;
+    stroke-dasharray: var(--length);
+    stroke-dashoffset: var(--length);
+    animation: drawPath var(--duration) forwards;
+  }
+}
+
+@keyframes drawPath {
+  100% {
+    stroke-dashoffset: 0;
+  }
+}

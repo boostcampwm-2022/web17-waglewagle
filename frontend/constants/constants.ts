@@ -2,3 +2,8 @@ export enum ADMIN_PAGE_TAB {
   USER_CONTROL = 0,
   KEYWORD_CONTROL = 1,
 }
+
+export enum INTERSECT_TYPES {
+  CHANGE_COLOR = 'CHANGE_COLOR',
+  DRAW_SVG = 'DRAW_SVG',
+}
