@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react';
-import useIntersectionObserver from '../../hooks/useIntersectionObserver';
 import { INTERSECT_TYPES } from '@constants/constants';
+import useIntersectionObserver from '../../hooks/useIntersectionObserver';
 import classnames from 'classnames/bind';
 import styles from '@sass/components/home/HomeArticle.module.scss';
 const cx = classnames.bind(styles);
 
-const HomeManual = () => {
+const HomeTeamIntroduction = () => {
   const articleRef = useRef<HTMLElement>(null);
 
   const option = {
@@ -28,15 +28,15 @@ const HomeManual = () => {
   }, []);
   return (
     <article className={cx('color-default')} ref={articleRef}>
-      <h3>와글와글 사용법</h3>
+      <h3>팀 소개</h3>
       <p>
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. In tenetur
-        tempore, nulla numquam molestiae quae accusantium reiciendis, illum
-        doloribus deserunt magnam animi sapiente adipisci temporibus, minus
-        odit. Culpa, nostrum repellendus.
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam quod
+        consequuntur quidem molestias totam reiciendis iste at repellat. Cum
+        esse quae fugit in possimus ipsam molestiae impedit recusandae accusamus
+        nisi.
       </p>
     </article>
   );
 };
 
-export default HomeManual;
+export default HomeTeamIntroduction;

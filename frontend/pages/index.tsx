@@ -5,10 +5,11 @@ import {
   HomeTitle,
   HomeDescriptionLayout,
   HomeChevronDown,
+  HomeProblem,
+  HomeProjectIntroduction,
+  HomeManual,
+  HomeTeamIntroduction,
 } from '@components/home';
-import HomeProblem from '@components/home/HomeProblem';
-import HomeIntroduce from '@components/home/HomeIntroduce';
-import HomeManual from '@components/home/HomeManual';
 import StartButton from '@components/common/StartButton';
 
 const Home = () => {
@@ -22,8 +23,9 @@ const Home = () => {
       </HomeMainLayout>
       <HomeDescriptionLayout>
         <HomeProblem />
-        <HomeIntroduce />
+        <HomeProjectIntroduction />
         <HomeManual />
+        <HomeTeamIntroduction />
       </HomeDescriptionLayout>
     </HomeLayout>
   );
