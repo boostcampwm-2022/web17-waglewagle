@@ -1,6 +1,7 @@
 package com.waglewagle.rest.user;
 
 import lombok.Getter;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@ToString
 public class User {
 
     @Id @GeneratedValue
@@ -16,7 +18,7 @@ public class User {
 
     @Enumerated(value= EnumType.STRING)
     @Column(nullable = false, updatable = false)
-    private OauthType oauthMethod;
+    private OauthMethod oauthMethod;
 
     private String oauthKey;
 
@@ -32,5 +34,17 @@ public class User {
     private LocalDateTime updatedAt;
 
     private LocalDateTime deletedAt;
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setOauthMethod(OauthMethod oauthMethod) {
+        this.oauthMethod = oauthMethod;
+    }
+
+    public void setOauthKey(String oauthKey) {
+        this.oauthKey = oauthKey;
+    }
 }
 
