@@ -1,3 +1,4 @@
-import ButtonLayout from './ButtonLayout';
+import DefaultButton from './DefaultButton';
+import Modal from './Modal';
 
-export { ButtonLayout };
+export { DefaultButton, Modal };
