@@ -21,6 +21,7 @@
     stroke-dasharray: var(--length);
     stroke-dashoffset: var(--length);
     animation: drawPath var(--duration) forwards;
+    animation-delay: var(--delay);
   }
 }
 
