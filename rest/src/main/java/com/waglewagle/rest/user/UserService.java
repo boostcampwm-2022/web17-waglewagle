@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
+import javax.transaction.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -11,7 +12,8 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public Long loginWithUsername(String username) {
+    @Transactional
+    public Long authenticateWithUsername(String username) {
         Long userId = userRepository.findOrSaveUsername(username);
         return userId;
     }

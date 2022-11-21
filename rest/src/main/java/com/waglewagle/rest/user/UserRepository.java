@@ -21,7 +21,6 @@ public class UserRepository {
         return user;
     }
 
-    @Transactional
     public Long findOrSaveUsername(String username) {
         try {
         String SQLQuery = "SELECT u FROM User u WHERE u.username = ?1";

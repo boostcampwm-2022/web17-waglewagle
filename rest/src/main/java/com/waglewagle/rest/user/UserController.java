@@ -18,10 +18,10 @@ public class UserController {
 
     @PostMapping("/login")
     @ResponseBody
-    public LoginResponseDTO LoginWithUsername(HttpServletResponse response, @RequestBody UsernameLoginDTO usernameLoginDTO) {
+    public LoginResponseDTO authenticateWithUsername(HttpServletResponse response, @RequestBody UsernameLoginDTO usernameLoginDTO) {
 
         String username = usernameLoginDTO.getUsername();
-        Long userId = userService.loginWithUsername(username);
+        Long userId = userService.authenticateWithUsername(username);
 
         Cookie userIdCookie = userService.createUserIdCookie(userId);
         response.addCookie(userIdCookie);
