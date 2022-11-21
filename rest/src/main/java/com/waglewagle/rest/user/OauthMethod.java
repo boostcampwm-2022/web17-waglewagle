@@ -1,5 +1,5 @@
 package com.waglewagle.rest.user;
 
-public enum OauthType {
+public enum OauthMethod {
     GITHUB, GOOGLE, INSTAGRAM, USERNAME
 }
