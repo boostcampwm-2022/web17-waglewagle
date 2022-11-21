@@ -8,6 +8,8 @@ import {
 } from '@components/home';
 import { DefaultButton } from '@components/common';
 import axios from 'axios';
+import { useEffect } from 'react';
+import makeDummyKeywordList from '../utils/makeDummyKeywordList';
 
 const Home = () => {
   const handleClickStartButton = () => {
@@ -20,6 +22,10 @@ const Home = () => {
         alert('서버 통신에 실패했습니다.');
       });
   };
+
+  useEffect(() => {
+    console.log(makeDummyKeywordList(100));
+  }, []);
 
   return (
     <HomeLayout>
