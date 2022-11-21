@@ -1,0 +1,31 @@
+name: Frontend CI
+
+on:
+  pull_request:
+    branches:
+      - fe/release
+    types:
+      - closed
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: next start
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{secrets.FE_HOST}}
+          port: ${{secrets.FE_PORT}}
+          username: ${{secrets.FE_USERNAME}}
+          password: ${{secrets.FE_PASSWORD}}
+          script: |
+            cd /home/web17-waglewagle
+            git pull origin fe/release
+            cd frontend
+            npm install
+            npm run build
+            pm2 kill -all
+            pm2 start "npm start"
