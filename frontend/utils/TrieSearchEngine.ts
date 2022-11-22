@@ -1,5 +1,7 @@
+import SearchEngine from './SearchEngine';
+
 interface TrieNodeInterface {
-  isCompleteWord: boolean;
+  isCompleteWord: boolean; // TODO : isLastChar는 어떨까?
   children: Record<string, TrieNodeInterface>;
 }
 
@@ -20,10 +22,11 @@ class TrieNode implements TrieNodeInterface {
 
 type Stack = [TrieNode, string][];
 
-class TrieSearchEngine {
+class TrieSearchEngine extends SearchEngine {
   headNode: TrieNode; // 인터페이스가 아닌 구현체가 들어가므로
 
   constructor() {
+    super();
     this.headNode = new TrieNode();
   }
 
@@ -98,3 +101,23 @@ class TrieSearchEngine {
 }
 
 export default TrieSearchEngine;
+
+// 더미 데이터
+const wordList = [
+  { keyword: '가', count: 3 },
+  { keyword: '다', count: 3 },
+  { keyword: '나', count: 3 },
+  { keyword: '가나', count: 3 },
+  { keyword: '가다', count: 3 },
+  { keyword: '가나다', count: 2 },
+  { keyword: '가나라', count: 3 },
+  { keyword: '가나라마', count: 3 },
+];
+
+// 트라이 자료구조를 만든다.
+const searchEngine = new TrieSearchEngine();
+
+// 트라이 자료구조에 단어를 추가한다.
+wordList.forEach((word) => {
+  searchEngine.insert(word);
+});
