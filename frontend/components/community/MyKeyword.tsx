@@ -1,12 +1,15 @@
+import styles from '@sass/components/community/MyKeyword.module.scss';
+import classnames from 'classnames/bind';
+const cx = classnames.bind(styles);
 interface MyKeywordProps {
   keyword: string;
 }
 
 const MyKeyword = ({ keyword }: MyKeywordProps) => {
   return (
-    <li>
+    <li className={cx('keyword-item')}>
       {keyword}
-      <span>x</span>
+      <button className={cx('delete-button')}>x</button>
     </li>
   );
 };

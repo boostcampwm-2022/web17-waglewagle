@@ -1,0 +1,14 @@
+@mixin button-interaction {
+  &:hover {
+    cursor: pointer;
+  }
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.list-container {
+  display: flex;
+  margin: 15px;
+  gap: 15px;
+}
