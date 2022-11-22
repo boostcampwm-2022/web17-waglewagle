@@ -2,6 +2,12 @@
 
 $border-radius: 10px;
 
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 @mixin button-interaction {
   &:hover {
     cursor: pointer;
@@ -19,7 +25,6 @@ $border-radius: 10px;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  gap: 10px;
 
   hr {
     width: 100%;
@@ -30,6 +35,12 @@ $border-radius: 10px;
   text-align: center;
   font-size: 2.5rem;
   font-family: 'Nanum BugGeugSeong';
+}
+
+.username-login-form {
+  flex-direction: column;
+  @include flex-center;
+  gap: 20px;
 }
 
 .username-input {
@@ -56,9 +67,7 @@ $border-radius: 10px;
   position: relative;
   width: 300px;
   height: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @include flex-center;
   border: 1px solid black;
   border-radius: $border-radius;
   background-color: $off-white-color;
