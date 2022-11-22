@@ -4,6 +4,7 @@ import {
   AutoComplete,
   CommunityHeader,
   CommunityLayout,
+  KeywordAddModal,
 } from '@components/community';
 import { useEffect, useState } from 'react';
 
@@ -44,7 +45,7 @@ const Community = () => {
         isOpenModal={isOpenKeywordModal}
         closeModal={() => setIsOpenKeywordModal(false)}
       >
-        <div>1</div>
+        <KeywordAddModal />
       </Modal>
     </CommunityLayout>
   );
