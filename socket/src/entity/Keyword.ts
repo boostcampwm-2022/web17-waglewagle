@@ -1,4 +1,5 @@
 import {
+  BaseEntity,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
@@ -7,6 +8,7 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
+  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from './User';
@@ -19,8 +21,8 @@ import { Thread } from './Thread';
 })
 @Index('FK2ik49kpsr60x3lp4ffo4k23k1', ['authorId'], {})
 @Entity('keyword')
-export class Keyword {
-  @Column('bigint', { primary: true, name: 'id' })
+export class Keyword extends BaseEntity {
+  @PrimaryGeneratedColumn('increment', { name: 'id', type: 'bigint' })
   id: string;
 
   @Column('varchar', { name: 'keyword', nullable: true, length: 255 })

@@ -8,6 +8,7 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Keyword } from './Keyword';
 import { User } from './User';
@@ -17,7 +18,7 @@ import { User } from './User';
 @Index('FKfspfoq62r3wrwmx755muuqnf8', ['parentThreadId'], {})
 @Entity('thread')
 export class Thread {
-  @Column('bigint', { primary: true, name: 'id' })
+  @PrimaryGeneratedColumn('increment', { name: 'id', type: 'bigint' })
   id: string;
 
   @Column('varchar', { name: 'content', nullable: true, length: 5000 })

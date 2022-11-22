@@ -7,6 +7,7 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
+  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from './User';
@@ -17,7 +18,7 @@ import { KeywordUser } from './KeywordUser';
 @Index('FKfsfwlfb2ummfsb30q78wo6se0', ['userId'], {})
 @Entity('community')
 export class Community {
-  @Column('bigint', { primary: true, name: 'id' })
+  @PrimaryGeneratedColumn('increment', { name: 'id', type: 'bigint' })
   id: string;
 
   @Column('varchar', { name: 'summary', nullable: true, length: 255 })

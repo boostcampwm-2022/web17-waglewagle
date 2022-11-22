@@ -5,6 +5,7 @@ import {
   Entity,
   Index,
   OneToMany,
+  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Community } from './Community';
@@ -16,7 +17,7 @@ import { Thread } from './Thread';
 @Index('UK_sb8bbouer5wak8vyiiy4pf2bx', ['username'], { unique: true })
 @Entity('user')
 export class User {
-  @Column('bigint', { primary: true, name: 'id' })
+  @PrimaryGeneratedColumn('increment', { name: 'id', type: 'bigint' })
   id: string;
 
   @Column('varchar', { name: 'oauth_key', nullable: true, length: 255 })

@@ -1,4 +1,5 @@
 import {
+  BaseEntity,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
@@ -6,6 +7,7 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
+  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Community } from './Community';
@@ -16,8 +18,8 @@ import { User } from './User';
 @Index('FKlqjerts6c6lcml0n06053x3ls', ['keywordId'], {})
 @Index('FKnifacyv4qur5wp3nyj8ykb6gs', ['userId'], {})
 @Entity('keyword_user')
-export class KeywordUser {
-  @Column('bigint', { primary: true, name: 'id' })
+export class KeywordUser extends BaseEntity {
+  @PrimaryGeneratedColumn('increment', { name: 'id', type: 'bigint' })
   id: string;
 
   @Column('bigint', { name: 'community_id', nullable: true })
