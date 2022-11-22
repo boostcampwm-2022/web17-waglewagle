@@ -2,7 +2,6 @@ import classnames from 'classnames/bind';
 import styles from '@sass/components/common/LoginModalContent.module.scss';
 import { AiFillGithub } from 'react-icons/ai';
 import { ChangeEvent, useState } from 'react';
-import apis from '../../apis/apis';
 const cx = classnames.bind(styles);
 
 const LoginModalContent = () => {
@@ -14,7 +13,8 @@ const LoginModalContent = () => {
 
   const handleSubmitUsernameLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    apis.fetchLogin(username);
+    localStorage.setItem('waglewagle-username', username); // 임시 유저데이터
+    // apis.fetchLogin(username);
     setUsername('');
   };
 

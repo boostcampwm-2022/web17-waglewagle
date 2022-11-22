@@ -5,24 +5,46 @@ import {
   CommunityHeader,
   CommunityLayout,
 } from '@components/community';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const Community = () => {
-  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+  const [userData, setUserData] = useState<string | null>('');
+  const [isOpenLoginModal, setIsOpenLoginModal] = useState<boolean>(false);
+  const [isOpenKeywordModal, setIsOpenKeywordModal] = useState<boolean>(false);
 
   const handleClickEnter = () => {
-    setIsOpenModal(true);
+    setIsOpenLoginModal(true);
   };
+
+  const handleClickKeywordModal = () => {
+    setIsOpenKeywordModal(true);
+  };
+
+  useEffect(() => {
+    const username = localStorage.getItem('waglewagle-username');
+    setUserData(username);
+  }, []);
 
   return (
     <CommunityLayout>
       <CommunityHeader
         title='부스트캠프 7기'
+        userData={userData}
+        handleClickKeywordModal={handleClickKeywordModal}
         handleClickEnter={handleClickEnter}
       />
       <AutoComplete />
-      <Modal isOpenModal={isOpenModal} closeModal={() => setIsOpenModal(false)}>
+      <Modal
+        isOpenModal={isOpenLoginModal}
+        closeModal={() => setIsOpenLoginModal(false)}
+      >
         <LoginModalContent />
+      </Modal>
+      <Modal
+        isOpenModal={isOpenKeywordModal}
+        closeModal={() => setIsOpenKeywordModal(false)}
+      >
+        <div>1</div>
       </Modal>
     </CommunityLayout>
   );
