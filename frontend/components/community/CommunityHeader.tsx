@@ -5,9 +5,10 @@ const cx = classnames.bind(styles);
 
 interface CommunityHeaderProps {
   title: string;
+  handleClickEnter: () => void;
 }
 
-const CommunityHeader = ({ title }: CommunityHeaderProps) => {
+const CommunityHeader = ({ title, handleClickEnter }: CommunityHeaderProps) => {
   return (
     <header className={cx('header')}>
       <div className={cx('left-header')}>
@@ -15,7 +16,9 @@ const CommunityHeader = ({ title }: CommunityHeaderProps) => {
         <h2>{title}</h2>
       </div>
       <div className={cx('buttons')}>
-        <button className={cx('enter-button')}>입장하기</button>
+        <button onClick={handleClickEnter} className={cx('enter-button')}>
+          입장하기
+        </button>
       </div>
     </header>
   );
