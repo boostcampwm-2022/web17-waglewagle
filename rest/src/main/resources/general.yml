@@ -5,7 +5,7 @@ spring:
   jpa:
     generate-ddl: true
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
       use-new-id-generator-mappings: false
     properties:
       hibernate:

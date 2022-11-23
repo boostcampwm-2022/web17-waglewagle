@@ -34,6 +34,14 @@ dependencies {
 //    https://stackoverflow.com/questions/53326271/spring-nullable-annotation-generates-unknown-enum-constant-warning ???
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
 
+    //QueryDSL: https://gaemi606.tistory.com/entry/Spring-Boot-Querydsl-%EC%B6%94%EA%B0%80-Gradle-7x
+    //annotationProcessor???
+    implementation 'com.querydsl:querydsl-core'
+    implementation 'com.querydsl:querydsl-jpa'
+
+    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 }
 
 tasks.named('test') {
