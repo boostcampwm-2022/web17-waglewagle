@@ -8,11 +8,16 @@ import TrieSearchEngine from '../../utils/TrieSearchEngine';
 import AddCircleIcon from '@public/images/add-circle.svg';
 import styles from '@sass/components/community/AutoComplete.module.scss';
 import classnames from 'classnames/bind';
+import { KeywordData } from '../../types/types';
 const cx = classnames.bind(styles);
+
+interface AutoCompleteProps {
+  communityKeywordData: KeywordData[];
+}
 
 const searchEngine = new TrieSearchEngine();
 
-const AutoComplete = () => {
+const AutoComplete = ({ communityKeywordData }: AutoCompleteProps) => {
   const [searchKeyword, setSearchKeyword] = useState<string>('');
   const [searchResult, setSearchResult] = useState<string[]>(['']);
   const [isOpenDropdown, setIsOpenDropDown] = useState<boolean>(false);
@@ -32,23 +37,11 @@ const AutoComplete = () => {
   };
 
   useEffect(() => {
-    // TODO : 나중에는 서버에서 받아와야한다.
-    const mockWordList = [
-      { keyword: '가', count: 3 },
-      { keyword: '다', count: 3 },
-      { keyword: '나', count: 3 },
-      { keyword: '가나', count: 3 },
-      { keyword: '가다', count: 3 },
-      { keyword: '가나다', count: 2 },
-      { keyword: '가나라', count: 3 },
-      { keyword: '가나라마', count: 3 },
-    ];
-
-    mockWordList.forEach((word) => {
+    communityKeywordData.forEach((word) => {
       searchEngine.insert(word);
     });
 
-    setSearchResult(mockWordList.map(({ keyword }) => keyword));
+    setSearchResult(communityKeywordData.map(({ keyword }) => keyword));
   }, []);
 
   return (
