@@ -5,15 +5,7 @@ import CommunityUserRepository, {
 class CommunityUserService {
   constructor(private readonly CommunityUserRepository: CommunityUserRepositoryInterface) {}
 
-  async isUserInCommunity(
-    userId: string,
-    communityId: string,
-    isTransactional: boolean
-  ): Promise<boolean> {
-    if (!isTransactional) {
-      return await this.CommunityUserRepository.checkIfUserInCommunity(userId, communityId);
-    }
-
+  async isUserInCommunity(userId: string, communityId: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
       this.CommunityUserRepository.dataSource.manager.transaction(async (em) => {
         this.CommunityUserRepository.checkIfUserInCommunity(userId, communityId, em)
@@ -25,11 +17,7 @@ class CommunityUserService {
 }
 
 export interface CommunityUserServiceInterface {
-  isUserInCommunity(
-    userId: string,
-    communityId: string,
-    isTransactional: boolean
-  ): Promise<boolean>;
+  isUserInCommunity(userId: string, communityId: string): Promise<boolean>;
 }
 
 export default new CommunityUserService(CommunityUserRepository);

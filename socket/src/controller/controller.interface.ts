@@ -1,5 +1,5 @@
-import { SocketCarrier } from '../utils/util';
+import { SocketWithUserId } from '../types/socket.types';
 
 export interface ControllerInterface {
-  register(socketCarrier: SocketCarrier): void;
+  register(socket: SocketWithUserId): void;
 }

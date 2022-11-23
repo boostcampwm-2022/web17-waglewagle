@@ -10,7 +10,6 @@ const ormConfig: DataSourceOptions = Object.freeze({
   entities: ['entity/*.*'],
   charset: 'UTF8_GENERAL_CI',
   connectTimeout: 5000,
-  acquireTimeout: 5000,
   synchronize: ENV.RUN_ENV === 'dev',
   bigint: true,
 });

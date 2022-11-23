@@ -1,3 +1,4 @@
 import App from './app';
+import KeywordController from './controller/Keyword.Controller';
 
-new App().listen(3000);
+new App([KeywordController]).listen(3000);

@@ -1,4 +1,5 @@
 import {
+  BaseEntity,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
@@ -17,7 +18,7 @@ import { KeywordUser } from './KeywordUser';
 
 @Index('FKfsfwlfb2ummfsb30q78wo6se0', ['userId'], {})
 @Entity('community')
-export class Community {
+export class Community extends BaseEntity {
   @PrimaryGeneratedColumn('increment', { name: 'id', type: 'bigint' })
   id: string;
 

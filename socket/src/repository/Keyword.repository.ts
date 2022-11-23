@@ -39,17 +39,36 @@ class KeywordRepository implements KeywordRepositoryInterface {
    */
   async checkIfKeywordExists(
     communityId: string,
-    keywordId: string,
+    keywordString: string,
     em?: EntityManager
   ): Promise<boolean> {
-    const Keyword = this.entity;
+    const findOptions = { keyword: keywordString, communityId };
+
     if (!em) {
-      const isKeywordExist = await Keyword.countBy({ id: keywordId, communityId });
+      const isKeywordExist = await this.entity.countBy(findOptions);
       return isKeywordExist === 1;
     }
 
-    const isKeywordExist = await em.countBy(Keyword, { id: keywordId, communityId });
+    const isKeywordExist = await em.countBy(this.entity, findOptions);
     return isKeywordExist === 1;
+  }
+
+  async findByKeywordAndCommunityId(
+    communityId: string,
+    keywordString: string,
+    em: EntityManager
+  ): Promise<Keyword | null> {
+    const findOptions = {
+      where: {
+        communityId,
+        keyword: keywordString,
+      },
+    };
+    if (!em) {
+      return await this.entity.findOne(findOptions);
+    }
+
+    return await em.findOne(this.entity, findOptions);
   }
 }
 
@@ -58,9 +77,14 @@ export interface KeywordRepositoryInterface extends RepositoryInterface {
   delete(keyword: Keyword, em?: EntityManager): Promise<void>;
   checkIfKeywordExists(
     communityId: string,
-    keywordId: string,
+    keywordString: string,
     em?: EntityManager
   ): Promise<boolean>;
+  findByKeywordAndCommunityId(
+    communityId: string,
+    keywordString: string,
+    em: EntityManager
+  ): Promise<Keyword | null>;
   get entity(): typeof Keyword;
 }
 

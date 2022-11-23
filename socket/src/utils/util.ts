@@ -1,9 +1,3 @@
-import * as socketIo from 'socket.io';
-
-class SocketCarrier {
-  constructor(readonly socket: socketIo.Socket, readonly userId: string) {}
-}
-
 const createSuccessfulResponseTemplate = (data: any) => ({
   success: true,
   data,
@@ -11,7 +5,7 @@ const createSuccessfulResponseTemplate = (data: any) => ({
 
 const createFailedResponseTemplate = (error: any) => ({
   success: false,
-  error,
+  errorMessage: error?.message,
 });
 
-export { SocketCarrier, createSuccessfulResponseTemplate, createFailedResponseTemplate };
+export { createSuccessfulResponseTemplate, createFailedResponseTemplate };
