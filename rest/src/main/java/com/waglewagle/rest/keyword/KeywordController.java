@@ -1,5 +1,6 @@
 package com.waglewagle.rest.keyword;
 
+import com.waglewagle.rest.keyword.association.AssociationDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -22,11 +23,12 @@ public class KeywordController {
     //https://velog.io/@junbee/Spring-MVC-%EA%B8%B0%EB%B3%B8-%EA%B8%B0%EB%8A%A52-%ED%8C%8C%EB%9D%BC%EB%AF%B8%ED%84%B0-%EC%B2%98%EB%A6%AC
     //ResponseEntity
     //https://velog.io/@alstn_dev/Spring-Boot%EB%A1%9C-REST-API-%EC%84%9C%EB%B2%84-%EB%A7%8C%EB%93%A4%EA%B8%B0
-    @GetMapping("/associated")
-    public ResponseEntity<List<Keyword>> getAssociatedKeywords(@RequestParam("keyword-id") Long keywordId) {
+    @GetMapping("/associations")
+    public ResponseEntity<List<AssociationDTO>> getAssociatedKeywords(@RequestParam("keyword-id") Long keywordId) {
 
-        List<Keyword> sortedList = keywordService.calcAssociatedKeywords(keywordId);
+        List<AssociationDTO> sortedList = keywordService.calcAssociatedKeywordsByKeyword(keywordId);
 
+        //실패 http status? : 애초에 실패상황은 뭘까
         return ResponseEntity.ok(sortedList);
     }
 }
