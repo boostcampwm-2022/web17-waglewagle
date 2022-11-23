@@ -37,7 +37,7 @@ class KeywordRepository implements KeywordRepositoryInterface {
   /**
    * can hand over entityManager as third argument for transaction
    */
-  async checkIfKeywordExists(
+  async checkIfExistsInCommunityWithKeywordString(
     communityId: string,
     keywordString: string,
     em?: EntityManager
@@ -53,10 +53,30 @@ class KeywordRepository implements KeywordRepositoryInterface {
     return isKeywordExist === 1;
   }
 
+  /**
+   * can hand over entityManager as third argument for transaction
+   */
+  async checkIfExistsInCommunityWithKeywordId(
+    communityId: string,
+    keywordId: string,
+    em?: EntityManager
+  ): Promise<boolean> {
+    const findOptions = { communityId, id: keywordId };
+
+    if (!em) {
+      return (await this.entity.countBy(findOptions)) === 1;
+    }
+
+    return (await em.countBy(this.entity, findOptions)) === 1;
+  }
+
+  /**
+   * can hand over entityManager as third argument for transaction
+   */
   async findByKeywordAndCommunityId(
     communityId: string,
     keywordString: string,
-    em: EntityManager
+    em?: EntityManager
   ): Promise<Keyword | null> {
     const findOptions = {
       where: {
@@ -75,7 +95,7 @@ class KeywordRepository implements KeywordRepositoryInterface {
 export interface KeywordRepositoryInterface extends RepositoryInterface {
   save(keyword: Keyword, em?: EntityManager): Promise<Keyword>;
   delete(keyword: Keyword, em?: EntityManager): Promise<void>;
-  checkIfKeywordExists(
+  checkIfExistsInCommunityWithKeywordString(
     communityId: string,
     keywordString: string,
     em?: EntityManager
@@ -83,8 +103,13 @@ export interface KeywordRepositoryInterface extends RepositoryInterface {
   findByKeywordAndCommunityId(
     communityId: string,
     keywordString: string,
-    em: EntityManager
+    em?: EntityManager
   ): Promise<Keyword | null>;
+  checkIfExistsInCommunityWithKeywordId(
+    communityId: string,
+    keywordId: string,
+    em?: EntityManager
+  ): Promise<boolean>;
   get entity(): typeof Keyword;
 }
 

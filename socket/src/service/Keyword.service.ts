@@ -4,11 +4,7 @@ import KeywordRepository, { KeywordRepositoryInterface } from './../repository/K
 class KeywordService implements KeywordServiceInterface {
   constructor(private readonly keywordRepository: KeywordRepositoryInterface) {}
 
-  async saveKeyword(
-    keywordString: string,
-    authorId: string,
-    communityId: string
-  ): Promise<Keyword> {
+  saveKeyword(keywordString: string, authorId: string, communityId: string): Promise<Keyword> {
     return new Promise((resolve, reject) => {
       this.keywordRepository.dataSource.manager.transaction(async (em) => {
         const Keyword = this.keywordRepository.entity;
@@ -26,18 +22,32 @@ class KeywordService implements KeywordServiceInterface {
     });
   }
 
-  async checkIfKeywordExist(communityId: string, keywordString: string): Promise<boolean> {
+  checkIfKeywordExist(communityId: string, keywordString: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
       this.keywordRepository.dataSource.transaction(async (em) => {
         this.keywordRepository
-          .checkIfKeywordExists(communityId, keywordString, em)
+          .checkIfExistsInCommunityWithKeywordString(communityId, keywordString, em)
           .then((isExist) => resolve(isExist))
           .catch((error) => reject(error));
       });
     });
   }
 
-  async findKeywordInCommunity(
+  checkIfKeywordExistsInCommunityWithKeywordId(
+    communityId: string,
+    keywordId: string
+  ): Promise<boolean> {
+    return new Promise(async (resolve, reject) => {
+      this.keywordRepository.dataSource.transaction(async (em) => {
+        this.keywordRepository
+          .checkIfExistsInCommunityWithKeywordId(communityId, keywordId, em)
+          .then((isExist) => resolve(isExist))
+          .catch((error) => reject(error));
+      });
+    });
+  }
+
+  findKeywordInCommunityWithKeywordString(
     communityId: string,
     keywordString: string
   ): Promise<Keyword | null> {
@@ -55,7 +65,14 @@ class KeywordService implements KeywordServiceInterface {
 export interface KeywordServiceInterface {
   saveKeyword(keywordString: string, creatorId: string, communityId: string): Promise<Keyword>;
   checkIfKeywordExist(communityId: string, keywordString: string): Promise<boolean>;
-  findKeywordInCommunity(communityId: string, keywordString: string): Promise<Keyword | null>;
+  checkIfKeywordExistsInCommunityWithKeywordId(
+    communityId: string,
+    keywordId: string
+  ): Promise<boolean>;
+  findKeywordInCommunityWithKeywordString(
+    communityId: string,
+    keywordString: string
+  ): Promise<Keyword | null>;
 }
 
 export default new KeywordService(KeywordRepository);

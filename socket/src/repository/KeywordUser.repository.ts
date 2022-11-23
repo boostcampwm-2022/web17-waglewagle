@@ -37,11 +37,7 @@ class KeywordUserRepository implements KeywordUserRepositoryInterface {
   /**
    * can hand over entityManager as third argument for transaction
    */
-  async checkIfKeywordSelected(
-    userId: string,
-    keywordId: string,
-    em?: EntityManager
-  ): Promise<boolean> {
+  async checkIfKeywordSelected(userId: string, keywordId: string, em?: EntityManager): Promise<boolean> {
     if (!em) {
       const isKeywordSelected = await this.entity.countBy({
         keywordId,
@@ -56,12 +52,27 @@ class KeywordUserRepository implements KeywordUserRepositoryInterface {
     });
     return isKeywordSelected === 1;
   }
+
+  /**
+   * can hand over entityManager as third argument for transaction
+   */
+  async deleteByKeywordIdAndUserId(userId: string, keywordId: string, em?: EntityManager): Promise<void> {
+    const findOptions = { keywordId, userId };
+    if (!em) {
+      await this.entity.delete(findOptions);
+      return;
+    }
+
+    await em.delete(this.entity, findOptions);
+    return;
+  }
 }
 
 export interface KeywordUserRepositoryInterface extends RepositoryInterface {
   save(keywordUser: KeywordUser, em?: EntityManager): Promise<KeywordUser>;
   delete(keywordUser: KeywordUser, em?: EntityManager): Promise<void>;
   checkIfKeywordSelected(userId: string, keywordId: string, em?: EntityManager): Promise<boolean>;
+  deleteByKeywordIdAndUserId(userId: string, keywordId: string, em?: EntityManager): Promise<void>;
   get entity(): typeof KeywordUser;
 }
 

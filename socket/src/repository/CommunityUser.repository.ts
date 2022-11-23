@@ -38,11 +38,7 @@ class CommunityUserRepository implements CommunityUserRepositoryInterface {
   /**
    * can hand over entityManager as third argument for transaction
    */
-  async checkIfUserInCommunity(
-    userId: string,
-    communityId: string,
-    em?: EntityManager
-  ): Promise<boolean> {
+  async checkIfUserInCommunity(userId: string, communityId: string, em?: EntityManager): Promise<boolean> {
     if (!em) {
       const isUserInCommunity = await this.entity.countBy({
         communityId,

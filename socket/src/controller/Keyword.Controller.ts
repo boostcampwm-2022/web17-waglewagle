@@ -1,16 +1,16 @@
 import { ControllerInterface } from './controller.interface';
 import { emittingEvent, listeningEvent } from './../utils/event.enum';
-import CommunityUserService, {
-  CommunityUserServiceInterface,
-} from './../service/CommunityUser.service';
+import CommunityUserService, { CommunityUserServiceInterface } from './../service/CommunityUser.service';
 import KeywordUserService, { KeywordUserServiceInterface } from './../service/KeywordUser.service';
 import keywordService, { KeywordServiceInterface } from '../service/Keyword.service';
-import { createFailedResponseTemplate, createSuccessfulResponseTemplate } from '../utils/util';
+import { createFailedResponseTemplate } from '../utils/util';
 import {
   AlreadySelectedKeywordError,
   CommunityNotExistingError,
   ForbiddenError,
   IllegalInputError,
+  KeywordNotExistingError,
+  KeywordNotSelectedError,
   UnauthorizedError,
 } from '../utils/error';
 import { deselectKeywordInput, selectKeywordInput } from '../utils/event-input.types';
@@ -38,6 +38,7 @@ class KeywordController implements ControllerInterface {
         if (!socket.userId) {
           throw new ForbiddenError();
         }
+        const userId = socket.userId;
 
         // 2. 커뮤니티가 존재하는가?
         if (!(await this.communityService.checkIfCommunityExist(communityId))) {
@@ -45,40 +46,31 @@ class KeywordController implements ControllerInterface {
         }
 
         // 3. 커뮤니티에 참가한 유저인가?
-        if (!(await this.communityUserService.isUserInCommunity(socket.userId, communityId))) {
+        if (!(await this.communityUserService.isUserInCommunity(userId, communityId))) {
           throw new UnauthorizedError();
         }
 
         // 4. 키워드가 존재하는가?
         //      존재하는 경우 id를 뽑아와야 함.
-        let foundKeyword = await this.keywordService.findKeywordInCommunity(
+        let foundKeyword = await this.keywordService.findKeywordInCommunityWithKeywordString(
           communityId,
           keywordString
         );
         if (!foundKeyword) {
-          foundKeyword = await this.keywordService.saveKeyword(
-            keywordString,
-            socket.userId,
-            communityId
-          );
+          foundKeyword = await this.keywordService.saveKeyword(keywordString, userId, communityId);
         }
 
         // 5. 키워드에 이미 참가하였는가?
-        if (
-          await this.keywordUserService.checkIfKeywordAlreadySelected(
-            socket.userId,
-            foundKeyword.id
-          )
-        ) {
+        if (await this.keywordUserService.checkIfKeywordSelected(userId, foundKeyword.id)) {
           throw new AlreadySelectedKeywordError();
         }
 
         // 키워드 선택!
-        await this.keywordUserService.selectKeyword(socket.userId, foundKeyword.id, communityId);
+        await this.keywordUserService.selectKeyword(userId, foundKeyword.id, communityId);
 
         // 키워드 이벤트 발생!
         socket.broadcast.emit(emittingEvent.keyword_selected, {
-          userId: socket.userId,
+          userId,
           keyword: keywordString,
           keywordId: foundKeyword.id,
         });
@@ -89,33 +81,45 @@ class KeywordController implements ControllerInterface {
   }
 
   onDeselectKeyword(socket: SocketWithUserId) {
-    return async ({ keywordId, communityId }: deselectKeywordInput) => {
+    return async ({ keywordId, communityId }: deselectKeywordInput, errorCallback?: (error: any) => void) => {
       try {
-        if (!(await this.keywordService.checkIfKeywordExist(communityId, keywordId))) {
-          throw new IllegalInputError();
+        // 1. 로그인 한 유저인가?
+        if (!socket.userId) {
+          throw new ForbiddenError();
+        }
+        const userId = socket.userId;
+
+        // 2. 커뮤니티가 존재하는가?
+        if (!(await this.communityService.checkIfCommunityExist(communityId))) {
+          throw new CommunityNotExistingError();
         }
 
-        const { userId } = socket.data;
-        if (await this.keywordUserService.checkIfKeywordAlreadySelected(userId, keywordId)) {
-          throw new IllegalInputError();
+        // 3. 커뮤니티에 참가한 유저인가?
+        if (!(await this.communityUserService.isUserInCommunity(userId, communityId))) {
+          throw new UnauthorizedError();
         }
 
-        const savedKeywordUser = await this.keywordUserService.selectKeyword(
+        // 4. 키워드가 존재하는가?
+        if (!(await this.keywordService.checkIfKeywordExistsInCommunityWithKeywordId(communityId, keywordId))) {
+          throw new KeywordNotExistingError();
+        }
+
+        // 5. 키워드에 참가하였는가?
+        if (!(await this.keywordUserService.checkIfKeywordSelected(userId, keywordId))) {
+          throw new KeywordNotSelectedError();
+        }
+
+        // 키워드 선택 취소!
+        await this.keywordUserService.deselectKeyword(userId, keywordId);
+
+        // 키워드 이벤트 발생!
+        socket.broadcast.emit(emittingEvent.keyword_deselected, {
           userId,
           keywordId,
-          communityId
-        );
-
-        socket.emit(
-          emittingEvent.select_keyword_response,
-          createSuccessfulResponseTemplate(savedKeywordUser)
-        );
-        socket.emit(emittingEvent.keyword_selected, savedKeywordUser);
+          communityId,
+        });
       } catch (error) {
-        // socketCarrier.socket.emit(
-        //   emittingEvent.create_keyword_response,
-        //   createFailedResponseTemplate(error)
-        // );
+        errorCallback && errorCallback(createFailedResponseTemplate(error));
       }
     };
   }
@@ -125,9 +129,4 @@ class KeywordController implements ControllerInterface {
   }
 }
 
-export default new KeywordController(
-  keywordService,
-  KeywordUserService,
-  CommunityUserService,
-  CommunityService
-);
+export default new KeywordController(keywordService, KeywordUserService, CommunityUserService, CommunityService);

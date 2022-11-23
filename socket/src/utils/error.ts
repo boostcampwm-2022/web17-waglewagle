@@ -36,10 +36,24 @@ class AlreadySelectedKeywordError extends CustomSocketServerError {
   }
 }
 
+class KeywordNotExistingError extends CustomSocketServerError {
+  constructor() {
+    super(errorMessageEnum.Keyword_Not_Existing);
+  }
+}
+
+class KeywordNotSelectedError extends CustomSocketServerError {
+  constructor() {
+    super(errorMessageEnum.Keyword_Not_Selected);
+  }
+}
+
 export {
   IllegalInputError,
   UnauthorizedError,
   CommunityNotExistingError,
   AlreadySelectedKeywordError,
   ForbiddenError,
+  KeywordNotExistingError,
+  KeywordNotSelectedError,
 };
