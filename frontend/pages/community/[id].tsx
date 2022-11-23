@@ -37,6 +37,7 @@ const Community = () => {
       { keyword: '가나다', count: 2 },
       { keyword: '가나라', count: 3 },
       { keyword: '가나라마', count: 3 },
+      { keyword: '가나라마바사아자카파타하', count: 5 },
     ];
 
     const username = localStorage.getItem('waglewagle-username');
