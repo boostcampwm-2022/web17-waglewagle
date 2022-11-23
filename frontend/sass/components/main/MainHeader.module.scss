@@ -1,6 +1,8 @@
 .header {
   display: flex;
   justify-content: space-between;
+  max-width: 1320px;
+  margin: 0 auto;
   padding: 20px;
 
   .user-button {
@@ -8,14 +10,11 @@
     height: 30px;
     border: none;
     background: none;
-    background-image: url('/images/person.svg');
-    background-position: center center;
-    background-size: contain;
-    transition: all 0.1s linear;
+    transition: all 0.2s;
 
     &:hover {
       cursor: pointer;
-      transform: scale(1.01);
+      transform: scale(1.05);
     }
 
     &:active {

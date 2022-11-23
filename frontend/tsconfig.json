@@ -20,9 +20,10 @@
       "@components/*": ["./components/*"],
       "@constants/*": ["./constants/*"],
       "@public/*": ["./public/*"],
+      "@utils/*": ["./utils/*"],
       "@sass/*": ["./sass/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "util/trie.ts"],
   "exclude": ["node_modules"]
 }

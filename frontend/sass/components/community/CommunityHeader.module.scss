@@ -1,0 +1,34 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.left-header {
+  display: flex;
+  gap: 30px;
+}
+
+.buttons {
+  display: flex;
+  gap: 50px;
+}
+
+.enter-button {
+  padding: 5px 10px;
+  border: 1px solid black;
+  border-radius: 10px;
+  background: none;
+  transition: all 0.2s;
+
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.01);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
