@@ -12,12 +12,6 @@ enum emittingEvent {
   keyword_deleted = 'keyword_deleted',
   thread_created = 'thread_created',
   thread_deleted = 'thread_deleted',
-
-  select_keyword_response = 'select_keyword_response',
-  keyword_deselected_response = 'keyword_deselected_response',
-  delete_keyword_response = 'delete_keyword_response',
-  create_thread_response = 'create_thread_response',
-  delete_thread_response = 'delete_thread_response',
 }
 
 export { listeningEvent, emittingEvent };

@@ -8,12 +8,11 @@ import {
   AlreadySelectedKeywordError,
   CommunityNotExistingError,
   ForbiddenError,
-  IllegalInputError,
   KeywordNotExistingError,
   KeywordNotSelectedError,
   UnauthorizedError,
 } from '../utils/error';
-import { deselectKeywordInput, selectKeywordInput } from '../utils/event-input.types';
+import { deleteKeywordInput, deselectKeywordInput, selectKeywordInput } from '../utils/event-input.types';
 import { SocketWithUserId } from '../types/socket.types';
 import CommunityService, { CommunityServiceInterface } from '../service/Community.service';
 
@@ -126,6 +125,7 @@ class KeywordController implements ControllerInterface {
 
   register(socket: SocketWithUserId) {
     socket.on(listeningEvent.select_keyword, this.onSelectKeyword(socket));
+    socket.on(listeningEvent.deselect_keyword, this.onDeselectKeyword(socket));
   }
 }
 
