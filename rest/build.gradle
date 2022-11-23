@@ -28,6 +28,12 @@ dependencies {
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+//    warning: unknown enum constant When.MAYBE
+//    reason: class file for javax.annotation.meta.When not found
+//    https://stackoverflow.com/questions/53326271/spring-nullable-annotation-generates-unknown-enum-constant-warning ???
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
+
 }
 
 tasks.named('test') {
