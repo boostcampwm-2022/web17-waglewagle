@@ -4,7 +4,7 @@ import KeywordUserRepository, { KeywordUserRepositoryInterface } from './../repo
 class KeywordUserService {
   constructor(private readonly KeywordUserRepository: KeywordUserRepositoryInterface) {}
 
-  checkIfKeywordSelected(userId: string, keywordId: string): Promise<boolean> {
+  isKeywordSelected(userId: string, keywordId: string): Promise<boolean> {
     return new Promise(async (resolve, reject) => {
       this.KeywordUserRepository.dataSource.transaction(async (em) => {
         this.KeywordUserRepository.checkIfKeywordSelected(userId, keywordId, em)
@@ -41,7 +41,7 @@ class KeywordUserService {
 }
 
 export interface KeywordUserServiceInterface {
-  checkIfKeywordSelected(userId: string, keywordId: string): Promise<boolean>;
+  isKeywordSelected(userId: string, keywordId: string): Promise<boolean>;
   selectKeyword(userId: string, keywordId: string, communityId: string): Promise<KeywordUser>;
   deselectKeyword(userId: string, keywordId: string): Promise<void>;
 }

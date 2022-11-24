@@ -27,7 +27,7 @@ class KeywordController implements ControllerInterface {
   // 여러 개 키워드 동시 추가 이벤트 추가하기
 
   // 키워드 선택 및 부재 시 생성
-  onSelectKeyword(socket: SocketWithUserId) {
+  onSelectKeyword(socket: SocketWithUserId): (input: selectKeywordInput, callback?: (error: any) => void) => void {
     return async (
       { communityId, keyword: keywordString }: selectKeywordInput,
       errorCallback?: (error: any) => void
@@ -40,7 +40,7 @@ class KeywordController implements ControllerInterface {
         const userId = socket.userId;
 
         // 2. 커뮤니티가 존재하는가?
-        if (!(await this.communityService.checkIfCommunityExist(communityId))) {
+        if (!(await this.communityService.isCommunityExist(communityId))) {
           throw new CommunityNotExistingError();
         }
 
@@ -60,7 +60,7 @@ class KeywordController implements ControllerInterface {
         }
 
         // 5. 키워드에 이미 참가하였는가?
-        if (await this.keywordUserService.checkIfKeywordSelected(userId, foundKeyword.id)) {
+        if (await this.keywordUserService.isKeywordSelected(userId, foundKeyword.id)) {
           throw new AlreadySelectedKeywordError();
         }
 
@@ -79,7 +79,7 @@ class KeywordController implements ControllerInterface {
     };
   }
 
-  onDeselectKeyword(socket: SocketWithUserId) {
+  onDeselectKeyword(socket: SocketWithUserId): (input: deselectKeywordInput, callback?: (error: any) => void) => void {
     return async ({ keywordId, communityId }: deselectKeywordInput, errorCallback?: (error: any) => void) => {
       try {
         // 1. 로그인 한 유저인가?
@@ -89,7 +89,7 @@ class KeywordController implements ControllerInterface {
         const userId = socket.userId;
 
         // 2. 커뮤니티가 존재하는가?
-        if (!(await this.communityService.checkIfCommunityExist(communityId))) {
+        if (!(await this.communityService.isCommunityExist(communityId))) {
           throw new CommunityNotExistingError();
         }
 
@@ -99,12 +99,12 @@ class KeywordController implements ControllerInterface {
         }
 
         // 4. 키워드가 존재하는가?
-        if (!(await this.keywordService.checkIfKeywordExistsInCommunityWithKeywordId(communityId, keywordId))) {
+        if (!(await this.keywordService.isKeywordIdExistsInCommunity(communityId, keywordId))) {
           throw new KeywordNotExistingError();
         }
 
         // 5. 키워드에 참가하였는가?
-        if (!(await this.keywordUserService.checkIfKeywordSelected(userId, keywordId))) {
+        if (!(await this.keywordUserService.isKeywordSelected(userId, keywordId))) {
           throw new KeywordNotSelectedError();
         }
 
@@ -129,4 +129,5 @@ class KeywordController implements ControllerInterface {
   }
 }
 
+export { KeywordController };
 export default new KeywordController(keywordService, KeywordUserService, CommunityUserService, CommunityService);

@@ -1,11 +1,9 @@
-import CommunityRepository, {
-  CommunityRepositoryInterface,
-} from './../repository/Community.repository';
+import CommunityRepository, { CommunityRepositoryInterface } from './../repository/Community.repository';
 
 class CommunityService implements CommunityServiceInterface {
   constructor(private readonly communityRepository: CommunityRepositoryInterface) {}
 
-  async checkIfCommunityExist(communityId: string): Promise<boolean> {
+  async isCommunityExist(communityId: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
       this.communityRepository.dataSource.transaction(async (em) => {
         this.communityRepository
@@ -18,7 +16,7 @@ class CommunityService implements CommunityServiceInterface {
 }
 
 export interface CommunityServiceInterface {
-  checkIfCommunityExist(communityId: string): Promise<boolean>;
+  isCommunityExist(communityId: string): Promise<boolean>;
 }
 
 export default new CommunityService(CommunityRepository);

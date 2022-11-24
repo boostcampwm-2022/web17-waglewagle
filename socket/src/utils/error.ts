@@ -6,50 +6,43 @@ class CustomSocketServerError extends Error {
   }
 }
 
-class IllegalInputError extends CustomSocketServerError {
-  constructor() {
-    super(errorMessageEnum.Illegal_Input_Error);
-  }
-}
-
 class UnauthorizedError extends CustomSocketServerError {
   constructor() {
-    super(errorMessageEnum.Unauthorized_Error);
+    super(errorMessageEnum.UNAUTHORIZED);
   }
 }
 
 class ForbiddenError extends CustomSocketServerError {
   constructor() {
-    super(errorMessageEnum.Forbidden_Error);
+    super(errorMessageEnum.FORBIDDEN);
   }
 }
 
 class CommunityNotExistingError extends CustomSocketServerError {
   constructor() {
-    super(errorMessageEnum.Community_Not_Existing);
+    super(errorMessageEnum.COMMUNITY_NOT_EXISTING);
   }
 }
 
 class AlreadySelectedKeywordError extends CustomSocketServerError {
   constructor() {
-    super(errorMessageEnum.Already_Selected_Keyword);
+    super(errorMessageEnum.AlREADY_SELECTED_KEYWORD);
   }
 }
 
 class KeywordNotExistingError extends CustomSocketServerError {
   constructor() {
-    super(errorMessageEnum.Keyword_Not_Existing);
+    super(errorMessageEnum.KEYWORD_NOT_EXiSTING);
   }
 }
 
 class KeywordNotSelectedError extends CustomSocketServerError {
   constructor() {
-    super(errorMessageEnum.Keyword_Not_Selected);
+    super(errorMessageEnum.KEYWORD_NOT_SELECTED);
   }
 }
 
 export {
-  IllegalInputError,
   UnauthorizedError,
   CommunityNotExistingError,
   AlreadySelectedKeywordError,
