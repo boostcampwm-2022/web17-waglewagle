@@ -1,8 +1,6 @@
 import { BubbleData } from '../../types/types';
 import styles from '@sass/components/community/KeywordBubble.module.scss';
 import classnames from 'classnames/bind';
-import { useEffect, useRef, useState } from 'react';
-import Circle from '../../circlepacker/Circle';
 const cx = classnames.bind(styles);
 
 interface KeywordBubbleProps {
@@ -11,46 +9,14 @@ interface KeywordBubbleProps {
 
 // requestAnimationFrame으로 이동
 const KeywordBubble = ({ bubbleData }: KeywordBubbleProps) => {
-  const requestAnimationId = useRef<number>(0);
-  const bubbleRef = useRef<HTMLDivElement | null>(null);
-  const [posX, setPosX] = useState<number>(0);
-  const [posY, setPosY] = useState<number>(0);
-
-  useEffect(() => {
-    const animate = () => {
-      const circle = new Circle(3, 3, 5, { x: 100, y: 100 }, 2);
-
-      console.log('시작');
-
-      const update = () => {
-        if (circle.isMoving) {
-          const { x, y } = circle.move();
-
-          setPosX(x);
-          setPosY(y);
-
-          requestAnimationId.current = requestAnimationFrame(update);
-        } else {
-          cancelAnimationFrame(requestAnimationId.current);
-          console.log('끝');
-        }
-      };
-
-      update();
-    };
-
-    animate();
-  }, []);
-
   return (
     <div
-      ref={bubbleRef}
       className={cx('bubble')}
       style={{
-        transform: `translate(${posX}px, ${posY}px)`,
-        width: `${bubbleData.radius * 5}px`,
-        height: `${bubbleData.radius * 5}px`,
-        fontSize: `${10 + bubbleData.radius * 1}px`,
+        transform: `translate(${bubbleData.circle.x}px, ${bubbleData.circle.y}px)`,
+        width: `${bubbleData.circle.radius * 5}px`,
+        height: `${bubbleData.circle.radius * 5}px`,
+        fontSize: `${10 + bubbleData.circle.radius * 1}px`,
       }}
     >
       <span>{bubbleData.keyword}</span>

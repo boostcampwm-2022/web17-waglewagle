@@ -1,4 +1,7 @@
+import Circle from '../circlepacker/Circle';
+
 export type KeywordData = {
+  keywordId: string;
   keyword: string;
   count: number;
 };
@@ -6,7 +9,5 @@ export type KeywordData = {
 export type BubbleData = {
   keyword: string;
   count: number;
-  posX: number;
-  posY: number;
-  radius: number;
+  circle: Circle;
 };

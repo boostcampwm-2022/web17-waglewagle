@@ -3,13 +3,15 @@ interface Vector {
   y: number;
 }
 
+const FRICTION = 2;
+
 class Circle {
   constructor(
+    public id: string,
     public x: number,
     public y: number,
     public radius: number,
     public velocity: Vector,
-    public friction: number,
   ) {}
 
   move() {
@@ -22,8 +24,8 @@ class Circle {
 
   // TODO: 비트 연산 써보기
   reduceVelocity() {
-    this.velocity.x /= this.friction;
-    this.velocity.y /= this.friction;
+    this.velocity.x /= FRICTION;
+    this.velocity.y /= FRICTION;
   }
 
   updatePosition() {
