@@ -20,16 +20,10 @@
       "@components/*": ["./components/*"],
       "@constants/*": ["./constants/*"],
       "@public/*": ["./public/*"],
-      "@sass/*": ["./sass/*"],
-      "@hooks/*": ["./hooks/*"],
-      "@utils/*": ["./utils/*"]
+      "@utils/*": ["./utils/*"],
+      "@sass/*": ["./sass/*"]
     }
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "components/home/HomeDescription.tsx"
-  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "util/trie.ts"],
   "exclude": ["node_modules"]
 }
