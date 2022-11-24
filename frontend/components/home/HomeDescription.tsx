@@ -5,10 +5,11 @@ import QuestionSolution from './QuestionSolution';
 import { useEffect, useRef } from 'react';
 import useScrollDrawSvg from '@hooks/useScrollDrawSvg';
 import useScrollChangeColor from '@hooks/useScrollChangeColor';
+import useSectionScroll from '@hooks/useSectionScroll';
 const cx = classnames.bind(styles);
 
 const HomeDescription = () => {
-  const pageRef = useRef<number>(0);
+  useSectionScroll(4); // 최대 페이지를 넣어주면 섹션별로 움직이도록
   const colorObserver = useScrollChangeColor();
   const svgObserver = useScrollDrawSvg();
 
@@ -18,26 +19,6 @@ const HomeDescription = () => {
   const solutionSvgRef = useRef<SVGSVGElement>(null);
   const manualArticleRef = useRef<HTMLElement>(null);
   const teamArticleRef = useRef<HTMLElement>(null);
-
-  const moveSectionScroll = (e: WheelEvent) => {
-    e.preventDefault();
-    // 아래 스크롤
-    if (e.deltaY > 0 && pageRef.current < 4) {
-      pageRef.current += 1;
-    }
-    if (e.deltaY < 0 && pageRef.current > 0) {
-      pageRef.current -= 1;
-    }
-
-    window.scrollTo(0, pageRef.current * window.innerHeight);
-  };
-
-  useEffect(() => {
-    window.addEventListener('wheel', moveSectionScroll, { passive: false });
-    return () => {
-      window.removeEventListener('wheel', moveSectionScroll);
-    };
-  }, []);
 
   useEffect(() => {
     if (colorObserver) {
