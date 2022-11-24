@@ -1,9 +1,3 @@
-@keyframes slide-up {
-  from {
-    translate: 10px;
-  }
-}
-
 .description {
   height: 400vh;
   display: flex;
@@ -23,13 +17,27 @@
   }
 }
 
+.description-title,
+.description-paragraph {
+  opacity: 0;
+  transition: all 0.5s ease-in;
+}
+
 .description-title {
-  font-size: 2rem;
+  margin: 30px;
+  font-size: 2.5rem;
   font-family: 'Nanum BugGeugSeong';
 }
 
 .description-paragraph {
-  text-align: center;
+  line-height: 160%;
+  text-indent: 10px;
+  font-size: 1.1rem;
+
+  &:last-child {
+    margin-top: 30px;
+    font-style: italic;
+  }
 }
 
 .color-default {
@@ -37,7 +45,10 @@
 }
 
 .color-changed {
-  color: blue;
+  .description-title,
+  .description-paragraph {
+    opacity: 1;
+  }
 }
 
 .svg-drawing {

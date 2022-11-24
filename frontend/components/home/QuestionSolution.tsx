@@ -116,4 +116,5 @@ const QuestionSolution = React.forwardRef(
   },
 );
 
+QuestionSolution.displayName = 'QuestionSolution'; // forwardRef는 별도로 설정해주어야한다.
 export default QuestionSolution;
