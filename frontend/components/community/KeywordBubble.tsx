@@ -9,17 +9,37 @@ interface KeywordBubbleProps {
   bubbleData: BubbleData;
 }
 
+// requestAnimationFrame으로 이동
 const KeywordBubble = ({ bubbleData }: KeywordBubbleProps) => {
+  const requestAnimationId = useRef<number>(0);
   const bubbleRef = useRef<HTMLDivElement | null>(null);
+  const [posX, setPosX] = useState<number>(0);
+  const [posY, setPosY] = useState<number>(0);
 
   useEffect(() => {
-    const circle = new Circle(1, 1, 1, { x: 1, y: 1 });
+    const animate = () => {
+      const circle = new Circle(3, 3, 5, { x: 100, y: 100 }, 2);
 
-    const test = () => {
-      console.log(circle);
+      console.log('시작');
+
+      const update = () => {
+        if (circle.isMoving) {
+          const { x, y } = circle.move();
+
+          setPosX(x);
+          setPosY(y);
+
+          requestAnimationId.current = requestAnimationFrame(update);
+        } else {
+          cancelAnimationFrame(requestAnimationId.current);
+          console.log('끝');
+        }
+      };
+
+      update();
     };
 
-    test();
+    animate();
   }, []);
 
   return (
@@ -27,7 +47,7 @@ const KeywordBubble = ({ bubbleData }: KeywordBubbleProps) => {
       ref={bubbleRef}
       className={cx('bubble')}
       style={{
-        transform: `translate(${bubbleData.posX}px, ${bubbleData.posY}px)`,
+        transform: `translate(${posX}px, ${posY}px)`,
         width: `${bubbleData.radius * 5}px`,
         height: `${bubbleData.radius * 5}px`,
         fontSize: `${10 + bubbleData.radius * 1}px`,
@@ -37,5 +57,95 @@ const KeywordBubble = ({ bubbleData }: KeywordBubbleProps) => {
     </div>
   );
 };
+
+// setInterval로 이동 => 0, 0부터 이동
+// const KeywordBubble = ({ bubbleData }: KeywordBubbleProps) => {
+//   const bubbleRef = useRef<HTMLDivElement | null>(null);
+//   const [posX, setPosX] = useState<number>(0);
+//   const [posY, setPosY] = useState<number>(0);
+
+//   useEffect(() => {
+//     const animate = () => {
+//       const circle = new Circle(3, 3, 5, { x: 100, y: 100 }, 3);
+
+//       const update = () => {
+//         if (circle.isMoving) {
+//           const { x, y } = circle.move();
+
+//           setPosX(x);
+//           setPosY(y);
+//         } else {
+//           clearInterval(intervalId);
+//           console.log('끝');
+//         }
+//       };
+
+//       update();
+
+//       const intervalId = setInterval(() => {
+//         update();
+//       }, 10);
+//     };
+
+//     animate();
+//   }, []);
+
+//   return (
+//     <div
+//       ref={bubbleRef}
+//       className={cx('bubble')}
+//       style={{
+//         transform: `translate(${posX}px, ${posY}px)`,
+//         width: `${bubbleData.radius * 5}px`,
+//         height: `${bubbleData.radius * 5}px`,
+//         fontSize: `${10 + bubbleData.radius * 1}px`,
+//       }}
+//     >
+//       <span>{bubbleData.keyword}</span>
+//     </div>
+//   );
+// };
+
+// ref로 구현한 버블차트
+
+// const KeywordBubble = ({ bubbleData }: KeywordBubbleProps) => {
+//   const bubbleRef = useRef<HTMLDivElement | null>(null);
+//   const [posX, setPosX] = useState<number>(0);
+//   const [posY, setPosY] = useState<number>(0);
+
+//   useEffect(() => {
+//     console.log('시작');
+
+//     const circle = new Circle(3, 3, 5, { x: 100, y: 100 }, 3);
+//     const intervalId = setInterval(() => {
+//       if (circle.isMoving) {
+//         const { x, y } = circle.move();
+//         if (bubbleRef.current) {
+//           bubbleRef.current.style.transform = `translate(${x}px, ${y}px)`;
+//         }
+//       } else {
+//         clearInterval(intervalId);
+//         console.log('끝');
+//       }
+//     }, 10);
+//   }, []);
+
+//   return (
+//     <div
+//       ref={bubbleRef}
+//       className={cx('bubble')}
+//       style={{
+//         // transform: `translate(${posX}px, ${posY}px)`,
+//         width: `${bubbleData.radius * 5}px`,
+//         height: `${bubbleData.radius * 5}px`,
+//         fontSize: `${10 + bubbleData.radius * 1}px`,
+//       }}
+//     >
+//       <span>{bubbleData.keyword}</span>
+//     </div>
+//   );
+// };
+
+// export default KeywordBubble;
 
 export default KeywordBubble;
