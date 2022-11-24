@@ -7,7 +7,7 @@ interface DefaultButtonProps {
   width: number;
   height: number;
   fontSize: number;
-  handleClick: () => void;
+  handleClick?: () => void;
 }
 
 const DefaultButton = ({
