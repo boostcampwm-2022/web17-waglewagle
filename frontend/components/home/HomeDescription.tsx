@@ -1,13 +1,13 @@
 import classnames from 'classnames/bind';
 import styles from '@sass/components/home/HomeDescription.module.scss';
-import QuestionProblem from './QuestionProblem';
-import QuestionSolution from './QuestionSolution';
 import { useEffect, useRef } from 'react';
 import useScrollDrawSvg from '@hooks/useScrollDrawSvg';
 import useScrollChangeColor from '@hooks/useScrollChangeColor';
 import useSectionScroll from '@hooks/useSectionScroll';
-import IntroduceProduct from './IntroduceProduct';
-import IntroduceTeam from './IntroduceTeam';
+import IntroduceProduct from '../common/svg/IntroduceProduct';
+import QuestionProblem from '@components/common/svg/QuestionProblem';
+import QuestionSolution from '@components/common/svg/QuestionSolution';
+import IntroduceTeam from '@components/common/svg/IntroduceTeam';
 const cx = classnames.bind(styles);
 
 const HomeDescription = () => {
@@ -64,7 +64,7 @@ const HomeDescription = () => {
 
   return (
     <section id='description' className={cx('description')}>
-      <article className={cx('color-default')} ref={problemArticleRef}>
+      <article className={cx('description-article')} ref={problemArticleRef}>
         <QuestionProblem ref={problemSvgRef} />
         <h3 className={cx('description-title')}>우리가 느낀 문제점</h3>
         <p className={cx('description-paragraph')}>
@@ -82,7 +82,7 @@ const HomeDescription = () => {
           어쩌면 우리에게는 관심사 접근성 개선이 필요했습니다.
         </p>
       </article>
-      <article className={cx('color-default')} ref={solutionArticleRef}>
+      <article className={cx('description-article')} ref={solutionArticleRef}>
         <QuestionSolution ref={solutionSvgRef} />
         <h3 className={cx('description-title')}>
           커뮤니티 내, 관심 키워드 시각화 서비스
@@ -96,7 +96,7 @@ const HomeDescription = () => {
           우리 커뮤니티에는 어떤 키워드가 가장 와글와글 할까요?
         </p>
       </article>
-      <article className={cx('color-default')} ref={manualArticleRef}>
+      <article className={cx('description-article')} ref={manualArticleRef}>
         <IntroduceProduct ref={productSvgRef} />
         <h3 className={cx('description-title')}>와글와글 사용법</h3>
         <p className={cx('description-paragraph')}>
@@ -111,7 +111,7 @@ const HomeDescription = () => {
         </p>
         <p className={cx('description-paragraph')}>해치지 않아요. 🐕</p>
       </article>
-      <article className={cx('color-default')} ref={teamArticleRef}>
+      <article className={cx('description-article')} ref={teamArticleRef}>
         <IntroduceTeam ref={teamSvgRef} />
         <h3 className={cx('description-title')}></h3>
         <p className={cx('description-paragraph')}>
