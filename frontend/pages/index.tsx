@@ -3,14 +3,10 @@ import {
   HomeLayout,
   HomeMainLayout,
   HomeTitle,
-  HomeDescriptionLayout,
   HomeChevronDown,
-  HomeProblem,
-  HomeProjectIntroduction,
-  HomeManual,
-  HomeTeamIntroduction,
 } from '@components/home';
 import StartButton from '@components/common/StartButton';
+import HomeDescription from '@components/home/HomeDescription';
 
 const Home = () => {
   return (
@@ -21,12 +17,7 @@ const Home = () => {
         <StartButton />
         <HomeChevronDown />
       </HomeMainLayout>
-      <HomeDescriptionLayout>
-        <HomeProblem />
-        <HomeProjectIntroduction />
-        <HomeManual />
-        <HomeTeamIntroduction />
-      </HomeDescriptionLayout>
+      <HomeDescription />
     </HomeLayout>
   );
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '@sass/components/home/HomeArticle.module.scss';
+import styles from '@sass/components/home/HomeDescription.module.scss';
 import classnames from 'classnames/bind';
 const cx = classnames.bind(styles);
 
