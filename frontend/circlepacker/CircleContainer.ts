@@ -18,14 +18,17 @@ class CircleContainer {
       vector.x = centralX - x;
     }
     if (x < centralX) {
-      vector.x = x - centralX;
+      vector.x = centralX - x;
     }
     if (y > centralY) {
       vector.y = centralY - y;
     }
     if (y < centralY) {
-      vector.y = y - centralY;
+      vector.y = centralY - y;
     }
+
+    vector.x /= 4;
+    vector.y /= 4;
 
     return vector;
   }
@@ -39,7 +42,13 @@ class CircleContainer {
 
   addCircle(circleId: string, radius: number) {
     const { x, y } = this.getRandPos();
-    const newCircle = new Circle(circleId, x, y, radius, { x: 100, y: 100 });
+    const newCircle = new Circle(
+      circleId,
+      x,
+      y,
+      radius,
+      this.calcInitVector(x, y),
+    );
     this.circles.push(newCircle);
 
     return newCircle;
@@ -49,12 +58,19 @@ class CircleContainer {
   update() {
     let isAllCircleStop = true;
 
-    this.circles.forEach((circle) => {
-      if (circle.isMoving) {
+    for (let i = 0; i < this.circles.length - 1; i++) {
+      const circleA = this.circles[i];
+      if (circleA.isMoving) {
         isAllCircleStop = false;
+        for (let j = i + 1; j < this.circles.length; j++) {
+          const circleB = this.circles[j];
+          if (this.checkIntersection(circleA, circleB)) {
+            console.log('충돌!!!!');
+          }
+        }
       }
-      circle.move();
-    });
+      circleA.move();
+    }
 
     if (isAllCircleStop) {
       this.isStatic = true;
@@ -63,11 +79,18 @@ class CircleContainer {
     }
   }
 
+  // 겹침 확인
+  checkIntersection(circleA: Circle, circleB: Circle) {
+    const distance = Math.hypot(circleA.x - circleB.x, circleA.y - circleB.y);
+    if (circleA.radius + circleB.radius > distance) {
+      return true;
+    }
+
+    return false;
+  }
+
   // // 겹침 발생시 속도를 변화시킴
   // handleCollision() {}
-
-  // // 겹침 확인
-  // checkIntersection() {}
 }
 
 export default CircleContainer;

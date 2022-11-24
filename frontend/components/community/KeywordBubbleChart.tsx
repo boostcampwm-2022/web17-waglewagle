@@ -67,7 +67,13 @@ const KeywordBubbleChart = ({ communityKeywordData }: KeywordBubbleChart) => {
   return (
     <div className={cx('chart-container')}>
       {bubbleDataList.map((bubbleData, index) => (
-        <KeywordBubble key={index} bubbleData={bubbleData} />
+        <KeywordBubble
+          key={index}
+          keyword={bubbleData.keyword}
+          posX={bubbleData.circle.x}
+          posY={bubbleData.circle.y}
+          radius={bubbleData.circle.radius}
+        />
       ))}
     </div>
   );

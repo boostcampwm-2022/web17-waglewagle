@@ -5,11 +5,14 @@ import { useState } from 'react';
 const cx = classnames.bind(styles);
 
 interface KeywordBubbleProps {
-  bubbleData: BubbleData;
+  keyword: string;
+  posX: number;
+  posY: number;
+  radius: number;
 }
 
 // requestAnimationFrame으로 이동
-const KeywordBubble = ({ bubbleData }: KeywordBubbleProps) => {
+const KeywordBubble = ({ keyword, posX, posY, radius }: KeywordBubbleProps) => {
   // TODO : 이거... 맞아...?
   const [isHover, setIsHover] = useState<boolean>(false);
 
@@ -27,17 +30,15 @@ const KeywordBubble = ({ bubbleData }: KeywordBubbleProps) => {
       onMouseLeave={handleMouseLeave}
       className={cx('bubble')}
       style={{
-        transform: `translate(${
-          bubbleData.circle.x - bubbleData.circle.radius
-        }px, ${bubbleData.circle.y - bubbleData.circle.radius}px) scale(${
+        transform: `translate(${posX - radius}px, ${posY - radius}px) scale(${
           isHover ? 1.2 : 1.0
         })`,
-        width: `${bubbleData.circle.radius * 5}px`,
-        height: `${bubbleData.circle.radius * 5}px`,
-        fontSize: `${10 + bubbleData.circle.radius * 1}px`,
+        width: `${radius * 5}px`,
+        height: `${radius * 5}px`,
+        fontSize: `${10 + radius * 1}px`,
       }}
     >
-      <span>{bubbleData.keyword}</span>
+      <span>{keyword}</span>
     </div>
   );
 };
