@@ -1,5 +1,14 @@
+@keyframes slide-up {
+  from {
+    translate: 10px;
+  }
+}
+
 .description {
   height: 400vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
   article {
     height: 100vh;
@@ -7,7 +16,20 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
+    gap: 20px;
+
+    animation: slide-up;
   }
+}
+
+.description-title {
+  font-size: 2rem;
+  font-family: 'Nanum BugGeugSeong';
+}
+
+.description-paragraph {
+  text-align: center;
 }
 
 .color-default {
