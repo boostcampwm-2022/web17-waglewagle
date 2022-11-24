@@ -1,11 +1,10 @@
 import Circle from './Circle';
 
 class CircleContainer {
-  public circles: Circle[];
+  public circles: Circle[] = [];
+  public isStatic = false; // '나를 조금만 더 믿어줘 에러' 타입스크립트가 너무 추론이 쉬운건 타입 쓰지 말라는 에러가 뜸. 찾아보니 진짜라서 지움.
 
-  constructor(private width: number, private height: number) {
-    this.circles = [];
-  }
+  constructor(private width: number, private height: number) {}
 
   calcInitVector(x: number, y: number) {
     const centralX = this.width / 2;
@@ -40,20 +39,29 @@ class CircleContainer {
 
   addCircle(circleId: string, radius: number) {
     const { x, y } = this.getRandPos();
-    const newCircle = new Circle(
-      circleId,
-      x,
-      y,
-      radius,
-      this.calcInitVector(x, y),
-    );
+    const newCircle = new Circle(circleId, x, y, radius, { x: 100, y: 100 });
     this.circles.push(newCircle);
 
     return newCircle;
   }
 
   // 화면 갱신
-  // update() {}
+  update() {
+    let isAllCircleStop = true;
+
+    this.circles.forEach((circle) => {
+      if (circle.isMoving) {
+        isAllCircleStop = false;
+      }
+      circle.move();
+    });
+
+    if (isAllCircleStop) {
+      this.isStatic = true;
+    } else {
+      this.isStatic = false;
+    }
+  }
 
   // // 겹침 발생시 속도를 변화시킴
   // handleCollision() {}

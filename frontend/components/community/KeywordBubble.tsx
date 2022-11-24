@@ -1,7 +1,7 @@
 import { BubbleData } from '../../types/types';
 import styles from '@sass/components/community/KeywordBubble.module.scss';
 import classnames from 'classnames/bind';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 const cx = classnames.bind(styles);
 
 interface KeywordBubbleProps {

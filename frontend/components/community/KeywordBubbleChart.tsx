@@ -13,6 +13,7 @@ interface KeywordBubbleChart {
 
 const KeywordBubbleChart = ({ communityKeywordData }: KeywordBubbleChart) => {
   const [bubbleDataList, setBubbleDataList] = useState<BubbleData[]>([]);
+  const requestAnimationId = useRef<number>(0);
   const circleContainerRef = useRef<CircleContainer | null>(null);
 
   const getBubbleData = (keywordData: KeywordData, circleData: Circle) => {
@@ -23,17 +24,31 @@ const KeywordBubbleChart = ({ communityKeywordData }: KeywordBubbleChart) => {
     };
   };
 
-  useEffect(() => {
-    circleContainerRef.current = new CircleContainer(
-      window.innerWidth,
-      window.innerHeight,
-    );
-  }, []);
+  const animate = () => {
+    const update = () => {
+      if (circleContainerRef.current?.isStatic) {
+        cancelAnimationFrame(requestAnimationId.current);
+        return;
+      }
+
+      circleContainerRef.current?.update();
+      requestAnimationId.current = requestAnimationFrame(update);
+    };
+
+    update();
+  };
 
   useEffect(() => {
+    if (!circleContainerRef.current) {
+      circleContainerRef.current = new CircleContainer(
+        window.innerWidth,
+        window.innerHeight,
+      );
+    }
+
     const bubbleDataArray = communityKeywordData.map((keywordData) => {
       const radius = keywordData.count * 10;
-      const circleData = circleContainerRef.current.addCircle(
+      const circleData = circleContainerRef.current!.addCircle(
         keywordData.keywordId,
         radius,
       );
@@ -42,6 +57,12 @@ const KeywordBubbleChart = ({ communityKeywordData }: KeywordBubbleChart) => {
 
     setBubbleDataList(bubbleDataArray);
   }, [communityKeywordData]);
+
+  useEffect(() => {
+    if (bubbleDataList.length) {
+      animate();
+    }
+  }, [bubbleDataList]);
 
   return (
     <div className={cx('chart-container')}>
