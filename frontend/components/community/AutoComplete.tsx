@@ -37,12 +37,17 @@ const AutoComplete = ({ communityKeywordData }: AutoCompleteProps) => {
   };
 
   useEffect(() => {
-    communityKeywordData.forEach((word) => {
-      searchEngine.insert(word);
-    });
+    if (communityKeywordData.length) {
+      communityKeywordData.forEach((keywordData) => {
+        searchEngine.insert({
+          keyword: keywordData.keyword,
+          count: keywordData.count,
+        });
+      });
 
-    setSearchResult(communityKeywordData.map(({ keyword }) => keyword));
-  }, []);
+      setSearchResult(communityKeywordData.map(({ keyword }) => keyword));
+    }
+  }, [communityKeywordData]);
 
   return (
     <div className={cx('auto-complete')}>
