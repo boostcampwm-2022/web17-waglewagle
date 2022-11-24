@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { BubbleData, KeywordData } from '../../types/types';
 import KeywordBubble from './KeywordBubble';
 import styles from '@sass/components/community/KeywordBubbleChart.module.scss';
@@ -7,14 +7,13 @@ import CircleContainer from '../../circlepacker/CircleContainer';
 import Circle from '../../circlepacker/Circle';
 const cx = classnames.bind(styles);
 
-const circleContainer = new CircleContainer(1000, 1000);
-
 interface KeywordBubbleChart {
   communityKeywordData: KeywordData[];
 }
 
 const KeywordBubbleChart = ({ communityKeywordData }: KeywordBubbleChart) => {
   const [bubbleDataList, setBubbleDataList] = useState<BubbleData[]>([]);
+  const circleContainerRef = useRef<CircleContainer | null>(null);
 
   const getBubbleData = (keywordData: KeywordData, circleData: Circle) => {
     return {
@@ -25,9 +24,16 @@ const KeywordBubbleChart = ({ communityKeywordData }: KeywordBubbleChart) => {
   };
 
   useEffect(() => {
+    circleContainerRef.current = new CircleContainer(
+      window.innerWidth,
+      window.innerHeight,
+    );
+  }, []);
+
+  useEffect(() => {
     const bubbleDataArray = communityKeywordData.map((keywordData) => {
       const radius = keywordData.count * 10;
-      const circleData = circleContainer.addCircle(
+      const circleData = circleContainerRef.current.addCircle(
         keywordData.keywordId,
         radius,
       );

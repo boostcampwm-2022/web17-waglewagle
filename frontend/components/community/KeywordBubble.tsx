@@ -1,6 +1,7 @@
 import { BubbleData } from '../../types/types';
 import styles from '@sass/components/community/KeywordBubble.module.scss';
 import classnames from 'classnames/bind';
+import { useEffect, useState } from 'react';
 const cx = classnames.bind(styles);
 
 interface KeywordBubbleProps {
@@ -9,11 +10,28 @@ interface KeywordBubbleProps {
 
 // requestAnimationFrame으로 이동
 const KeywordBubble = ({ bubbleData }: KeywordBubbleProps) => {
+  // TODO : 이거... 맞아...?
+  const [isHover, setIsHover] = useState<boolean>(false);
+
+  const handleMouseEnter = () => {
+    setIsHover(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHover(false);
+  };
+
   return (
     <div
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       className={cx('bubble')}
       style={{
-        transform: `translate(${bubbleData.circle.x}px, ${bubbleData.circle.y}px)`,
+        transform: `translate(${
+          bubbleData.circle.x - bubbleData.circle.radius
+        }px, ${bubbleData.circle.y - bubbleData.circle.radius}px) scale(${
+          isHover ? 1.2 : 1.0
+        })`,
         width: `${bubbleData.circle.radius * 5}px`,
         height: `${bubbleData.circle.radius * 5}px`,
         fontSize: `${10 + bubbleData.circle.radius * 1}px`,
