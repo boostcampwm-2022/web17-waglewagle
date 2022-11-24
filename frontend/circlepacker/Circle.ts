@@ -3,7 +3,7 @@ interface Vector {
   y: number;
 }
 
-const FRICTION = 2;
+const FRICTION = 1.1;
 
 class Circle {
   constructor(
@@ -42,7 +42,7 @@ class Circle {
 
   get isMoving() {
     // velocity가 높아지면 잔움직임이 적어진다.
-    if (Math.abs(this.velocity.x) > 0.1 && Math.abs(this.velocity.y) > 0.1) {
+    if (Math.abs(this.velocity.x) > 0.01 && Math.abs(this.velocity.y) > 0.01) {
       return true;
     }
 

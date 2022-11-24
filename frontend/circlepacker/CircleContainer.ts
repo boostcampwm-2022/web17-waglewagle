@@ -27,8 +27,8 @@ class CircleContainer {
       vector.y = centralY - y;
     }
 
-    vector.x /= 4;
-    vector.y /= 4;
+    vector.x /= 8;
+    vector.y /= 8;
 
     return vector;
   }
@@ -65,7 +65,7 @@ class CircleContainer {
         for (let j = i + 1; j < this.circles.length; j++) {
           const circleB = this.circles[j];
           if (this.checkIntersection(circleA, circleB)) {
-            console.log('충돌!!!!');
+            this.handleCollision(circleA, circleB);
           }
         }
       }
@@ -82,7 +82,7 @@ class CircleContainer {
   // 겹침 확인
   checkIntersection(circleA: Circle, circleB: Circle) {
     const distance = Math.hypot(circleA.x - circleB.x, circleA.y - circleB.y);
-    if (circleA.radius + circleB.radius > distance) {
+    if ((circleA.radius + circleB.radius) * 1.1 > distance) {
       return true;
     }
 
@@ -90,7 +90,12 @@ class CircleContainer {
   }
 
   // // 겹침 발생시 속도를 변화시킴
-  // handleCollision() {}
+  handleCollision(circleA: Circle, circleB: Circle) {
+    circleA.velocity.x -= circleA.velocity.x * 3;
+    circleA.velocity.y -= circleA.velocity.y * 3;
+    circleB.velocity.x -= circleB.velocity.x * 3;
+    circleB.velocity.y -= circleB.velocity.y * 3;
+  }
 }
 
 export default CircleContainer;
