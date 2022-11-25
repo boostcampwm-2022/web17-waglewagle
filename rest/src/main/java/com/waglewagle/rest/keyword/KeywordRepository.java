@@ -11,6 +11,8 @@ import java.util.List;
 
 //import static이 뭐더라;;;
 import static com.waglewagle.rest.keywordUser.QKeywordUser.keywordUser;
+import static com.waglewagle.rest.keyword.QKeyword.keyword1;
+import static com.waglewagle.rest.community.QCommunity.community;
 
 @Repository
 @RequiredArgsConstructor
@@ -22,6 +24,15 @@ public class KeywordRepository {
     public Keyword findOne(Long keywordId) {
         return em.find(Keyword.class, keywordId);
     }
+
+    public List<Keyword> findAllByCommunityId(Long communityId) {
+        return jpaQueryFactory
+                .selectFrom(keyword1)
+                .innerJoin(keyword1.community, community)
+                .where(community.id.eq(communityId))
+                .fetch(); //TODO: fetchJoin?
+    }
+
     public List<Keyword> findAssociatedKeywords(Keyword keyword) {
 
         return jpaQueryFactory

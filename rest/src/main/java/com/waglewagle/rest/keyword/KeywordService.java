@@ -5,6 +5,7 @@ import com.waglewagle.rest.keyword.association.AssociationDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,5 +33,27 @@ public class KeywordService {
     public List<Keyword> calcAssociatedKeywordsByUser(Long userId) {
 
         return null;
+    }
+
+    //TODO: N+1 문제에 해당되는지 체크(각 keyword마다 keywordUser 테이블 조회할 때)
+    //TODO: stream사용해서 함수형으로 짜
+    public List<KeywordDTO> getKeywordListInCommunity(Long communityId) {
+
+        List<Keyword> allKeywordInCommunity = keywordRepository.findAllByCommunityId(communityId);
+        List<KeywordDTO> responseList = new ArrayList<>();
+
+        for (Keyword keyword : allKeywordInCommunity) {
+
+            responseList.add(
+                    new KeywordDTO(
+                            String.valueOf(keyword.getId()),
+                            keyword.getKeyword(),
+                            keyword.getKeywordUsers().size()
+                    )
+            );
+        }
+
+        return responseList;
+//        return allKeywordInCommunity.stream().forEach(keyword -> new KeywordDTO(keyword.getId().toString(), keyword.getKeyword(), keyword.getKeywordUsers().size())).collect(Collectors.toList());
     }
 }
