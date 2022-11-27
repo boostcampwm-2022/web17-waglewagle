@@ -1,15 +1,14 @@
 package com.waglewagle.rest.keyword.association;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @AllArgsConstructor
-@Getter @ToString
-//@RequiredArgsConstructor TODO: RequiredArgsConstructor 문제점? - https://dev-code-notepad.tistory.com/153
+@Getter @Setter
+@ToString
 public class AssociationDTO {
     String keywordId;
     String keywordName;
+    //TODO: DumbAssociateCalculator와 의존성이 짙어지는 것 같아 나중에 지울 변수
+    Integer count;
     Integer rank;
 }

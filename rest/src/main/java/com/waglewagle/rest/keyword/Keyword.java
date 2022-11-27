@@ -49,8 +49,6 @@ public class Keyword {
 
     private LocalDateTime deletedAt;
 
-    //CasecadeType???
-    //TODO: 안썼다! >> keywordUserRepository쓰지 말고 keywordUser를 keyword로 부터 접근하라던데...
     @OneToMany(mappedBy = "keyword", cascade = CascadeType.ALL)
     private List<KeywordUser> keywordUsers = new ArrayList<>();
 }
