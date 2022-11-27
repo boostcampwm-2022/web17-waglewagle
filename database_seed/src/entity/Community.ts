@@ -21,7 +21,7 @@ export class Community extends BaseEntity {
   @PrimaryGeneratedColumn('increment', { name: 'id', type: 'bigint' })
   id: string;
 
-  @Column('varchar', { name: 'summary', nullable: true, length: 255 })
+  @Column('varchar', { name: 'summary', nullable: true, length: 1000 })
   summary: string | null;
 
   @Column('varchar', { name: 'title', nullable: true, length: 255 })
