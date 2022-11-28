@@ -29,15 +29,15 @@ const Community = () => {
   useEffect(() => {
     // TODO : 나중에는 서버에서 받아와야한다.
     const mockWordList = [
-      { keyword: '가', count: 3 },
-      { keyword: '다', count: 3 },
-      { keyword: '나', count: 3 },
-      { keyword: '가나', count: 3 },
-      { keyword: '가다', count: 3 },
-      { keyword: '가나다', count: 2 },
-      { keyword: '가나라', count: 3 },
-      { keyword: '가나라마', count: 3 },
-      { keyword: '가나라마바사아자카파타하', count: 5 },
+      { keyword: '가', count: 3, keywordId: '1' },
+      { keyword: '다', count: 3, keywordId: '2' },
+      { keyword: '나', count: 3, keywordId: '3' },
+      { keyword: '가나', count: 3, keywordId: '4' },
+      { keyword: '가다', count: 3, keywordId: '5' },
+      { keyword: '가나다', count: 2, keywordId: '6' },
+      { keyword: '가나라', count: 3, keywordId: '7' },
+      { keyword: '가나라마', count: 3, keywordId: '8' },
+      { keyword: '가나라마바사아자카파타하', count: 5, keywordId: '9' },
     ];
 
     const username = localStorage.getItem('waglewagle-username');

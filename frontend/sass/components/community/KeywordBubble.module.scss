@@ -2,6 +2,8 @@
 
 .bubble {
   position: absolute;
+  top: 0;
+  left: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -10,7 +12,6 @@
   transition: all 0.3s ease-in-out;
   &:hover {
     border: 1px solid $primary-color;
-    scale: 1.2;
     background-color: $off-white-color;
     cursor: pointer;
     span {
