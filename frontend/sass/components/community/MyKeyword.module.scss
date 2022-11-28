@@ -1,0 +1,26 @@
+@import '@sass/variables.scss';
+
+@mixin button-interaction {
+  &:hover {
+    cursor: pointer;
+  }
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.keyword-item {
+  display: flex;
+  gap: 3px;
+}
+
+.delete-button {
+  width: 12px;
+  height: 12px;
+  background-color: $red-color;
+  color: $off-white-color;
+  border: none;
+  border-radius: 50%;
+  font-size: 10px;
+  @include button-interaction;
+}

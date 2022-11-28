@@ -1,0 +1,33 @@
+@import '@sass/variables.scss';
+
+.bubble {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: $primary-color;
+  transition: all 0.3s ease-in-out;
+  &:hover {
+    border: 1px solid $primary-color;
+    background-color: $off-white-color;
+    cursor: pointer;
+    span {
+      color: $primary-color;
+    }
+  }
+
+  span {
+    display: block;
+    width: 90%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    color: $off-white-color;
+    text-align: center;
+    font-family: 'Nanum BugGeugSeong';
+    transition: background-color 0.1s ease-in;
+  }
+}
