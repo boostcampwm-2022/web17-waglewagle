@@ -93,6 +93,7 @@ const KeywordAddModal = () => {
               />
               <button className={cx('keyword-add-button')}>추가하기</button>
             </form>
+            {/* TODO: 리팩토링때 추상화시켜서 공통으로 쓰기*/}
             {isOpenDropdown && (
               <ul className={cx('search-result-list')}>
                 {searchResult.map((word) => (
@@ -101,7 +102,6 @@ const KeywordAddModal = () => {
               </ul>
             )}
           </div>
-
           {/* 키워드 추천은 추가 섹션과 기능적으로 연관되어있다고 할 수 있을까? */}
           <KeywordAssociated />
         </section>
