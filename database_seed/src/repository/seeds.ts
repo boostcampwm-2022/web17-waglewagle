@@ -199,18 +199,25 @@ dataSource.initialize().then(async (dataSource) => {
   await dataSource.createQueryBuilder().insert().into(Keyword).values(keywords).execute();
   console.log('2-4 keywords 완료!');
 
-  await Promise.all(
-    keywordUsers.map((keywordUser) => {
-      dataSource.createQueryBuilder().insert().into(KeywordUser).values(keywordUser);
-    })
-  );
+  const keywordUsersBatch: KeywordUser[][] = [];
+  for (let i = 0; i < Math.min(); i++) {
+    keywordUsersBatch.push(keywordUsers.slice(i * 1000, (i + 1) * 1000));
+    if ((i + 1) * 1000 > keywordUsers.length) break;
+  }
+  for (const keywordUsers of keywordUsersBatch) {
+    await dataSource.createQueryBuilder().insert().into(KeywordUser).values(keywordUsers).execute();
+  }
+
   console.log('2-5 keywordUsers 완료!');
 
-  await Promise.all(
-    threads.map((thread) => {
-      dataSource.createQueryBuilder().insert().into(Thread).values(thread);
-    })
-  );
+  const threadBatch: Thread[][] = [];
+  for (let i = 0; i < Math.min(); i++) {
+    threadBatch.push(threads.slice(i * 1000, (i + 1) * 1000));
+    if ((i + 1) * 1000 > threads.length) break;
+  }
+  for (const threads of threadBatch) {
+    await dataSource.createQueryBuilder().insert().into(Thread).values(threads).execute();
+  }
   console.log('2-6 threads 완료!');
 
   process.exit();
