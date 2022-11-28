@@ -34,4 +34,22 @@ public class UserController {
         LoginResponseDTO loginResponseDTO = new LoginResponseDTO(true, userId);
         return ResponseEntity.ok(loginResponseDTO);
     }
+
+    @PutMapping("/profile")
+    @ResponseBody
+    public ResponseEntity<UpdateProfileResponseDTO> updateProfile(@RequestBody UpdateProfileDTO updateProfileDTO, @CookieValue(name = "user_id") Long userId) {
+
+        if(updateProfileDTO.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        User user = userService.updateUserProfile(userId, updateProfileDTO);
+        if (Objects.isNull(user)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        UpdateProfileResponseDTO updateProfileResponseDTO = new UpdateProfileResponseDTO(user);
+
+        return ResponseEntity.ok(updateProfileResponseDTO);
+    }
 }

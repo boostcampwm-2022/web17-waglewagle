@@ -1,5 +1,6 @@
 package com.waglewagle.rest.user;
 
+import com.waglewagle.rest.user.dto.UpdateProfileDTO;
 import lombok.Getter;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
@@ -45,6 +46,16 @@ public class User {
 
     public void setOauthKey(String oauthKey) {
         this.oauthKey = oauthKey;
+    }
+
+    public void updateProfile(UpdateProfileDTO updateProfileDTO) {
+        if (updateProfileDTO.getProfileImageUrl() != null){
+            profileImageUrl = updateProfileDTO.getProfileImageUrl();
+        }
+
+        if (updateProfileDTO.getUsername() != null){
+            username = updateProfileDTO.getUsername();
+        }
     }
 }
 
