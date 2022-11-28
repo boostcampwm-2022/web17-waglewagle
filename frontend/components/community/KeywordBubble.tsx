@@ -32,10 +32,10 @@ const KeywordBubble = ({ keyword, posX, posY, radius }: KeywordBubbleProps) => {
       style={{
         transform: `translate(${posX - radius}px, ${posY - radius}px) scale(${
           isHover ? 1.2 : 1.0
-        })`,
-        width: `${radius * 5}px`,
-        height: `${radius * 5}px`,
-        fontSize: `${10 + radius * 1}px`,
+        })`, // 원의 중앙이 좌표와 일치할 수 있도록 tranform
+        width: `${radius * 2}px`,
+        height: `${radius * 2}px`,
+        fontSize: `${10 + radius * 0.2}px`,
       }}
     >
       <span>{keyword}</span>
