@@ -143,15 +143,9 @@ dataSource.initialize().then(async (dataSource) => {
 
   console.log('1-4 keywords 완료!');
 
-  // 어떤 커뮤니티에 어떤 키워드가 있고, 누가 만들었는가?
-  communityToKeyword;
-  // 어떤 커뮤니티에 누가 있는가?
-  communityToUser;
-  // 이거 조금 더 늘려야함
   const keywordUsers: KeywordUser[] = [];
   keywords.forEach(({ id: keywordId, authorId, communityId }) => {
     {
-      // 키워드 만든 놈 건 이미 넣었음!
       const keywordUser = new KeywordUser();
       keywordUser.communityId = communityId;
       keywordUser.userId = authorId;
@@ -204,29 +198,38 @@ dataSource.initialize().then(async (dataSource) => {
   console.log('2-3 communityUsers 완료!');
   await dataSource.createQueryBuilder().insert().into(Keyword).values(keywords).execute();
   console.log('2-4 keywords 완료!');
-  // await dataSource.createQueryBuilder().insert().into(KeywordUser).values(keywordUsers).execute();
+  await dataSource.createQueryBuilder().insert().into(KeywordUser).values(keywordUsers).execute();
 
-  const keywordUsersBatch: KeywordUser[][] = [];
-  for (let i = 0; i < Math.min(); i++) {
-    keywordUsersBatch.push(keywordUsers.slice(i * 1000, (i + 1) * 1000));
-    if ((i + 1) * 1000 > keywordUsers.length) break;
-  }
-  for (const keywordUsers of keywordUsersBatch) {
-    await dataSource.createQueryBuilder().insert().into(KeywordUser).values(keywordUsers).execute();
-  }
-
+  // const keywordUsersBatch: KeywordUser[][] = [];
+  // for (let i = 0; i < Math.min(); i++) {
+  //   keywordUsersBatch.push(keywordUsers.slice(i * 1000, (i + 1) * 1000));
+  //   if ((i + 1) * 1000 > keywordUsers.length) break;
+  // }
+  // for (const keywordUsers of keywordUsersBatch) {
+  //   await dataSource.createQueryBuilder().insert().into(KeywordUser).values(keywordUsers).execute();
+  // }
+  await Promise.all(
+    keywordUsers.map((keywordUser) => {
+      dataSource.createQueryBuilder().insert().into(KeywordUser).values(keywordUser);
+    })
+  );
   console.log('2-5 keywordUsers 완료!');
 
   // await dataSource.createQueryBuilder().insert().into(Thread).values(threads).execute();
-  // 답은 batch였다... 쓰레기 ORM이다...
-  const threadBatch: Thread[][] = [];
-  for (let i = 0; i < Math.min(); i++) {
-    threadBatch.push(threads.slice(i * 1000, (i + 1) * 1000));
-    if ((i + 1) * 1000 > threads.length) break;
-  }
-  for (const threads of threadBatch) {
-    await dataSource.createQueryBuilder().insert().into(Thread).values(threads).execute();
-  }
+  // // 답은 하나씩이었다....
+  // const threadBatch: Thread[][] = [];
+  // for (let i = 0; i < Math.min(); i++) {
+  //   threadBatch.push(threads.slice(i * 1000, (i + 1) * 1000));
+  //   if ((i + 1) * 1000 > threads.length) break;
+  // }
+  // for (const threads of threadBatch) {
+  //   await dataSource.createQueryBuilder().insert().into(Thread).values(threads).execute();
+  // }
+  await Promise.all(
+    threads.map((thread) => {
+      dataSource.createQueryBuilder().insert().into(Thread).values(thread);
+    })
+  );
   console.log('2-6 threads 완료!');
 
   process.exit();
