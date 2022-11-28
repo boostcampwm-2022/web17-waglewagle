@@ -198,16 +198,7 @@ dataSource.initialize().then(async (dataSource) => {
   console.log('2-3 communityUsers 완료!');
   await dataSource.createQueryBuilder().insert().into(Keyword).values(keywords).execute();
   console.log('2-4 keywords 완료!');
-  await dataSource.createQueryBuilder().insert().into(KeywordUser).values(keywordUsers).execute();
 
-  // const keywordUsersBatch: KeywordUser[][] = [];
-  // for (let i = 0; i < Math.min(); i++) {
-  //   keywordUsersBatch.push(keywordUsers.slice(i * 1000, (i + 1) * 1000));
-  //   if ((i + 1) * 1000 > keywordUsers.length) break;
-  // }
-  // for (const keywordUsers of keywordUsersBatch) {
-  //   await dataSource.createQueryBuilder().insert().into(KeywordUser).values(keywordUsers).execute();
-  // }
   await Promise.all(
     keywordUsers.map((keywordUser) => {
       dataSource.createQueryBuilder().insert().into(KeywordUser).values(keywordUser);
@@ -215,16 +206,6 @@ dataSource.initialize().then(async (dataSource) => {
   );
   console.log('2-5 keywordUsers 완료!');
 
-  // await dataSource.createQueryBuilder().insert().into(Thread).values(threads).execute();
-  // // 답은 하나씩이었다....
-  // const threadBatch: Thread[][] = [];
-  // for (let i = 0; i < Math.min(); i++) {
-  //   threadBatch.push(threads.slice(i * 1000, (i + 1) * 1000));
-  //   if ((i + 1) * 1000 > threads.length) break;
-  // }
-  // for (const threads of threadBatch) {
-  //   await dataSource.createQueryBuilder().insert().into(Thread).values(threads).execute();
-  // }
   await Promise.all(
     threads.map((thread) => {
       dataSource.createQueryBuilder().insert().into(Thread).values(thread);
