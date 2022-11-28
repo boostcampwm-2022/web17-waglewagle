@@ -17,7 +17,7 @@ const App = ({ Component, pageProps }: AppProps) => {
   }(window, 'c0bb5fef'));
         `}
       </Script>
-      <Component {...pageProps} />;
+      <Component {...pageProps} />
     </>
   );
 };

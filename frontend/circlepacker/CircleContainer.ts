@@ -1,6 +1,7 @@
 import Circle from './Circle';
 
-const REPULSIVE_COEFFICIENT = 0.07;
+const REPULSIVE_COEFFICIENT = 0.6;
+const COLLISION_COEFFICIENT = 0.1;
 
 class CircleContainer {
   public circles: Circle[] = [];
@@ -16,18 +17,9 @@ class CircleContainer {
       y: 0,
     };
 
-    if (x > centralX) {
-      vector.x = centralX - x;
-    }
-    if (x < centralX) {
-      vector.x = centralX - x;
-    }
-    if (y > centralY) {
-      vector.y = centralY - y;
-    }
-    if (y < centralY) {
-      vector.y = centralY - y;
-    }
+    // 초기 중력
+    vector.x = centralX - x;
+    vector.y = centralY - y;
 
     vector.x /= 20;
     vector.y /= 20;
@@ -63,15 +55,14 @@ class CircleContainer {
 
     for (let i = 0; i < this.circles.length; i++) {
       const circleA = this.circles[i];
-      if (circleA.isMoving) {
-        isAllCircleStop = false;
-        for (let j = i + 1; j < this.circles.length; j++) {
-          const circleB = this.circles[j];
-          if (this.checkIntersection(circleA, circleB)) {
-            this.handleCollision(circleA, circleB);
-          }
+      isAllCircleStop = false;
+      for (let j = i + 1; j < this.circles.length; j++) {
+        const circleB = this.circles[j];
+        if (this.checkIntersection(circleA, circleB)) {
+          this.handleCollision(circleA, circleB);
         }
       }
+      this.applyGravity(circleA);
       this.handleWallCollision(circleA);
       circleA.move();
     }
@@ -118,9 +109,10 @@ class CircleContainer {
     repulsiveForce: number,
   ) {
     return (
-      speedA +
-      (2 * massB * (speedB - speedA)) / (massA + massB) +
-      repulsiveForce * REPULSIVE_COEFFICIENT
+      (speedA +
+        (2 * massB * (speedB - speedA)) / (massA + massB) +
+        repulsiveForce * REPULSIVE_COEFFICIENT) *
+      COLLISION_COEFFICIENT
     );
   }
 
@@ -166,8 +158,18 @@ class CircleContainer {
   handleCollision(circleA: Circle, circleB: Circle) {
     const { afterCircleAVelocity, afterCircleBVelocity } =
       this.caculateCollisionVector(circleA, circleB);
+
     circleA.velocity = afterCircleAVelocity;
     circleB.velocity = afterCircleBVelocity;
+  }
+
+  applyGravity(circle: Circle) {
+    const centralX = this.width / 2;
+    const centralY = this.height / 2;
+    const gravityX = centralX - circle.x;
+    const gravityY = centralY - circle.y;
+    circle.x += gravityX / 98;
+    circle.y += gravityY / 98;
   }
 }
 
