@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 import { BubbleData, KeywordData } from '../../types/types';
 import KeywordBubble from './KeywordBubble';
@@ -5,22 +6,37 @@ import styles from '@sass/components/community/KeywordBubbleChart.module.scss';
 import classnames from 'classnames/bind';
 import CircleContainer from '../../circlepacker/CircleContainer';
 import Circle from '../../circlepacker/Circle';
+import apis from '../../apis/apis';
+import { useRouter } from 'next/router';
 const cx = classnames.bind(styles);
 
-interface KeywordBubbleChart {
-  communityKeywordData: KeywordData[];
-}
-
-const KeywordBubbleChart = ({ communityKeywordData }: KeywordBubbleChart) => {
+const KeywordBubbleChart = () => {
+  const router = useRouter();
+  const communityId: string = router.query.id as string;
+  const [communityKeywordData, setCommunityKeywordData] = useState<
+    KeywordData[]
+  >([]);
   const [bubbleDataList, setBubbleDataList] = useState<BubbleData[]>([]);
   const [_, setIsMove] = useState<boolean>(false);
   const requestAnimationId = useRef<NodeJS.Timer | null>(null);
   const circleContainerRef = useRef<CircleContainer | null>(null);
 
+  const { data } = useQuery<KeywordData[]>(
+    ['keyword', communityId],
+    () => {
+      const data = apis.getKeywords(communityId);
+      return data;
+    },
+    {
+      enabled: !!communityId,
+      refetchInterval: 1000,
+    },
+  );
+
   const getBubbleData = (keywordData: KeywordData, circleData: Circle) => {
     return {
-      keyword: keywordData.keyword,
-      count: keywordData.count,
+      keyword: keywordData.keywordName,
+      count: keywordData.memberCount,
       circle: circleData,
     };
   };
@@ -38,8 +54,16 @@ const KeywordBubbleChart = ({ communityKeywordData }: KeywordBubbleChart) => {
 
     requestAnimationId.current = setInterval(() => {
       update();
-    }, 100);
+    }, 300);
   };
+
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+    const slicedData = data.slice(0, 30);
+    setCommunityKeywordData(slicedData);
+  }, [data]);
 
   useEffect(() => {
     if (!circleContainerRef.current) {
@@ -50,11 +74,11 @@ const KeywordBubbleChart = ({ communityKeywordData }: KeywordBubbleChart) => {
     }
 
     const bubbleDataArray = communityKeywordData.map((keywordData) => {
-      const radius = 50 + keywordData.count * 1.5;
+      const radius = 20 + keywordData.memberCount * 2;
       const circleData = circleContainerRef.current!.addCircle(
         keywordData.keywordId,
         radius,
-        keywordData.keyword,
+        keywordData.keywordName,
       );
 
       return getBubbleData(keywordData, circleData);
@@ -67,6 +91,10 @@ const KeywordBubbleChart = ({ communityKeywordData }: KeywordBubbleChart) => {
     if (bubbleDataList.length) {
       animate();
     }
+    // 매번 이전 interval을 지우고 새로운 interval로 교체되며 움직임이 빨라지지 않음.
+    return () => {
+      clearInterval(requestAnimationId.current!);
+    };
   }, [bubbleDataList]);
 
   return (

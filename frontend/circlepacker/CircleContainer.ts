@@ -4,7 +4,7 @@ const REPULSIVE_COEFFICIENT = 0.6;
 const COLLISION_COEFFICIENT = 0.1;
 
 class CircleContainer {
-  public circles: Circle[] = [];
+  public circles: Record<string, Circle> = {};
   public isStatic = false; // '나를 조금만 더 믿어줘 에러' 타입스크립트가 너무 추론이 쉬운건 타입 쓰지 말라는 에러가 뜸. 찾아보니 진짜라서 지움.
 
   constructor(private width: number, private height: number) {}
@@ -35,6 +35,15 @@ class CircleContainer {
   }
 
   addCircle(circleId: string, radius: number, innerText: string) {
+    if (circleId in this.circles) {
+      const updatedCircle = this.circles[circleId];
+      if (!updatedCircle) {
+        throw new Error('없는 원입니다.');
+      }
+      updatedCircle.radius = radius;
+      return updatedCircle;
+    }
+
     const { x, y } = this.getRandPos();
     const newCircle = new Circle(
       circleId,
@@ -44,7 +53,7 @@ class CircleContainer {
       radius,
       this.calcInitVector(x, y),
     );
-    this.circles.push(newCircle);
+    this.circles[circleId] = newCircle;
 
     return newCircle;
   }
@@ -53,11 +62,12 @@ class CircleContainer {
   update() {
     let isAllCircleStop = true;
 
-    for (let i = 0; i < this.circles.length; i++) {
-      const circleA = this.circles[i];
+    const idArray = Object.keys(this.circles);
+    for (let i = 0; i < idArray.length; i++) {
+      const circleA = this.circles[idArray[i]];
       isAllCircleStop = false;
-      for (let j = i + 1; j < this.circles.length; j++) {
-        const circleB = this.circles[j];
+      for (let j = i + 1; j < idArray.length; j++) {
+        const circleB = this.circles[idArray[j]];
         if (this.checkIntersection(circleA, circleB)) {
           this.handleCollision(circleA, circleB);
         }

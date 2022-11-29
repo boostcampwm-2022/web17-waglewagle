@@ -1,4 +1,3 @@
-import { BubbleData } from '../../types/types';
 import styles from '@sass/components/community/KeywordBubble.module.scss';
 import classnames from 'classnames/bind';
 import { useState } from 'react';

@@ -1,8 +1,11 @@
 import '@sass/globals.scss';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { AppProps } from 'next/app';
 import Script from 'next/script';
+import { useState } from 'react';
 
 const App = ({ Component, pageProps }: AppProps) => {
+  const [queryClient] = useState<QueryClient>(() => new QueryClient());
   return (
     <>
       <Script
@@ -17,7 +20,9 @@ const App = ({ Component, pageProps }: AppProps) => {
   }(window, 'c0bb5fef'));
         `}
       </Script>
-      <Component {...pageProps} />
+      <QueryClientProvider client={queryClient}>
+        <Component {...pageProps} />
+      </QueryClientProvider>
     </>
   );
 };

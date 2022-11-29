@@ -7,20 +7,35 @@ import {
 import TrieSearchEngine from '../../utils/TrieSearchEngine';
 import AddCircleIcon from '@public/images/add-circle.svg';
 import styles from '@sass/components/community/AutoComplete.module.scss';
+import { useQuery } from '@tanstack/react-query';
 import classnames from 'classnames/bind';
 import { KeywordData } from '../../types/types';
+import apis from '../../apis/apis';
+import { useRouter } from 'next/router';
 const cx = classnames.bind(styles);
-
-interface AutoCompleteProps {
-  communityKeywordData: KeywordData[];
-}
 
 const searchEngine = new TrieSearchEngine();
 
-const AutoComplete = ({ communityKeywordData }: AutoCompleteProps) => {
+const AutoComplete = () => {
+  const router = useRouter();
+  const communityId: string = router.query.id as string;
+  const [communityKeywordData, setCommunityKeywordData] = useState<
+    KeywordData[]
+  >([]);
   const [searchKeyword, setSearchKeyword] = useState<string>('');
   const [searchResult, setSearchResult] = useState<string[]>(['']);
   const [isOpenDropdown, setIsOpenDropDown] = useState<boolean>(false);
+
+  const { data } = useQuery<KeywordData[]>(
+    ['keyword', communityId],
+    () => {
+      const data = apis.getKeywords(communityId);
+      return data;
+    },
+    {
+      enabled: !!communityId,
+    },
+  );
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
@@ -37,15 +52,24 @@ const AutoComplete = ({ communityKeywordData }: AutoCompleteProps) => {
   };
 
   useEffect(() => {
+    if (!data) {
+      return;
+    }
+    setCommunityKeywordData(data);
+  }, [data]);
+
+  useEffect(() => {
     if (communityKeywordData.length) {
       communityKeywordData.forEach((keywordData) => {
         searchEngine.insert({
-          keyword: keywordData.keyword,
-          count: keywordData.count,
+          keyword: keywordData.keywordName,
+          count: keywordData.memberCount,
         });
       });
 
-      setSearchResult(communityKeywordData.map(({ keyword }) => keyword));
+      setSearchResult(
+        communityKeywordData.map(({ keywordName }) => keywordName),
+      );
     }
   }, [communityKeywordData]);
 
@@ -53,8 +77,8 @@ const AutoComplete = ({ communityKeywordData }: AutoCompleteProps) => {
     <div className={cx('auto-complete')}>
       {isOpenDropdown && (
         <ul className={cx('search-result')}>
-          {searchResult.map((word) => (
-            <li key={word}>{word}</li>
+          {searchResult.map((word, index) => (
+            <li key={index}>{word}</li>
           ))}
         </ul>
       )}
