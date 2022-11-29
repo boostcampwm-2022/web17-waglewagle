@@ -3,7 +3,7 @@ HELP.md
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
-!**/src/test/**/build/
+!**/src/experiment/**/build/
 
 ### STS ###
 .apt_generated
@@ -15,7 +15,7 @@ build/
 .sts4-cache
 bin/
 !**/src/main/**/bin/
-!**/src/test/**/bin/
+!**/src/experiment/**/bin/
 
 ### IntelliJ IDEA ###
 .idea
@@ -24,7 +24,7 @@ bin/
 *.ipr
 out/
 !**/src/main/**/out/
-!**/src/test/**/out/
+!**/src/experiment/**/out/
 
 ### NetBeans ###
 /nbproject/private/
@@ -38,3 +38,4 @@ out/
 
 src/main/resources/secret.yml
 src/main/generated/
+src/main/resources/application-oauth.properties
