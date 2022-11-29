@@ -37,4 +37,5 @@ jobs:
             echo '${{ secrets.REST_SECRET_YML }}' > ${{ env.REST_DEPLOY_DIRNAME }}/${{ env.REST_SECRET_YML_PATH }}
             cd ${{ env.REST_DEPLOY_DIRNAME }}/rest/
             ./gradlew bootJar
-            nohup java -jar build/libs/*.jar &
+            fuser -k -n tcp 8080
+            nohup java -jar build/libs/*.jar > nohup.out 2> nohup.err < /dev/null &
