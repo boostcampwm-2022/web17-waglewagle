@@ -4,6 +4,7 @@ const REPULSIVE_COEFFICIENT = 0.6;
 const COLLISION_COEFFICIENT = 0.1;
 
 class CircleContainer {
+  // TODO: circles private으로 수정하기
   public circles: Record<string, Circle> = {};
   public isStatic = false; // '나를 조금만 더 믿어줘 에러' 타입스크립트가 너무 추론이 쉬운건 타입 쓰지 말라는 에러가 뜸. 찾아보니 진짜라서 지움.
 
@@ -59,6 +60,7 @@ class CircleContainer {
   }
 
   // 화면 갱신
+  // TODO: 정지 조건 추가하기
   update() {
     let isAllCircleStop = true;
 

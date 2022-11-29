@@ -114,6 +114,7 @@ const wordList = [
   { keyword: '가나라마', count: 3 },
 ];
 
+// TODO: 삭제하기
 // 트라이 자료구조를 만든다.
 const searchEngine = new TrieSearchEngine();
 

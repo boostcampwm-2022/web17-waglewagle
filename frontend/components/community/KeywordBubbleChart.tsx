@@ -43,6 +43,7 @@ const KeywordBubbleChart = () => {
     };
   };
 
+  // TODO: 애니메이션 setInrevl로 할지 requestAnimationFrame으로 할지 정해서  변수명 정하고 update 함수 리팩토링하기
   const animate = () => {
     const update = () => {
       if (circleContainerRef.current?.isStatic) {

@@ -42,6 +42,7 @@ const KeywordBubble = ({ keyword, posX, posY, radius }: KeywordBubbleProps) => {
   );
 };
 
+// TODO: 지우기
 // setInterval로 이동 => 0, 0부터 이동
 // const KeywordBubble = ({ bubbleData }: KeywordBubbleProps) => {
 //   const bubbleRef = useRef<HTMLDivElement | null>(null);

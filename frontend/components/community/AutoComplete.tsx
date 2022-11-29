@@ -74,6 +74,7 @@ const AutoComplete = () => {
   }, [communityKeywordData]);
 
   return (
+    // TODO: 자동완성 문자열과의 인터랙션 추가하기 (입력 단어 변경등)
     <div className={cx('auto-complete')}>
       {isOpenDropdown && (
         <ul className={cx('search-result')}>
