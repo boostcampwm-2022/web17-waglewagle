@@ -1,6 +1,8 @@
 package com.waglewagle.rest.user;
 
+import com.waglewagle.rest.keywordUser.KeywordUser;
 import com.waglewagle.rest.user.dto.UpdateProfileDTO;
+import com.waglewagle.rest.user.dto.UserInfoDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -49,5 +51,19 @@ public class UserService {
 
         user.updateProfile(updateProfileDTO);
         return user;
+    }
+
+    public UserInfoDTO getUserInfo(Long userId) {
+        User user = userRepository.findById(userId);
+        if (Objects.isNull(user)) {
+            return null;
+        }
+
+        return new UserInfoDTO(user);
+    }
+
+    public List<KeywordUser> getUserKeywords(Long userId) {
+        User user = userRepository.findById(userId);
+        return null;
     }
 }
