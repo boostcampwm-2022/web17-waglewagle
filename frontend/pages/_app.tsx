@@ -1,5 +1,10 @@
 import '@sass/globals.scss';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import {
+  QueryClient,
+  QueryClientProvider,
+  Hydrate,
+} from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import type { AppProps } from 'next/app';
 import Script from 'next/script';
 import { useState } from 'react';
@@ -21,7 +26,10 @@ const App = ({ Component, pageProps }: AppProps) => {
         `}
       </Script>
       <QueryClientProvider client={queryClient}>
-        <Component {...pageProps} />
+        <Hydrate state={pageProps.dehydratedState}>
+          <Component {...pageProps} />
+        </Hydrate>
+        <ReactQueryDevtools />
       </QueryClientProvider>
     </>
   );

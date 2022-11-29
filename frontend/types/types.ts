@@ -2,8 +2,8 @@ import Circle from '../circlepacker/Circle';
 
 export type KeywordData = {
   keywordId: string;
-  keyword: string;
-  count: number;
+  keywordName: string;
+  memberCount: number;
 };
 
 export type BubbleData = {

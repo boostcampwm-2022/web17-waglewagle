@@ -8,6 +8,8 @@ import CircleContainer from '../../circlepacker/CircleContainer';
 import Circle from '../../circlepacker/Circle';
 import apis from '../../apis/apis';
 import { useRouter } from 'next/router';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
+import { NextPageContext } from 'next';
 const cx = classnames.bind(styles);
 
 const KeywordBubbleChart = () => {
@@ -113,3 +115,15 @@ const KeywordBubbleChart = () => {
 };
 
 export default KeywordBubbleChart;
+
+export const getServerSideProps = async ({ query }: NextPageContext) => {
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchQuery(['keyword', query.id]);
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+};
