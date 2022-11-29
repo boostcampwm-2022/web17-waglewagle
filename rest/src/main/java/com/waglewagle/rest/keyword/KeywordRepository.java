@@ -2,6 +2,7 @@ package com.waglewagle.rest.keyword;
 
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.waglewagle.rest.community.Community;
 import com.waglewagle.rest.user.QUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -44,6 +45,7 @@ public class KeywordRepository {
                                 .from(keywordUser)
                                 .where(keywordUser.keyword.eq(keyword))
                 ))
+                .where(keywordUser.keyword.community.eq(keyword.getCommunity()))
                 .fetch(); //TODO: fetch? fetchJoin?
     }
 }
