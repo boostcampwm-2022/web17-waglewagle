@@ -37,3 +37,4 @@ out/
 .vscode/
 
 src/main/resources/secret.yml
+src/main/generated/
