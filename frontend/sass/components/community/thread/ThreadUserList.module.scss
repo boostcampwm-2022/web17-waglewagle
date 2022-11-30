@@ -1,0 +1,39 @@
+.layout {
+  padding: 15px 20px;
+  border: 1px solid black;
+  border-radius: 10px;
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 30px;
+  font-family: 'Nanum BugGeugSeong';
+  gap: 12px;
+}
+
+.title {
+  font-size: 36px;
+}
+
+.online-count {
+  font-size: 20px;
+}
+
+.user-list {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  gap: 14px;
+}
+
+.username {
+  font-size: 16px;
+}
+
+.online-badge {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #54a523;
+}
