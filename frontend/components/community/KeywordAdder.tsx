@@ -1,21 +1,14 @@
-import {
-  ChangeEventHandler,
-  FormEventHandler,
-  useEffect,
-  useState,
-} from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { ChangeEventHandler, FormEventHandler, useState } from 'react';
 import { useRouter } from 'next/router';
 import useAutoComplete from '@hooks/useAutoComplete';
 import {
   SearchResultListLayout,
   AutoCompleteFormLayout,
 } from '@components/community';
-import apis from '../../apis/apis';
-import { KeywordData } from '../../types/types';
 import AddCircleIcon from '@public/images/add-circle.svg';
 import styles from '@sass/components/community/KeywordAdderLayout.module.scss';
 import classnames from 'classnames/bind';
+import useKeywordListQuery from '@hooks/useKeywordListQuery';
 const cx = classnames.bind(styles);
 
 interface KeywordAdderProps {
@@ -25,20 +18,7 @@ interface KeywordAdderProps {
 const KeywordAdder = ({ theme }: KeywordAdderProps) => {
   const router = useRouter();
   const communityId: string = router.query.id as string;
-  const { data } = useQuery<KeywordData[]>(
-    ['keyword', communityId],
-    () => {
-      const data = apis.getKeywords(communityId);
-      return data;
-    },
-    {
-      enabled: !!communityId,
-    },
-  );
-
-  const [communityKeywordData, setCommunityKeywordData] = useState<
-    KeywordData[]
-  >([]);
+  const communityKeywordData = useKeywordListQuery(communityId);
   const {
     searchKeyword,
     searchResult,
@@ -60,13 +40,6 @@ const KeywordAdder = ({ theme }: KeywordAdderProps) => {
   ) => {
     changeSearchKeyword(e.target.value);
   };
-
-  useEffect(() => {
-    if (!data) {
-      return;
-    }
-    setCommunityKeywordData(data);
-  }, [data]);
 
   return (
     <div className={cx('keyword-adder')}>

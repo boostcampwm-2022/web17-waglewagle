@@ -1,39 +1,28 @@
-import { useQuery } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 import { BubbleData, KeywordData } from '../../types/types';
 import KeywordBubble from './KeywordBubble';
-import styles from '@sass/components/community/KeywordBubbleChart.module.scss';
-import classnames from 'classnames/bind';
 import CircleContainer from '../../circlepacker/CircleContainer';
 import Circle from '../../circlepacker/Circle';
-import apis from '../../apis/apis';
 import { useRouter } from 'next/router';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { NextPageContext } from 'next';
+import useKeywordListQuery from '@hooks/useKeywordListQuery';
+import styles from '@sass/components/community/KeywordBubbleChart.module.scss';
+import classnames from 'classnames/bind';
 const cx = classnames.bind(styles);
 
 const KeywordBubbleChart = () => {
   const router = useRouter();
   const communityId: string = router.query.id as string;
-  const [communityKeywordData, setCommunityKeywordData] = useState<
-    KeywordData[]
-  >([]);
   const [bubbleDataList, setBubbleDataList] = useState<BubbleData[]>([]);
   const [_, setIsMove] = useState<boolean>(false);
   const requestAnimationId = useRef<NodeJS.Timer | null>(null);
   const circleContainerRef = useRef<CircleContainer | null>(null);
-
-  const { data } = useQuery<KeywordData[]>(
-    ['keyword', communityId],
-    () => {
-      const data = apis.getKeywords(communityId);
-      return data;
-    },
-    {
-      enabled: !!communityId,
-      refetchInterval: 1000,
-    },
-  );
+  const fetchedKeywordData = useKeywordListQuery(communityId);
+  // 여기에서는 slice된 keywordData를 가지고 있기 때문에 fetched와 별도의 상태로 관리됨.
+  const [slicedCommunityKeywordData, setSlicedCommunityKeywordData] = useState<
+    KeywordData[]
+  >([]);
 
   const getBubbleData = (keywordData: KeywordData, circleData: Circle) => {
     return {
@@ -44,6 +33,7 @@ const KeywordBubbleChart = () => {
   };
 
   // TODO: 애니메이션 setInrevl로 할지 requestAnimationFrame으로 할지 정해서  변수명 정하고 update 함수 리팩토링하기
+  // circleContainer가 아닌 이곳에 있는 이유는, 이 함수는 연산보다는 렌더링에 가까운 로직이기 때문 (setIsMove를 토글하여 리렌더링 시킴)
   const animate = () => {
     const update = () => {
       if (circleContainerRef.current?.isStatic) {
@@ -61,12 +51,12 @@ const KeywordBubbleChart = () => {
   };
 
   useEffect(() => {
-    if (!data) {
+    if (!fetchedKeywordData) {
       return;
     }
-    const slicedData = data.slice(0, 30);
-    setCommunityKeywordData(slicedData);
-  }, [data]);
+    const slicedData = fetchedKeywordData.slice(0, 30);
+    setSlicedCommunityKeywordData(slicedData);
+  }, [fetchedKeywordData]);
 
   useEffect(() => {
     if (!circleContainerRef.current) {
@@ -76,7 +66,7 @@ const KeywordBubbleChart = () => {
       );
     }
 
-    const bubbleDataArray = communityKeywordData.map((keywordData) => {
+    const bubbleDataArray = slicedCommunityKeywordData.map((keywordData) => {
       const radius = 20 + keywordData.memberCount * 2;
       const circleData = circleContainerRef.current!.addCircle(
         keywordData.keywordId,
@@ -88,7 +78,7 @@ const KeywordBubbleChart = () => {
     });
 
     setBubbleDataList(bubbleDataArray);
-  }, [communityKeywordData]);
+  }, [slicedCommunityKeywordData]);
 
   useEffect(() => {
     if (bubbleDataList.length) {

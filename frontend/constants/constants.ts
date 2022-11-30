@@ -6,3 +6,7 @@ export enum ADMIN_PAGE_TAB {
 export enum KEYWORD_ADDER_THEME {
   MAIN = 'main',
 }
+
+export enum REACT_QUERY_KEY {
+  KEYWORD = 'keyword',
+}
