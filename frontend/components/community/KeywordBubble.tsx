@@ -1,4 +1,3 @@
-import { BubbleData } from '../../types/types';
 import styles from '@sass/components/community/KeywordBubble.module.scss';
 import classnames from 'classnames/bind';
 import { useState } from 'react';
@@ -32,10 +31,10 @@ const KeywordBubble = ({ keyword, posX, posY, radius }: KeywordBubbleProps) => {
       style={{
         transform: `translate(${posX - radius}px, ${posY - radius}px) scale(${
           isHover ? 1.2 : 1.0
-        })`,
-        width: `${radius * 5}px`,
-        height: `${radius * 5}px`,
-        fontSize: `${10 + radius * 1}px`,
+        })`, // 원의 중앙이 좌표와 일치할 수 있도록 tranform
+        width: `${radius * 2}px`,
+        height: `${radius * 2}px`,
+        fontSize: `${10 + radius * 0.2}px`,
       }}
     >
       <span>{keyword}</span>
@@ -43,6 +42,7 @@ const KeywordBubble = ({ keyword, posX, posY, radius }: KeywordBubbleProps) => {
   );
 };
 
+// TODO: 지우기
 // setInterval로 이동 => 0, 0부터 이동
 // const KeywordBubble = ({ bubbleData }: KeywordBubbleProps) => {
 //   const bubbleRef = useRef<HTMLDivElement | null>(null);

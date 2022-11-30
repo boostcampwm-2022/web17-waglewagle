@@ -9,7 +9,7 @@
   justify-content: center;
   border-radius: 50%;
   background-color: $primary-color;
-  transition: all 0.3s ease-in-out;
+  transition: 0.3s linear;
   &:hover {
     border: 1px solid $primary-color;
     background-color: $off-white-color;
@@ -17,6 +17,7 @@
     span {
       color: $primary-color;
     }
+    z-index: 9;
   }
 
   span {
