@@ -6,6 +6,7 @@ import {
   KeywordBubbleChart,
 } from '@components/community';
 import KeywordAdder from '@components/community/KeywordAdder';
+import AddCircleIcon from '@public/images/add-circle.svg';
 import { KEYWORD_ADDER_THEME } from '@constants/constants';
 import { useState, useEffect } from 'react';
 
@@ -38,7 +39,10 @@ const Community = () => {
         handleClickEnter={handleClickEnter}
       />
       <KeywordBubbleChart />
-      <KeywordAdder theme={KEYWORD_ADDER_THEME.MAIN} />
+      <KeywordAdder
+        theme={KEYWORD_ADDER_THEME.MAIN}
+        addButtonValue={<AddCircleIcon />}
+      />
       <Modal
         isOpenModal={isOpenLoginModal}
         closeModal={() => setIsOpenLoginModal(false)}

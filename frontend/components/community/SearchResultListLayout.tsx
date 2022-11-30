@@ -12,7 +12,7 @@ const SearchResultListLayout = ({
   children,
   layoutTheme,
 }: SearchResultListLayoutProps) => {
-  return <ul className={cx(`${layoutTheme}`)}>{children}</ul>;
+  return <ul className={cx(layoutTheme)}>{children}</ul>;
 };
 
 export default SearchResultListLayout;

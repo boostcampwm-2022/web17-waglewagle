@@ -5,7 +5,6 @@ import {
   SearchResultListLayout,
   AutoCompleteFormLayout,
 } from '@components/community';
-import AddCircleIcon from '@public/images/add-circle.svg';
 import styles from '@sass/components/community/KeywordAdderLayout.module.scss';
 import classnames from 'classnames/bind';
 import useKeywordListQuery from '@hooks/useKeywordListQuery';
@@ -13,9 +12,10 @@ const cx = classnames.bind(styles);
 
 interface KeywordAdderProps {
   theme: string;
+  addButtonValue: React.ReactNode | string;
 }
 
-const KeywordAdder = ({ theme }: KeywordAdderProps) => {
+const KeywordAdder = ({ theme, addButtonValue }: KeywordAdderProps) => {
   const router = useRouter();
   const communityId: string = router.query.id as string;
   const communityKeywordData = useKeywordListQuery(communityId);
@@ -42,7 +42,7 @@ const KeywordAdder = ({ theme }: KeywordAdderProps) => {
   };
 
   return (
-    <div className={cx('keyword-adder')}>
+    <div className={cx(theme)}>
       {isOpenDropdown && (
         <SearchResultListLayout layoutTheme={theme}>
           {searchResult.map((word, index) => (
@@ -58,9 +58,7 @@ const KeywordAdder = ({ theme }: KeywordAdderProps) => {
           onFocus={() => setIsOpenDropDown(true)}
           onBlur={() => setIsOpenDropDown(false)}
         />
-        <button type='submit'>
-          <AddCircleIcon />
-        </button>
+        <button type='submit'>{addButtonValue}</button>
       </AutoCompleteFormLayout>
     </div>
   );
