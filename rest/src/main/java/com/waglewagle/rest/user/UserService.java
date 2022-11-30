@@ -28,6 +28,8 @@ public class UserService {
         Cookie userIdCookie =new Cookie("user_id", Long.toString(userId));
         userIdCookie.setMaxAge(3600 * 1000);
         userIdCookie.setPath("/");
+        userIdCookie.setHttpOnly(true);
+        userIdCookie.setSecure(true);
         return userIdCookie;
     }
 
