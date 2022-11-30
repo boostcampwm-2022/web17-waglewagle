@@ -4,7 +4,11 @@ import styles from '@sass/components/community/keyword/ThreadList.module.scss';
 import classnames from 'classnames/bind';
 const cx = classnames.bind(styles);
 
-const ThreadList = () => {
+interface ThreadListProps {
+  toggleSidebar(id: string): void;
+}
+
+const ThreadList = ({ toggleSidebar }: ThreadListProps) => {
   const [threadDataList] = useState<
     {
       id: string;
@@ -18,7 +22,8 @@ const ThreadList = () => {
     {
       id: '1',
       username: '김관경',
-      contents: '개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!',
+      contents:
+        '개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!',
       createAt: 201020,
       comments: [],
     },
@@ -50,10 +55,12 @@ const ThreadList = () => {
       {threadDataList.map(({ id, username, contents, createAt, comments }) => (
         <Thread
           key={id}
+          id={id}
           username={username}
           contents={contents}
           createAt={createAt}
           comments={comments}
+          toggleSidebar={toggleSidebar}
         />
       ))}
     </ul>

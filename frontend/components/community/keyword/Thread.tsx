@@ -4,16 +4,25 @@ import Image from 'next/image';
 const cx = classnames.bind(styles);
 
 interface ThreadProps {
+  id: string;
   username: string;
   profileURL?: string;
   createAt: number;
   contents: string;
   comments: Comment[];
+  toggleSidebar(id: string): void;
 }
 
-const Thread = ({ profileURL, username, createAt, contents }: ThreadProps) => {
+const Thread = ({
+  id,
+  profileURL,
+  username,
+  createAt,
+  contents,
+  toggleSidebar,
+}: ThreadProps) => {
   return (
-    <li className={cx('thread')}>
+    <li className={cx('thread')} onClick={() => toggleSidebar(id)}>
       <Image
         className={cx('profile-image')}
         src={
