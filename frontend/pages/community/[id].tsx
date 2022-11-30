@@ -4,8 +4,9 @@ import {
   CommunityLayout,
   KeywordAddModal,
   KeywordBubbleChart,
-  MainKeywordAdder,
 } from '@components/community';
+import KeywordAdder from '@components/community/KeywordAdder';
+import { KEYWORD_ADDER_THEME } from '@constants/constants';
 import { useState, useEffect } from 'react';
 
 const Community = () => {
@@ -37,7 +38,7 @@ const Community = () => {
         handleClickEnter={handleClickEnter}
       />
       <KeywordBubbleChart />
-      <MainKeywordAdder />
+      <KeywordAdder theme={KEYWORD_ADDER_THEME.MAIN} />
       <Modal
         isOpenModal={isOpenLoginModal}
         closeModal={() => setIsOpenLoginModal(false)}

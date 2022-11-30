@@ -6,16 +6,23 @@ import {
 } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
-import apis from '../../apis/apis';
-import AddCircleIcon from '@public/images/add-circle.svg';
-import { KeywordData } from '../../types/types';
 import useAutoComplete from '@hooks/useAutoComplete';
-import styles from '@sass/components/community/AutoComplete.module.scss';
+import {
+  SearchResultListLayout,
+  AutoCompleteFormLayout,
+} from '@components/community';
+import apis from '../../apis/apis';
+import { KeywordData } from '../../types/types';
+import AddCircleIcon from '@public/images/add-circle.svg';
+import styles from '@sass/components/community/KeywordAdderLayout.module.scss';
 import classnames from 'classnames/bind';
-import SearchResultListLayout from './SearchResultListLayout';
 const cx = classnames.bind(styles);
 
-const MainKeywordAdder = () => {
+interface KeywordAdderProps {
+  theme: string;
+}
+
+const KeywordAdder = ({ theme }: KeywordAdderProps) => {
   const router = useRouter();
   const communityId: string = router.query.id as string;
   const { data } = useQuery<KeywordData[]>(
@@ -62,29 +69,28 @@ const MainKeywordAdder = () => {
   }, [data]);
 
   return (
-    <div className={cx('auto-complete')}>
+    <div className={cx('keyword-adder')}>
       {isOpenDropdown && (
-        <SearchResultListLayout theme='primary'>
+        <SearchResultListLayout layoutTheme={theme}>
           {searchResult.map((word, index) => (
             <li key={index}>{word}</li>
           ))}
         </SearchResultListLayout>
       )}
-      <form onSubmit={handleSubmit} className={cx('form')}>
+      <AutoCompleteFormLayout layoutTheme={theme} handleSubmit={handleSubmit}>
         <input
           type='text'
           value={searchKeyword}
           onChange={handleChangeSearchKeyword}
-          className={cx('input')}
           onFocus={() => setIsOpenDropDown(true)}
           onBlur={() => setIsOpenDropDown(false)}
         />
-        <button type='submit' className={cx('submit-button')}>
+        <button type='submit'>
           <AddCircleIcon />
         </button>
-      </form>
+      </AutoCompleteFormLayout>
     </div>
   );
 };
 
-export default MainKeywordAdder;
+export default KeywordAdder;

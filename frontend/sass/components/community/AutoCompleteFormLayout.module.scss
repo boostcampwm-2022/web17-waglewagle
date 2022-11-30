@@ -1,0 +1,25 @@
+// layoutTheme 추가가 필요한 경우, 새로운 class를 만들어서 input과 button 스타일을 지정해주면 됨.
+.main {
+  position: relative;
+
+  input {
+    width: 100%;
+    height: 50px;
+    padding: 15px 30px;
+    border: 1px solid black;
+    border-radius: 15px;
+  }
+
+  button {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: none;
+    transition: all 0.2s;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+}
