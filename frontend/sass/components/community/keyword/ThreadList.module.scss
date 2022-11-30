@@ -1,0 +1,8 @@
+.thread-list {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  height: 500px;
+  overflow-y: scroll;
+  padding-right: 20px;
+}
