@@ -3,6 +3,7 @@ import {
   ChangeEventHandler,
   FormEventHandler,
   useState,
+  useEffect,
 } from 'react';
 import { useRouter } from 'next/router';
 import useAutoComplete from '@hooks/useAutoComplete';
@@ -14,6 +15,7 @@ import styles from '@sass/components/community/KeywordAdderLayout.module.scss';
 import classnames from 'classnames/bind';
 import useKeywordListQuery from '@hooks/useKeywordListQuery';
 import apis from '../../apis/apis';
+import { KeywordAssociationData } from '../../types/types';
 const cx = classnames.bind(styles);
 
 interface KeywordAdderProps {
@@ -31,14 +33,17 @@ const KeywordAdder = ({ theme, addButtonValue }: KeywordAdderProps) => {
     changeSearchKeyword,
   } = useAutoComplete(communityKeywordData);
 
-  // TODO: 자동완성 컴포넌트 추상화하면서 거기로 넘기기
   const [isOpenDropdown, setIsOpenDropDown] = useState<boolean>(false);
+  const [keywordAssociations, setKeywordAssociations] = useState<
+    KeywordAssociationData[]
+  >([]);
 
   const getKeywordAssociations = async (keywordId: string) => {
     const keywordAssociationsData = await apis.getKeywordAssociations(
       keywordId,
     );
-    console.log(keywordAssociationsData);
+    const slicedData = keywordAssociationsData.slice(0, 3);
+    setKeywordAssociations(slicedData);
   };
 
   // TODO: 테스트코드 작성 가능
@@ -69,7 +74,6 @@ const KeywordAdder = ({ theme, addButtonValue }: KeywordAdderProps) => {
     e.preventDefault();
     setIsOpenDropDown(false);
     changeSearchKeyword('');
-
     const keywordId = getKeywordIdByKeyword(searchKeyword);
     if (keywordId) {
       await getKeywordAssociations(keywordId);
@@ -88,6 +92,12 @@ const KeywordAdder = ({ theme, addButtonValue }: KeywordAdderProps) => {
     const target = e.target as HTMLLIElement;
     changeSearchKeyword(target.innerText);
   };
+
+  // 이후 분리하여 상위 컴포넌트에서 사용 필요함.
+  // TODO: 전역상태관리 쓸지 물어보기
+  // useEffect(() => {
+  //   console.log(keywordAssociations);
+  // }, [keywordAssociations]);
 
   return (
     <div
