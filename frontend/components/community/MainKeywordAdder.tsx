@@ -4,44 +4,20 @@ import {
   useEffect,
   useState,
 } from 'react';
-import TrieSearchEngine from '../../utils/TrieSearchEngine';
-import AddCircleIcon from '@public/images/add-circle.svg';
-import styles from '@sass/components/community/AutoComplete.module.scss';
 import { useQuery } from '@tanstack/react-query';
-import classnames from 'classnames/bind';
-import { KeywordData } from '../../types/types';
-import apis from '../../apis/apis';
 import { useRouter } from 'next/router';
+import apis from '../../apis/apis';
+import AddCircleIcon from '@public/images/add-circle.svg';
+import { KeywordData } from '../../types/types';
 import useAutoComplete from '@hooks/useAutoComplete';
+import styles from '@sass/components/community/AutoComplete.module.scss';
+import classnames from 'classnames/bind';
+import SearchResultListLayout from './SearchResultListLayout';
 const cx = classnames.bind(styles);
 
-const AutoComplete = () => {
+const MainKeywordAdder = () => {
   const router = useRouter();
   const communityId: string = router.query.id as string;
-  const [communityKeywordData, setCommunityKeywordData] = useState<
-    KeywordData[]
-  >([]);
-  const { searchEngine, initResult } = useAutoComplete(communityKeywordData);
-
-  // TODO: 자동완성 컴포넌트 추상화하면서 거기로 넘기기
-  const [searchKeyword, setSearchKeyword] = useState<string>('');
-  const [searchResult, setSearchResult] = useState<string[]>(['']);
-  const [isOpenDropdown, setIsOpenDropDown] = useState<boolean>(false);
-
-  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
-    e.preventDefault();
-    const searchEngineResult = searchEngine.search(searchKeyword);
-    setSearchResult(searchEngineResult);
-    setIsOpenDropDown(true);
-    setSearchKeyword('');
-  };
-
-  const handleChangeSearchKeyword: ChangeEventHandler<HTMLInputElement> = (
-    e,
-  ) => {
-    setSearchKeyword(e.target.value);
-  };
-
   const { data } = useQuery<KeywordData[]>(
     ['keyword', communityId],
     () => {
@@ -53,6 +29,31 @@ const AutoComplete = () => {
     },
   );
 
+  const [communityKeywordData, setCommunityKeywordData] = useState<
+    KeywordData[]
+  >([]);
+  const {
+    searchKeyword,
+    searchResult,
+    changeSearchKeyword,
+    updateSearchResult,
+  } = useAutoComplete(communityKeywordData);
+
+  // TODO: 자동완성 컴포넌트 추상화하면서 거기로 넘기기
+  const [isOpenDropdown, setIsOpenDropDown] = useState<boolean>(false);
+
+  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+    setIsOpenDropDown(true);
+    updateSearchResult();
+  };
+
+  const handleChangeSearchKeyword: ChangeEventHandler<HTMLInputElement> = (
+    e,
+  ) => {
+    changeSearchKeyword(e.target.value);
+  };
+
   useEffect(() => {
     if (!data) {
       return;
@@ -60,19 +61,14 @@ const AutoComplete = () => {
     setCommunityKeywordData(data);
   }, [data]);
 
-  useEffect(() => {
-    setSearchResult(initResult);
-  }, [initResult]);
-
   return (
-    // TODO: 자동완성 문자열과의 인터랙션 추가하기 (입력 단어 변경등)
     <div className={cx('auto-complete')}>
       {isOpenDropdown && (
-        <ul className={cx('search-result')}>
+        <SearchResultListLayout theme='primary'>
           {searchResult.map((word, index) => (
             <li key={index}>{word}</li>
           ))}
-        </ul>
+        </SearchResultListLayout>
       )}
       <form onSubmit={handleSubmit} className={cx('form')}>
         <input
@@ -91,4 +87,4 @@ const AutoComplete = () => {
   );
 };
 
-export default AutoComplete;
+export default MainKeywordAdder;
