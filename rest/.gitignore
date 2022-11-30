@@ -38,4 +38,4 @@ out/
 
 src/main/resources/secret.yml
 src/main/generated/
-src/main/resources/application-oauth.properties
+src/main/resources/application-oauth.yml
