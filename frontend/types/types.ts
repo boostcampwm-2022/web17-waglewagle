@@ -6,6 +6,14 @@ export type KeywordData = {
   memberCount: number;
 };
 
+// TODO: 그냥 rank를 옵셔널로 넣을까
+export type KeywordAssociationData = {
+  keywordId: string;
+  keywordName: string;
+  memberCount: number;
+  rank: number;
+};
+
 export type BubbleData = {
   keyword: string;
   count: number;

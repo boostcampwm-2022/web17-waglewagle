@@ -13,6 +13,7 @@ import {
 import styles from '@sass/components/community/KeywordAdderLayout.module.scss';
 import classnames from 'classnames/bind';
 import useKeywordListQuery from '@hooks/useKeywordListQuery';
+import apis from '../../apis/apis';
 const cx = classnames.bind(styles);
 
 interface KeywordAdderProps {
@@ -33,10 +34,46 @@ const KeywordAdder = ({ theme, addButtonValue }: KeywordAdderProps) => {
   // TODO: 자동완성 컴포넌트 추상화하면서 거기로 넘기기
   const [isOpenDropdown, setIsOpenDropDown] = useState<boolean>(false);
 
-  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+  const getKeywordAssociations = async (keywordId: string) => {
+    const keywordAssociationsData = await apis.getKeywordAssociations(
+      keywordId,
+    );
+    console.log(keywordAssociationsData);
+  };
+
+  // TODO: 테스트코드 작성 가능
+  const getKeywordIdByKeyword = (keyword: string): string | false => {
+    // 커뮤니티 키워드 데이터가 없으면 검색할 수 없다.
+    if (!communityKeywordData) {
+      return false;
+    }
+
+    // some을 쓰면 예외처리가 힘들 것 같아서 filter 사용
+    const result = communityKeywordData?.filter(
+      (keywordData) => keywordData.keywordName === keyword,
+    );
+
+    if (result.length === 0) {
+      return false;
+    }
+
+    if (result.length > 1) {
+      // TODO: 커스텀 에러 객체 만들기
+      throw new Error('중복된 id가 있습니다.');
+    }
+
+    return result[0].keywordId;
+  };
+
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     setIsOpenDropDown(false);
     changeSearchKeyword('');
+
+    const keywordId = getKeywordIdByKeyword(searchKeyword);
+    if (keywordId) {
+      await getKeywordAssociations(keywordId);
+    }
   };
 
   const handleChangeSearchKeyword: ChangeEventHandler<HTMLInputElement> = (
