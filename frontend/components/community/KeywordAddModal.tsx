@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, MouseEventHandler } from 'react';
 import MyKeyword from './MyKeyword';
 import MyKeywordList from './MyKeywordList';
 import KeywordAssociated from './KeywordAssociated';
@@ -14,6 +14,14 @@ type keywordProps = {
 
 const KeywordAddModal = () => {
   const [myKeywordList, setMyKeywordList] = useState<keywordProps[] | []>([]);
+
+  const handleDeleteClick: MouseEventHandler<HTMLButtonElement> = (e) => {
+    const target = e.target as HTMLElement;
+    const filteredList = myKeywordList.filter(
+      (keyword) => keyword.keyword !== target.previousSibling?.textContent,
+    );
+    setMyKeywordList(filteredList);
+  };
 
   useEffect(() => {
     setMyKeywordList([
@@ -47,7 +55,11 @@ const KeywordAddModal = () => {
           <h4 className={cx('my-keyword-title')}>내 키워드</h4>
           <MyKeywordList>
             {myKeywordList.map((keywordData) => (
-              <MyKeyword key={keywordData.id} keyword={keywordData.keyword} />
+              <MyKeyword
+                handleDeleteClick={handleDeleteClick}
+                key={keywordData.id}
+                keyword={keywordData.keyword}
+              />
             ))}
           </MyKeywordList>
           <button className={cx('enter-button')}>입장하기</button>
