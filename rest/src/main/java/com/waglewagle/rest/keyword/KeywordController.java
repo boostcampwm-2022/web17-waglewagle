@@ -1,10 +1,15 @@
 package com.waglewagle.rest.keyword;
 
 import com.waglewagle.rest.community.CommunityService;
+import com.waglewagle.rest.keyword.KeywordDTO.*;
 import com.waglewagle.rest.keyword.association.AssociationDTO;
+import com.waglewagle.rest.keywordUser.KeywordUserService;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -22,6 +27,7 @@ public class KeywordController {
     //https://velog.io/@junbee/Spring-MVC-%EA%B8%B0%EB%B3%B8-%EA%B8%B0%EB%8A%A52-%ED%8C%8C%EB%9D%BC%EB%AF%B8%ED%84%B0-%EC%B2%98%EB%A6%AC
     //ResponseEntity
     //https://velog.io/@alstn_dev/Spring-Boot%EB%A1%9C-REST-API-%EC%84%9C%EB%B2%84-%EB%A7%8C%EB%93%A4%EA%B8%B0
+    @ResponseBody
     @GetMapping("/associations")
     public ResponseEntity<List<AssociationDTO>> getAssociatedKeywords(@RequestParam("keyword-id") Long keywordId) {
 
