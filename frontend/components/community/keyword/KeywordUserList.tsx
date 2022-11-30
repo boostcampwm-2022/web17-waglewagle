@@ -1,10 +1,10 @@
 import { useMemo, useState } from 'react';
-import styles from '@sass/components/community/thread/ThreadUserList.module.scss';
+import styles from '@sass/components/community/keyword/KeywordUserList.module.scss';
 import classnames from 'classnames/bind';
 const cx = classnames.bind(styles);
 
 // TODO: user 수가 많아졌을 때 레이아웃 수정
-const ThreadUserList = () => {
+const KeywordUserList = () => {
   const [userList] = useState([
     { id: '1', username: '김관경', isOnline: true },
     { id: '2', username: '문성현', isOnline: true },
@@ -37,4 +37,4 @@ const ThreadUserList = () => {
   );
 };
 
-export default ThreadUserList;
+export default KeywordUserList;
