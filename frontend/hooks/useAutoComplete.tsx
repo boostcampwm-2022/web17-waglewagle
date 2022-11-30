@@ -16,12 +16,6 @@ const useAutoComplete = (keywordList: KeywordData[] | undefined) => {
     setSearchKeyword(value);
   };
 
-  const updateSearchResult = () => {
-    const searchEngineResult = searchEngine.search(searchKeyword);
-    setSearchResult(searchEngineResult);
-    setSearchKeyword('');
-  };
-
   // 키워드 리스트가 바뀔 때마다 searchEngine의 단어를 갱신한다.
   // TODO: 추가된 단어만 추가할 수 있도록 수정할 수 있을까? 현재 성능상의 이슈는 없어서 다른 작업이 먼저일듯함.
   useEffect(() => {
@@ -40,11 +34,15 @@ const useAutoComplete = (keywordList: KeywordData[] | undefined) => {
     }
   }, [keywordList]);
 
+  useEffect(() => {
+    const searchEngineResult = searchEngine.search(searchKeyword);
+    setSearchResult(searchEngineResult);
+  }, [searchKeyword]);
+
   return {
     searchKeyword,
     searchResult,
     changeSearchKeyword,
-    updateSearchResult,
   };
 };
 

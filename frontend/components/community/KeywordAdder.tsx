@@ -25,10 +25,9 @@ const KeywordAdder = ({ theme, addButtonValue }: KeywordAdderProps) => {
   const communityId: string = router.query.id as string;
   const communityKeywordData = useKeywordListQuery(communityId);
   const {
-    searchKeyword,
+    searchKeyword, // TODO: 이것을 여기서 useAutoComplete에서 관리해주는게 맞을까? 의존제어가 제대로 되고 있는걸까? 자식 컴포넌트처럼 생각해도 될까? 무언가 Badsmell. 그냥 어색한걸까?
     searchResult,
     changeSearchKeyword,
-    updateSearchResult,
   } = useAutoComplete(communityKeywordData);
 
   // TODO: 자동완성 컴포넌트 추상화하면서 거기로 넘기기
@@ -36,13 +35,14 @@ const KeywordAdder = ({ theme, addButtonValue }: KeywordAdderProps) => {
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    setIsOpenDropDown(true);
-    updateSearchResult();
+    setIsOpenDropDown(false);
+    changeSearchKeyword('');
   };
 
   const handleChangeSearchKeyword: ChangeEventHandler<HTMLInputElement> = (
     e,
   ) => {
+    setIsOpenDropDown(true);
     changeSearchKeyword(e.target.value);
   };
 
