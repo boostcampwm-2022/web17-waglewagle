@@ -12,9 +12,8 @@ import classnames from 'classnames/bind';
 import { KeywordData } from '../../types/types';
 import apis from '../../apis/apis';
 import { useRouter } from 'next/router';
+import useAutoComplete from '@hooks/useAutoComplete';
 const cx = classnames.bind(styles);
-
-const searchEngine = new TrieSearchEngine();
 
 const AutoComplete = () => {
   const router = useRouter();
@@ -22,20 +21,12 @@ const AutoComplete = () => {
   const [communityKeywordData, setCommunityKeywordData] = useState<
     KeywordData[]
   >([]);
+  const { searchEngine, initResult } = useAutoComplete(communityKeywordData);
+
+  // TODO: 자동완성 컴포넌트 추상화하면서 거기로 넘기기
   const [searchKeyword, setSearchKeyword] = useState<string>('');
   const [searchResult, setSearchResult] = useState<string[]>(['']);
   const [isOpenDropdown, setIsOpenDropDown] = useState<boolean>(false);
-
-  const { data } = useQuery<KeywordData[]>(
-    ['keyword', communityId],
-    () => {
-      const data = apis.getKeywords(communityId);
-      return data;
-    },
-    {
-      enabled: !!communityId,
-    },
-  );
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
@@ -51,6 +42,17 @@ const AutoComplete = () => {
     setSearchKeyword(e.target.value);
   };
 
+  const { data } = useQuery<KeywordData[]>(
+    ['keyword', communityId],
+    () => {
+      const data = apis.getKeywords(communityId);
+      return data;
+    },
+    {
+      enabled: !!communityId,
+    },
+  );
+
   useEffect(() => {
     if (!data) {
       return;
@@ -59,19 +61,8 @@ const AutoComplete = () => {
   }, [data]);
 
   useEffect(() => {
-    if (communityKeywordData.length) {
-      communityKeywordData.forEach((keywordData) => {
-        searchEngine.insert({
-          keyword: keywordData.keywordName,
-          count: keywordData.memberCount,
-        });
-      });
-
-      setSearchResult(
-        communityKeywordData.map(({ keywordName }) => keywordName),
-      );
-    }
-  }, [communityKeywordData]);
+    setSearchResult(initResult);
+  }, [initResult]);
 
   return (
     // TODO: 자동완성 문자열과의 인터랙션 추가하기 (입력 단어 변경등)
