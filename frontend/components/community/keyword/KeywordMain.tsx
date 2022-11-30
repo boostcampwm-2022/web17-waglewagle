@@ -3,6 +3,7 @@ import { KeywordData } from '../../../types/types';
 import ThreadList from './ThreadList';
 import styles from '@sass/components/community/keyword/KeywordMain.module.scss';
 import classnames from 'classnames/bind';
+import PostThread from './ThreadForm';
 const cx = classnames.bind(styles);
 
 const KeywordMain = () => {
@@ -21,10 +22,7 @@ const KeywordMain = () => {
         </p>
       </div>
       <ThreadList />
-      <form>
-        <input type='text' placeholder='내용을 입력하세요.' />
-        <button>글쓰기</button>
-      </form>
+      <PostThread />
     </main>
   );
 };
