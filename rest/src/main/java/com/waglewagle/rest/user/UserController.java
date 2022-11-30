@@ -1,9 +1,6 @@
 package com.waglewagle.rest.user;
 
-import com.waglewagle.rest.user.dto.LoginResponseDTO;
-import com.waglewagle.rest.user.dto.UpdateProfileDTO;
-import com.waglewagle.rest.user.dto.UpdateProfileResponseDTO;
-import com.waglewagle.rest.user.dto.UsernameLoginDTO;
+import com.waglewagle.rest.user.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -51,5 +48,13 @@ public class UserController {
         UpdateProfileResponseDTO updateProfileResponseDTO = new UpdateProfileResponseDTO(user);
 
         return ResponseEntity.ok(updateProfileResponseDTO);
+    }
+
+    @GetMapping("/me")
+    @ResponseBody
+    public ResponseEntity<UserInfoDTO> getUserInfo(@CookieValue(name = "user_id") Long userId) {
+        UserInfoDTO userInfoDTO = userService.getUserInfo(userId);
+
+        return ResponseEntity.ok(userInfoDTO);
     }
 }
