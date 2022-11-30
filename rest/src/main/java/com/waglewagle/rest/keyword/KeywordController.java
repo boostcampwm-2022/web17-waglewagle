@@ -37,6 +37,7 @@ public class KeywordController {
         return ResponseEntity.ok(sortedList);
     }
 
+    @ResponseBody
     @GetMapping("/{community_id}")
     public ResponseEntity<List<KeywordDTO>> getAllKeywordInCommunity(@PathVariable("community_id") Long communityId) {
 
