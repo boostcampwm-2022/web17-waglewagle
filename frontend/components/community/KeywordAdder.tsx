@@ -1,4 +1,9 @@
-import { ChangeEventHandler, FormEventHandler, useState } from 'react';
+import {
+  MouseEventHandler,
+  ChangeEventHandler,
+  FormEventHandler,
+  useState,
+} from 'react';
 import { useRouter } from 'next/router';
 import useAutoComplete from '@hooks/useAutoComplete';
 import {
@@ -41,12 +46,24 @@ const KeywordAdder = ({ theme, addButtonValue }: KeywordAdderProps) => {
     changeSearchKeyword(e.target.value);
   };
 
+  const handleMouseDownkResultItem: MouseEventHandler<HTMLLIElement> = (e) => {
+    e.preventDefault();
+    const target = e.target as HTMLLIElement;
+    changeSearchKeyword(target.innerText);
+  };
+
   return (
-    <div className={cx(theme)}>
+    <div
+      className={cx(theme)}
+      onFocus={() => setIsOpenDropDown(true)}
+      onBlur={() => setIsOpenDropDown(false)}
+    >
       {isOpenDropdown && (
         <SearchResultListLayout layoutTheme={theme}>
           {searchResult.map((word, index) => (
-            <li key={index}>{word}</li>
+            <li onMouseDown={handleMouseDownkResultItem} key={index}>
+              {word}
+            </li>
           ))}
         </SearchResultListLayout>
       )}
@@ -55,8 +72,6 @@ const KeywordAdder = ({ theme, addButtonValue }: KeywordAdderProps) => {
           type='text'
           value={searchKeyword}
           onChange={handleChangeSearchKeyword}
-          onFocus={() => setIsOpenDropDown(true)}
-          onBlur={() => setIsOpenDropDown(false)}
         />
         <button type='submit'>{addButtonValue}</button>
       </AutoCompleteFormLayout>
