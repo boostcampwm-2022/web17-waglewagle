@@ -1,6 +1,7 @@
 import classnames from 'classnames/bind';
 import styles from '@sass/components/common/LoginModalContent.module.scss';
 import { AiFillGithub } from 'react-icons/ai';
+import config from '../../config';
 const cx = classnames.bind(styles);
 
 const LoginModalContent = () => {
@@ -8,7 +9,7 @@ const LoginModalContent = () => {
     <div className={cx('container')}>
       <h2 className={cx('title')}>로그인</h2>
       <a
-        href='http://localhost:8080/oauth2/authorization/github'
+        href={`${config.API_HOST}/oauth2/authorization/github`}
         className={cx('github-login-button')}
       >
         <AiFillGithub />

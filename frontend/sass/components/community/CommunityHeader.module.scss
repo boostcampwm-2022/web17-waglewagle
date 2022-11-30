@@ -1,9 +1,12 @@
 .header {
+  position: relative;
   display: flex;
   justify-content: space-between;
   max-width: 1320px;
   margin: 0 auto;
   padding: 20px;
+  background-color: transparent;
+  z-index: 9;
 }
 
 .left-header {
