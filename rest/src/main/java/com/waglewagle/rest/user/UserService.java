@@ -29,7 +29,7 @@ public class UserService {
         userIdCookie.setMaxAge(3600 * 1000);
         userIdCookie.setPath("/");
         userIdCookie.setHttpOnly(true);
-        userIdCookie.setSecure(true);
+//        userIdCookie.setSecure(true);
         return userIdCookie;
     }
 
