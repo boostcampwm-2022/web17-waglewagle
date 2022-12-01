@@ -3,6 +3,7 @@ package com.waglewagle.rest.keyword;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.waglewagle.rest.community.Community;
+import com.waglewagle.rest.keyword.KeywordDTO.*;
 import com.waglewagle.rest.user.QUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -47,5 +48,18 @@ public class KeywordRepository {
                 ))
                 .where(keywordUser.keyword.community.eq(keyword.getCommunity()))
                 .fetch(); //TODO: fetch? fetchJoin?
+    }
+
+    public boolean isKeywordDuplicated(CreateKeywordInputDTO createKeywordInputDTO) {
+        return em.createQuery("SELECT k FROM Keyword k WHERE k.keyword = :keywordName AND k.community.id = :communityId", Keyword.class)
+                .setParameter("keywordName", createKeywordInputDTO.getKeywordName())
+                .setParameter("communityId",createKeywordInputDTO.getCommunityId())
+                .getResultList()
+                .size() == 1;
+    }
+
+    public void saveKeyword(Keyword keyword) {
+        em.persist(keyword);
+//        return keyword;
     }
 }
