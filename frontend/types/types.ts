@@ -11,8 +11,23 @@ export type KeywordData = {
   memberCount: number;
 };
 
+export type AddKeywordData = {
+  keywordName: string;
+  communityId: string;
+};
+
+export type AddKeywordResponseData = {
+  keywordId: string;
+  keywordName: string;
+};
+
+export type JoinKeywordData = {
+  keywordId: string;
+  communityId: string;
+};
+
 // TODO: 그냥 rank를 옵셔널로 넣을까
-export type KeywordAssociationData = {
+export type KeywordRelatedData = {
   keywordId: string;
   keywordName: string;
   memberCount: number;

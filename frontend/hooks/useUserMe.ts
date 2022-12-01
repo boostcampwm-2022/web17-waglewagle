@@ -5,7 +5,7 @@ import { UserData } from '../types/types';
 
 const useUserMe = () => {
   const fetchUserMe = async () => {
-    const data = await apis.getUserMe();
+    const data = await apis.getUserData();
     return data;
   };
   const { data } = useQuery<UserData>([REACT_QUERY_KEY.USERME], fetchUserMe);

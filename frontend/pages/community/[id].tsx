@@ -12,6 +12,7 @@ import { useState } from 'react';
 import useUserMe from '@hooks/useUserMe';
 
 const Community = () => {
+  const userData = useUserMe();
   const [isOpenLoginModal, setIsOpenLoginModal] = useState<boolean>(false);
   const [isOpenKeywordModal, setIsOpenKeywordModal] = useState<boolean>(false);
 
@@ -23,6 +24,10 @@ const Community = () => {
     setIsOpenKeywordModal(true);
   };
 
+  const closeLoginModal = () => {
+    setIsOpenLoginModal(false);
+  };
+
   return (
     <CommunityLayout>
       <CommunityHeader
@@ -31,15 +36,17 @@ const Community = () => {
         handleClickEnter={handleClickEnter}
       />
       <KeywordBubbleChart />
-      <KeywordAdder
-        theme={KEYWORD_ADDER_THEME.MAIN}
-        addButtonValue={<AddCircleIcon />}
-      />
+      {userData && (
+        <KeywordAdder
+          theme={KEYWORD_ADDER_THEME.MAIN}
+          addButtonValue={<AddCircleIcon />}
+        />
+      )}
       <Modal
         isOpenModal={isOpenLoginModal}
         closeModal={() => setIsOpenLoginModal(false)}
       >
-        <LoginModalContent />
+        <LoginModalContent closeLoginModal={closeLoginModal} />
       </Modal>
       <Modal
         isOpenModal={isOpenKeywordModal}

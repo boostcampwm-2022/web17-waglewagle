@@ -32,9 +32,9 @@ const KeywordAdder = ({ theme, addButtonValue }: KeywordAdderProps) => {
     useAutoComplete(communityKeywordData);
   const {
     myKeywordList,
-    recentAssociationKeywordList,
+    relatedKeywordList,
     handleChangeMyKeywordList,
-    handleChangeRecentAssociationKeywordList,
+    handleChangeRelatedKeywordList,
   } = useUserKeywordList();
 
   const [isOpenDropdown, setIsOpenDropDown] = useState<boolean>(false);
@@ -44,7 +44,7 @@ const KeywordAdder = ({ theme, addButtonValue }: KeywordAdderProps) => {
       keywordId,
     );
     const slicedData = keywordAssociationsData.slice(0, 3);
-    handleChangeRecentAssociationKeywordList(slicedData);
+    return slicedData;
   };
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
@@ -61,9 +61,18 @@ const KeywordAdder = ({ theme, addButtonValue }: KeywordAdderProps) => {
       const newMyKeyword = { keywordId, keywordName: searchKeyword };
       const updatedMyKeywordList = [...myKeywordList, newMyKeyword];
       handleChangeMyKeywordList(updatedMyKeywordList);
-      await getKeywordAssociations(keywordId);
+      const slicedData = await getKeywordAssociations(keywordId);
+      handleChangeRelatedKeywordList(slicedData);
     } else {
-      // 키워드 추가 API, 이후 keyword id를 반환받아서 참가하기 => 이후에는 Mutation으로 수정됨.
+      const body = {
+        keywordName: searchKeyword,
+        communityId,
+      };
+      const result = await apis.addKeyword(body);
+      const updatedMyKeywordList = [...myKeywordList, result];
+      handleChangeMyKeywordList(updatedMyKeywordList);
+      const slicedData = await getKeywordAssociations(result.keywordId);
+      handleChangeRelatedKeywordList(slicedData);
     }
 
     setIsOpenDropDown(false);
@@ -82,12 +91,6 @@ const KeywordAdder = ({ theme, addButtonValue }: KeywordAdderProps) => {
     const target = e.target as HTMLLIElement;
     changeSearchKeyword(target.innerText);
   };
-
-  // 이후 분리하여 상위 컴포넌트에서 사용 필요함.
-  // TODO: 전역상태관리 쓸지 물어보기
-  useEffect(() => {
-    console.log(recentAssociationKeywordList);
-  }, [recentAssociationKeywordList]);
 
   return (
     <div

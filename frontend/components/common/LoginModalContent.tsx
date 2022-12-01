@@ -4,7 +4,11 @@ import { ChangeEvent, useState } from 'react';
 import apis from '../../apis/apis';
 const cx = classnames.bind(styles);
 
-const LoginModalContent = () => {
+interface LoginModalContentProps {
+  closeLoginModal: () => void;
+}
+
+const LoginModalContent = ({ closeLoginModal }: LoginModalContentProps) => {
   const [username, setUsername] = useState<string>('');
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -16,6 +20,7 @@ const LoginModalContent = () => {
     // localStorage.setItem('waglewagle-username', username); // 임시 유저데이터
     apis.fetchLogin(username);
     setUsername('');
+    closeLoginModal();
   };
 
   return (
