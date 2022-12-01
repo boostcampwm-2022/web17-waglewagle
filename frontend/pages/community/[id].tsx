@@ -1,12 +1,12 @@
-import { Modal } from '@components/common';
-import LoginModalContent from '@components/common/LoginModalContent';
+import { Modal, LoginModalContent } from '@components/common';
 import {
-  AutoComplete,
   CommunityHeader,
   CommunityLayout,
   KeywordAddModal,
   KeywordBubbleChart,
 } from '@components/community';
+import KeywordAdder from '@components/community/KeywordAdder';
+import { KEYWORD_ADDER_THEME } from '@constants/constants';
 import { useState, useEffect } from 'react';
 
 const Community = () => {
@@ -38,7 +38,7 @@ const Community = () => {
         handleClickEnter={handleClickEnter}
       />
       <KeywordBubbleChart />
-      <AutoComplete />
+      <KeywordAdder theme={KEYWORD_ADDER_THEME.MAIN} />
       <Modal
         isOpenModal={isOpenLoginModal}
         closeModal={() => setIsOpenLoginModal(false)}

@@ -1,0 +1,9 @@
+@import '@sass/variables.scss';
+
+.keyword-adder {
+  position: absolute;
+  bottom: 100px;
+  left: 50%;
+  width: 250px;
+  transform: translateX(-50%);
+}
