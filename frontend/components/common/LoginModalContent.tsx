@@ -2,6 +2,7 @@ import classnames from 'classnames/bind';
 import styles from '@sass/components/common/LoginModalContent.module.scss';
 import { ChangeEvent, useState } from 'react';
 import apis from '../../apis/apis';
+import { useRouter } from 'next/router';
 const cx = classnames.bind(styles);
 
 interface LoginModalContentProps {
@@ -9,16 +10,19 @@ interface LoginModalContentProps {
 }
 
 const LoginModalContent = ({ closeLoginModal }: LoginModalContentProps) => {
+  const router = useRouter();
   const [username, setUsername] = useState<string>('');
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
   };
 
-  const handleSubmitUsernameLogin = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmitUsernameLogin = async (
+    e: React.FormEvent<HTMLFormElement>,
+  ) => {
     e.preventDefault();
     // localStorage.setItem('waglewagle-username', username); // 임시 유저데이터
-    apis.fetchLogin(username);
+    await apis.fetchLogin(username);
     setUsername('');
     closeLoginModal();
   };

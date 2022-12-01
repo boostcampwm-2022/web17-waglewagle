@@ -1,6 +1,9 @@
+import { Modal } from '@components/common';
+import useUserMe from '@hooks/useUserMe';
 import styles from '@sass/components/community/KeywordBubble.module.scss';
 import classnames from 'classnames/bind';
 import { useState } from 'react';
+import KeywordModalContent from './keyword/KeywordModalContent';
 const cx = classnames.bind(styles);
 
 interface KeywordBubbleProps {
@@ -12,8 +15,9 @@ interface KeywordBubbleProps {
 
 // requestAnimationFrame으로 이동
 const KeywordBubble = ({ keyword, posX, posY, radius }: KeywordBubbleProps) => {
-  // TODO : 이거... 맞아...?
+  const userData = useUserMe();
   const [isHover, setIsHover] = useState<boolean>(false);
+  const [isOpenKeywordModal, setIsOpenKeywordModal] = useState<boolean>(false);
 
   const handleMouseEnter = () => {
     setIsHover(true);
@@ -23,8 +27,13 @@ const KeywordBubble = ({ keyword, posX, posY, radius }: KeywordBubbleProps) => {
     setIsHover(false);
   };
 
+  const handleClick = () => {
+    userData && setIsOpenKeywordModal(true); // 유저 정보가 있을때만 모달창을 띄워줌
+  };
+
   return (
     <div
+      onClick={handleClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       className={cx('bubble')}
@@ -38,6 +47,12 @@ const KeywordBubble = ({ keyword, posX, posY, radius }: KeywordBubbleProps) => {
       }}
     >
       <span>{keyword}</span>
+      <Modal
+        isOpenModal={isOpenKeywordModal}
+        closeModal={() => setIsOpenKeywordModal(false)}
+      >
+        <KeywordModalContent />
+      </Modal>
     </div>
   );
 };
