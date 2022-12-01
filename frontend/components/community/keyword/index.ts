@@ -1,5 +1,3 @@
-import KeywordGroupLayout from './KeywordLayout';
-import KeywordMain from './KeywordMain';
-import KeywordGroupUserList from './KeywordUserList';
+import KeywordModalContent from './KeywordModalContent';
 
-export { KeywordGroupLayout, KeywordMain, KeywordGroupUserList };
+export { KeywordModalContent };

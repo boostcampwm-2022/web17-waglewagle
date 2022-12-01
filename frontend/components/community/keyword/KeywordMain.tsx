@@ -41,7 +41,9 @@ const KeywordMain = () => {
           <ThreadList openSidebar={openSidebar} />
           <PostThread />
         </div>
-        {threadSidebar.isOpen && <Sidebar {...threadSidebar} closeSidebar={closeSidebar}/>}
+        {threadSidebar.isOpen && (
+          <Sidebar {...threadSidebar} closeSidebar={closeSidebar} />
+        )}
       </div>
     </main>
   );

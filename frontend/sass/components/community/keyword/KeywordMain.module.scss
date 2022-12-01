@@ -1,5 +1,6 @@
 .main {
-  width: 60%;
+  width: calc(100% - 250px);
+  height: 100%;
   padding: 45px 35px;
   border: 1px solid black;
   border-radius: 15px;
@@ -7,6 +8,7 @@
 
 .content {
   display: flex;
+  height: calc(100% - 80px);
 
   div:first-child {
     flex: 1;
@@ -27,4 +29,10 @@
 
 .user-count {
   font-size: 24px;
+}
+
+@media (max-width: 1320px) {
+  .main {
+    width: 100%;
+  }
 }
