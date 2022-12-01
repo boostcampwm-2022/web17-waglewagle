@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "seed": "rm -rf dist && tsc && node dist/seed/unique && node dist/repository/seeds"
+    "seed": "rm -rf dist && tsc && node dist/seed/unique && node dist/seed/seeds"
   },
   "keywords": [],
   "author": "",

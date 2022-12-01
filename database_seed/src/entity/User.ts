@@ -37,6 +37,12 @@ export class User extends BaseEntity {
   })
   username: string | null;
 
+  @Column('varchar', { name: 'email' })
+  email: string;
+
+  @Column('varchar', { name: 'role' })
+  role: string;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
