@@ -6,10 +6,10 @@ import { ThreadData } from '../../../types/types';
 const cx = classnames.bind(styles);
 
 interface ThreadListProps {
-  toggleSidebar(thread: ThreadData): void;
+  openSidebar(thread: ThreadData): void;
 }
 
-const ThreadList = ({ toggleSidebar }: ThreadListProps) => {
+const ThreadList = ({ openSidebar }: ThreadListProps) => {
   const [threadDataList] = useState<ThreadData[]>([
     {
       id: '1',
@@ -74,7 +74,7 @@ const ThreadList = ({ toggleSidebar }: ThreadListProps) => {
           contents={contents}
           createAt={createAt}
           comments={comments}
-          toggleSidebar={toggleSidebar}
+          openSidebar={openSidebar}
         />
       ))}
     </ul>

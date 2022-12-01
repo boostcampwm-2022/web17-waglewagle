@@ -3,6 +3,7 @@ import { CommentData } from '../../../types/types';
 import styles from '@sass/components/community/keyword/Sidebar.module.scss';
 import classnames from 'classnames/bind';
 import calculateTimeGap from '@utils/calculateTimeGap';
+import CloseIcon from '@public/images/close.svg';
 const cx = classnames.bind(styles);
 
 interface SidebarProps {
@@ -12,6 +13,7 @@ interface SidebarProps {
   createAt?: string;
   contents?: string;
   comments?: CommentData[];
+  closeSidebar(): void;
 }
 
 const Sidebar = ({
@@ -21,6 +23,7 @@ const Sidebar = ({
   createAt,
   contents,
   comments,
+  closeSidebar,
 }: SidebarProps) => {
   return (
     <div className={cx('sidebar')}>
@@ -64,6 +67,9 @@ const Sidebar = ({
           </li>
         ))}
       </ul>
+      <button className={cx('close-button')} onClick={closeSidebar}>
+        <CloseIcon />
+      </button>
     </div>
   );
 };

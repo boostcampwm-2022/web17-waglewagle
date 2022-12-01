@@ -20,11 +20,11 @@ const KeywordMain = () => {
     memberCount: 3,
   });
 
-  const toggleSidebar = (thread: ThreadData) => {
-    if (!threadSidebar.isOpen) {
-      setThreadSidebar({ isOpen: true, ...thread });
-      return;
-    }
+  const openSidebar = (thread: ThreadData) => {
+    setThreadSidebar({ isOpen: true, ...thread });
+  };
+
+  const closeSidebar = () => {
     setThreadSidebar({ isOpen: false });
   };
 
@@ -38,10 +38,10 @@ const KeywordMain = () => {
       </div>
       <div className={cx('content')}>
         <div>
-          <ThreadList toggleSidebar={toggleSidebar} />
+          <ThreadList openSidebar={openSidebar} />
           <PostThread />
         </div>
-        {threadSidebar.isOpen && <Sidebar {...threadSidebar} />}
+        {threadSidebar.isOpen && <Sidebar {...threadSidebar} closeSidebar={closeSidebar}/>}
       </div>
     </main>
   );

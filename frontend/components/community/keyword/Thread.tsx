@@ -15,7 +15,7 @@ interface ThreadProps {
   createAt: string;
   contents: string;
   comments: CommentData[];
-  toggleSidebar(thread: ThreadData): void;
+  openSidebar(thread: ThreadData): void;
 }
 
 const Thread = ({
@@ -25,22 +25,10 @@ const Thread = ({
   createAt,
   contents,
   comments,
-  toggleSidebar,
+  openSidebar,
 }: ThreadProps) => {
   return (
-    <li
-      className={cx('thread')}
-      onClick={() =>
-        toggleSidebar({
-          id,
-          profileURL,
-          username,
-          createAt,
-          contents,
-          comments,
-        })
-      }
-    >
+    <li className={cx('thread')}>
       <Image
         className={cx('profile-image')}
         src={
@@ -59,7 +47,19 @@ const Thread = ({
         <p>{contents}</p>
       </div>
       <div className={cx('buttons')}>
-        <button className={cx('comment-button')}>
+        <button
+          className={cx('comment-button')}
+          onClick={() =>
+            openSidebar({
+              id,
+              profileURL,
+              username,
+              createAt,
+              contents,
+              comments,
+            })
+          }
+        >
           <CommentIcon />
         </button>
         <button className={cx('delete-button')}>
