@@ -1,9 +1,12 @@
 package com.waglewagle.rest.keyword;
 
 import com.waglewagle.rest.community.Community;
+import com.waglewagle.rest.keywordUser.KeywordUser;
 import com.waglewagle.rest.thread.Thread;
 import com.waglewagle.rest.user.User;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -45,4 +48,7 @@ public class Keyword {
     private LocalDateTime updatedAt;
 
     private LocalDateTime deletedAt;
+
+    @OneToMany(mappedBy = "keyword", cascade = CascadeType.ALL)
+    private List<KeywordUser> keywordUsers = new ArrayList<>();
 }
