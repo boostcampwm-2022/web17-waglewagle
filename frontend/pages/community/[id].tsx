@@ -7,7 +7,7 @@ import {
   KeywordAddModal,
   KeywordBubbleChart,
 } from '@components/community';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const Community = () => {
   const [userData, setUserData] = useState<string | null>('');
@@ -21,6 +21,13 @@ const Community = () => {
   const handleClickKeywordModal = () => {
     setIsOpenKeywordModal(true);
   };
+
+  useEffect(() => {
+    const username = localStorage.getItem('waglewagle-username');
+    if (username) {
+      setUserData(username);
+    }
+  }, []);
 
   return (
     <CommunityLayout>
