@@ -25,6 +25,7 @@ const LoginModalContent = ({ closeLoginModal }: LoginModalContentProps) => {
     await apis.fetchLogin(username);
     setUsername('');
     closeLoginModal();
+    router.reload();
   };
 
   return (
