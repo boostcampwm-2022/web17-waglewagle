@@ -1,4 +1,4 @@
-<center>
+<div align="center">
 
 ![Group 18](https://user-images.githubusercontent.com/69471032/205137911-7ed0a14d-ffe9-4cec-94b6-6d4bd7bc73c5.png)
 
@@ -6,7 +6,7 @@
 
 50 ~ 300명의 커뮤니티의 소그룹 형성을 돕는 공통 관심사 시각화 서비스
 
-</center>
+</div>
 
 # 📽️ 데모 영상
 
