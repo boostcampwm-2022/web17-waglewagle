@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Modal } from '@components/common';
 import DefaultProfile from './DefaultProfile';
 import Image from 'next/image';
+import UserIcon from '@public/images/user.svg';
 import styles from '@sass/components/main/MainHeader.module.scss';
 import classnames from 'classnames/bind';
 const cx = classnames.bind(styles);
@@ -17,7 +18,9 @@ const MainHeader = () => {
         onClick={() => {
           setIsOpenModal((prev) => !prev);
         }}
-      />
+      >
+        <UserIcon />
+      </button>
       <Modal isOpenModal={isOpenModal} closeModal={() => setIsOpenModal(false)}>
         <DefaultProfile />
       </Modal>

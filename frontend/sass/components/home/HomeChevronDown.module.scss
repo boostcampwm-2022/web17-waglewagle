@@ -1,9 +1,10 @@
 .chevron--description {
-  margin-top: 30px;
+  margin-top: 50px;
 
-  transition: all 0.3s ease-in;
+  transition: all 0.2s ease-in;
 
   &:hover {
-    transform: translateY(10px);
+    cursor: pointer;
+    transform: translateY(5px);
   }
 }
