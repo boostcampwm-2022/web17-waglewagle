@@ -14,9 +14,6 @@ import { Community } from './Community';
 import { Keyword } from './Keyword';
 import { User } from './User';
 
-@Index('FKde4ofvrnhohtcvb1yaag3doct', ['communityId'], {})
-@Index('FKlqjerts6c6lcml0n06053x3ls', ['keywordId'], {})
-@Index('FKnifacyv4qur5wp3nyj8ykb6gs', ['userId'], {})
 @Entity('keyword_user')
 export class KeywordUser extends BaseEntity {
   @PrimaryGeneratedColumn('increment', { name: 'id', type: 'bigint' })

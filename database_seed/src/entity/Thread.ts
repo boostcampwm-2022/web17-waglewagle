@@ -9,15 +9,13 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  BaseEntity,
 } from 'typeorm';
 import { Keyword } from './Keyword';
 import { User } from './User';
 
-@Index('FKedurjn88vojgqvkjwbxlukmfx', ['authorId'], {})
-@Index('FK50e291c4mexo6p78mi3t2xd6u', ['keywordId'], {})
-@Index('FKfspfoq62r3wrwmx755muuqnf8', ['parentThreadId'], {})
 @Entity('thread')
-export class Thread {
+export class Thread extends BaseEntity {
   @PrimaryGeneratedColumn('increment', { name: 'id', type: 'bigint' })
   id: string;
 

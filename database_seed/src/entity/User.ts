@@ -1,4 +1,5 @@
 import {
+  BaseEntity,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
@@ -14,9 +15,8 @@ import { Keyword } from './Keyword';
 import { KeywordUser } from './KeywordUser';
 import { Thread } from './Thread';
 
-@Index('UK_sb8bbouer5wak8vyiiy4pf2bx', ['username'], { unique: true })
 @Entity('user')
-export class User {
+export class User extends BaseEntity {
   @PrimaryGeneratedColumn('increment', { name: 'id', type: 'bigint' })
   id: string;
 
