@@ -22,6 +22,27 @@ public class KeywordController {
 
     private final KeywordService keywordService;
     private final CommunityService communityService;
+    private final KeywordUserService keywordUserService;
+
+    /**
+     * 키워드 생성
+     * 11.29
+     */
+    @ResponseBody
+    @PostMapping("")
+    public ResponseEntity<CreateKeywordResponse> createKeyword(@RequestBody CreateKeywordInputDTO createKeywordInputDTO, @CookieValue("user_id") Long userId) {
+
+        if (keywordService.isDuplicated(createKeywordInputDTO)) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
+        String keywordName = createKeywordInputDTO.getKeywordName();
+        Long communityId = createKeywordInputDTO.getCommunityId();
+
+        Keyword keyword = keywordService.createKeyword(userId, communityId, keywordName);
+
+        return new ResponseEntity<>(new KeywordDTO.CreateKeywordResponse(keyword), HttpStatus.CREATED);
+    }
 
     //spring controller parameter
     //https://velog.io/@junbee/Spring-MVC-%EA%B8%B0%EB%B3%B8-%EA%B8%B0%EB%8A%A52-%ED%8C%8C%EB%9D%BC%EB%AF%B8%ED%84%B0-%EC%B2%98%EB%A6%AC
@@ -53,5 +74,20 @@ public class KeywordController {
         }
 
         return ResponseEntity.ok(keywordListInCommunity);
+    }
+
+    /**
+     * 키워드 참가
+     * 11.29
+     */
+    @ResponseBody
+    @PostMapping("/join")
+    public ResponseEntity<Boolean> joinKeyword(@RequestBody JoinKeywordInputDTO joinKeywordInputDTO, @CookieValue("user_id") Long userId) {
+        if (!joinKeywordInputDTO.isValid() || userId == null) {
+            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+        }
+
+        keywordService.joinKeyword(joinKeywordInputDTO, userId);
+        return new ResponseEntity(null, HttpStatus.CREATED);
     }
 }

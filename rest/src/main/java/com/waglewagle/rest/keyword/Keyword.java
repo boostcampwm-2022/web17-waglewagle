@@ -1,12 +1,11 @@
 package com.waglewagle.rest.keyword;
 
 import com.waglewagle.rest.community.Community;
+import com.waglewagle.rest.keyword.KeywordDTO.*;
 import com.waglewagle.rest.keywordUser.KeywordUser;
 import com.waglewagle.rest.thread.Thread;
 import com.waglewagle.rest.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -24,6 +23,7 @@ import java.util.List;
         }
 )
 @Getter
+@NoArgsConstructor
 public class Keyword {
 
     @Id
@@ -51,4 +51,14 @@ public class Keyword {
 
     @OneToMany(mappedBy = "keyword", cascade = CascadeType.ALL)
     private List<KeywordUser> keywordUsers = new ArrayList<>();
+
+    public Keyword (CreateKeywordDTO createKeywordDTO) {
+        author = createKeywordDTO.getAuthor();
+        community = createKeywordDTO.getCommunity();
+        keyword = createKeywordDTO.getKeywordName();
+    }
+
+    public void addKeywordUser(KeywordUser keywordUser) {
+        keywordUsers.add(keywordUser);
+    }
 }
