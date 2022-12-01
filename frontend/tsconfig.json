@@ -21,7 +21,8 @@
       "@constants/*": ["./constants/*"],
       "@public/*": ["./public/*"],
       "@utils/*": ["./utils/*"],
-      "@sass/*": ["./sass/*"]
+      "@sass/*": ["./sass/*"],
+      "@hooks/*": ["./hooks/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "util/trie.ts"],

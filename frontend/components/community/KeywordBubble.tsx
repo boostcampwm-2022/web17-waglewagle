@@ -1,7 +1,9 @@
-import { BubbleData } from '../../types/types';
+import { Modal } from '@components/common';
+import useUserMe from '@hooks/useUserMe';
 import styles from '@sass/components/community/KeywordBubble.module.scss';
 import classnames from 'classnames/bind';
 import { useState } from 'react';
+import KeywordModalContent from './keyword/KeywordModalContent';
 const cx = classnames.bind(styles);
 
 interface KeywordBubbleProps {
@@ -13,8 +15,9 @@ interface KeywordBubbleProps {
 
 // requestAnimationFrame으로 이동
 const KeywordBubble = ({ keyword, posX, posY, radius }: KeywordBubbleProps) => {
-  // TODO : 이거... 맞아...?
+  const userData = useUserMe();
   const [isHover, setIsHover] = useState<boolean>(false);
+  const [isOpenKeywordModal, setIsOpenKeywordModal] = useState<boolean>(false);
 
   const handleMouseEnter = () => {
     setIsHover(true);
@@ -24,25 +27,37 @@ const KeywordBubble = ({ keyword, posX, posY, radius }: KeywordBubbleProps) => {
     setIsHover(false);
   };
 
+  const handleClick = () => {
+    userData && setIsOpenKeywordModal(true); // 유저 정보가 있을때만 모달창을 띄워줌
+  };
+
   return (
     <div
+      onClick={handleClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       className={cx('bubble')}
       style={{
         transform: `translate(${posX - radius}px, ${posY - radius}px) scale(${
           isHover ? 1.2 : 1.0
-        })`,
-        width: `${radius * 5}px`,
-        height: `${radius * 5}px`,
-        fontSize: `${10 + radius * 1}px`,
+        })`, // 원의 중앙이 좌표와 일치할 수 있도록 tranform
+        width: `${radius * 2}px`,
+        height: `${radius * 2}px`,
+        fontSize: `${10 + radius * 0.2}px`,
       }}
     >
       <span>{keyword}</span>
+      <Modal
+        isOpenModal={isOpenKeywordModal}
+        closeModal={() => setIsOpenKeywordModal(false)}
+      >
+        <KeywordModalContent />
+      </Modal>
     </div>
   );
 };
 
+// TODO: 지우기
 // setInterval로 이동 => 0, 0부터 이동
 // const KeywordBubble = ({ bubbleData }: KeywordBubbleProps) => {
 //   const bubbleRef = useRef<HTMLDivElement | null>(null);

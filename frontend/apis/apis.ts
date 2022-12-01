@@ -1,20 +1,73 @@
-// 일단 스타일 신경 안쓰고 만들어두었읍니다.
+import {
+  AddKeywordData,
+  AddKeywordResponseData,
+  JoinKeywordData,
+  KeywordRelatedData,
+  UserData,
+} from './../types/types';
 import axios from 'axios';
+import config from '../config';
+import { KeywordData } from '../types/types';
 
-const instance = axios.create({
-  baseURL: 'http://www.waglewagle.link/api',
+const apiInstance = axios.create({
+  baseURL: `${config.API_HOST}`,
 });
 
-// TODO : apis 스타일 맞추기
 const fetchLogin = async (username: string) => {
-  const response = await instance.post('/v1/user/login', {
+  const response = await apiInstance.post('/v1/user/login', {
     data: username,
   });
+
   return response;
+};
+
+const getKeywords = async (id: string): Promise<KeywordData[]> => {
+  const response = await apiInstance.get(`/v1/keyword/${id}`);
+
+  return response.data;
+};
+
+const joinKeyword = async (joinKeywordData: JoinKeywordData) => {
+  await apiInstance.post('/v1/keyword/join', {
+    data: joinKeywordData,
+  });
+};
+
+const getUserData = async (): Promise<UserData> => {
+  const response = await apiInstance.get('/v1/user/me');
+
+  return response.data;
+};
+
+const getKeywordAssociations = async (
+  id: string,
+): Promise<KeywordRelatedData[]> => {
+  const response = await apiInstance.get('/v1/keyword/associations', {
+    params: {
+      'keyword-id': id,
+    },
+  });
+
+  return response.data;
+};
+
+const addKeyword = async (
+  addKeywordData: AddKeywordData,
+): Promise<AddKeywordResponseData> => {
+  const response = await apiInstance.post('/v1/keyword', {
+    data: addKeywordData,
+  });
+
+  return response.data;
 };
 
 const apis = {
   fetchLogin,
+  getKeywords,
+  joinKeyword,
+  addKeyword,
+  getUserData,
+  getKeywordAssociations,
 };
 
 export default apis;

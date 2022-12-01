@@ -10,6 +10,7 @@ class Circle {
     public id: string,
     public x: number,
     public y: number,
+    public innerText: string,
     public radius: number,
     public velocity: Vector,
   ) {}
@@ -42,7 +43,7 @@ class Circle {
 
   get isMoving() {
     // velocity가 높아지면 잔움직임이 적어진다.
-    if (Math.abs(this.velocity.x) > 0.01 && Math.abs(this.velocity.y) > 0.01) {
+    if (Math.abs(this.velocity.x) > 0.1 && Math.abs(this.velocity.y) > 0.01) {
       return true;
     }
 
