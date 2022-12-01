@@ -1,0 +1,6 @@
+spring:
+  config:
+    import:
+      - classpath:general.yml
+      - classpath:secret.yml
+      - classpath:application-oauth.yml
