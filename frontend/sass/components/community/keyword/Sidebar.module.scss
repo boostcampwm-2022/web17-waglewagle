@@ -9,3 +9,32 @@
     font-size: 24px;
   }
 }
+
+.profile-image {
+  border-radius: 5px;
+}
+
+.thread {
+  display: flex;
+  gap: 10px;
+}
+
+.name-time {
+  display: flex;
+  gap: 5px;
+}
+
+.comment-count {
+  margin: 10px 0;
+}
+
+.comment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.comment {
+  display: flex;
+  gap: 10px;
+}

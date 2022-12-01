@@ -17,10 +17,8 @@ const KeywordMain = () => {
     contents?: string;
     comments?: CommentData[];
   }>({
-    isOpen: true,
+    isOpen: false,
   });
-
-  const [isClosing, setIsClosing] = useState(false);
 
   const [keywordData] = useState<KeywordData>({
     keywordId: '1',
@@ -33,7 +31,6 @@ const KeywordMain = () => {
       setThreadSidebar({ isOpen: true, ...thread });
       return;
     }
-    setIsClosing(true);
     setThreadSidebar({ isOpen: false });
   };
 
@@ -50,9 +47,7 @@ const KeywordMain = () => {
           <ThreadList toggleSidebar={toggleSidebar} />
           <PostThread />
         </div>
-        {threadSidebar.isOpen && (
-          <Sidebar {...threadSidebar} isClosing={isClosing} />
-        )}
+        {threadSidebar.isOpen && <Sidebar {...threadSidebar} />}
       </div>
     </main>
   );
