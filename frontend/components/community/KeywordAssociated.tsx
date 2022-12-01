@@ -11,7 +11,7 @@ const KeywordAssociated = () => {
         src='/images/window-dog.png'
         width={66}
         height={70}
-        alt='추천 키워드를 알려주는 윈도우 도우미 강아지'
+        alt='추천 키워드를 알려주는 강아지 캐릭터'
       />
     </div>
   );

@@ -1,3 +1,4 @@
+import useUserMe from '@hooks/useUserMe';
 import styles from '@sass/components/community/CommunityHeader.module.scss';
 import classnames from 'classnames/bind';
 import Image from 'next/image';
@@ -5,17 +6,17 @@ const cx = classnames.bind(styles);
 
 interface CommunityHeaderProps {
   title: string;
-  userData: string | null;
   handleClickEnter: () => void;
   handleClickKeywordModal: () => void;
 }
 
 const CommunityHeader = ({
   title,
-  userData,
   handleClickEnter,
   handleClickKeywordModal,
 }: CommunityHeaderProps) => {
+  const userData = useUserMe();
+
   return (
     <header className={cx('header')}>
       <div className={cx('left-header')}>

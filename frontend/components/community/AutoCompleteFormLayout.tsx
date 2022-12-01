@@ -15,7 +15,7 @@ const AutoCompleteFormLayout = ({
   handleSubmit,
 }: AutoCompleteFormLayoutProps) => {
   return (
-    <form onSubmit={handleSubmit} className={cx(`${layoutTheme}`)}>
+    <form onSubmit={handleSubmit} className={cx(layoutTheme)}>
       {children}
     </form>
   );

@@ -1,79 +1,109 @@
 import {
+  MouseEventHandler,
   ChangeEventHandler,
   FormEventHandler,
-  useEffect,
   useState,
+  useEffect,
 } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import useAutoComplete from '@hooks/useAutoComplete';
 import {
   SearchResultListLayout,
   AutoCompleteFormLayout,
 } from '@components/community';
-import apis from '../../apis/apis';
-import { KeywordData } from '../../types/types';
-import AddCircleIcon from '@public/images/add-circle.svg';
 import styles from '@sass/components/community/KeywordAdderLayout.module.scss';
 import classnames from 'classnames/bind';
+import useKeywordListQuery from '@hooks/useKeywordListQuery';
+import apis from '../../apis/apis';
+import useUserKeywordList from '@hooks/useUserKeywordList';
+import getKeywordIdByKeyword from '@utils/getKeywordIdByKeywordName';
 const cx = classnames.bind(styles);
 
 interface KeywordAdderProps {
   theme: string;
+  addButtonValue: React.ReactNode | string;
 }
 
-const KeywordAdder = ({ theme }: KeywordAdderProps) => {
+const KeywordAdder = ({ theme, addButtonValue }: KeywordAdderProps) => {
   const router = useRouter();
   const communityId: string = router.query.id as string;
-  const { data } = useQuery<KeywordData[]>(
-    ['keyword', communityId],
-    () => {
-      const data = apis.getKeywords(communityId);
-      return data;
-    },
-    {
-      enabled: !!communityId,
-    },
-  );
-
-  const [communityKeywordData, setCommunityKeywordData] = useState<
-    KeywordData[]
-  >([]);
+  const communityKeywordData = useKeywordListQuery(communityId);
+  const { searchKeyword, searchResult, changeSearchKeyword } =
+    useAutoComplete(communityKeywordData);
   const {
-    searchKeyword,
-    searchResult,
-    changeSearchKeyword,
-    updateSearchResult,
-  } = useAutoComplete(communityKeywordData);
+    myKeywordList,
+    relatedKeywordList,
+    handleChangeMyKeywordList,
+    handleChangeRelatedKeywordList,
+  } = useUserKeywordList();
 
-  // TODO: 자동완성 컴포넌트 추상화하면서 거기로 넘기기
   const [isOpenDropdown, setIsOpenDropDown] = useState<boolean>(false);
 
-  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+  const getKeywordAssociations = async (keywordId: string) => {
+    const keywordAssociationsData = await apis.getKeywordAssociations(
+      keywordId,
+    );
+    const slicedData = keywordAssociationsData.slice(0, 3);
+    return slicedData;
+  };
+
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    setIsOpenDropDown(true);
-    updateSearchResult();
+
+    const keywordId = getKeywordIdByKeyword(
+      searchKeyword,
+      communityKeywordData,
+    );
+
+    if (keywordId) {
+      // 내 키워드에 추가 => 이후에는 Mutation으로 수정 필요
+      // memberCount를 넣으려면 키워드 추가, 키워드 참여 api 수신 시 모두 memberCount를 포함해서 받거나 memberCount까지 가져와야하기 때문에 myKeywordList에서는 memberCount 제외
+      const newMyKeyword = { keywordId, keywordName: searchKeyword };
+      const updatedMyKeywordList = [...myKeywordList, newMyKeyword];
+      handleChangeMyKeywordList(updatedMyKeywordList);
+      const slicedData = await getKeywordAssociations(keywordId);
+      handleChangeRelatedKeywordList(slicedData);
+    } else {
+      const body = {
+        keywordName: searchKeyword,
+        communityId,
+      };
+      const result = await apis.addKeyword(body);
+      const updatedMyKeywordList = [...myKeywordList, result];
+      handleChangeMyKeywordList(updatedMyKeywordList);
+      const slicedData = await getKeywordAssociations(result.keywordId);
+      handleChangeRelatedKeywordList(slicedData);
+    }
+
+    setIsOpenDropDown(false);
+    changeSearchKeyword('');
   };
 
   const handleChangeSearchKeyword: ChangeEventHandler<HTMLInputElement> = (
     e,
   ) => {
+    setIsOpenDropDown(true);
     changeSearchKeyword(e.target.value);
   };
 
-  useEffect(() => {
-    if (!data) {
-      return;
-    }
-    setCommunityKeywordData(data);
-  }, [data]);
+  const handleMouseDownkResultItem: MouseEventHandler<HTMLLIElement> = (e) => {
+    e.preventDefault();
+    const target = e.target as HTMLLIElement;
+    changeSearchKeyword(target.innerText);
+  };
 
   return (
-    <div className={cx('keyword-adder')}>
+    <div
+      className={cx(theme)}
+      onFocus={() => setIsOpenDropDown(true)}
+      onBlur={() => setIsOpenDropDown(false)}
+    >
       {isOpenDropdown && (
         <SearchResultListLayout layoutTheme={theme}>
           {searchResult.map((word, index) => (
-            <li key={index}>{word}</li>
+            <li onMouseDown={handleMouseDownkResultItem} key={index}>
+              {word}
+            </li>
           ))}
         </SearchResultListLayout>
       )}
@@ -82,12 +112,8 @@ const KeywordAdder = ({ theme }: KeywordAdderProps) => {
           type='text'
           value={searchKeyword}
           onChange={handleChangeSearchKeyword}
-          onFocus={() => setIsOpenDropDown(true)}
-          onBlur={() => setIsOpenDropDown(false)}
         />
-        <button type='submit'>
-          <AddCircleIcon />
-        </button>
+        <button type='submit'>{addButtonValue}</button>
       </AutoCompleteFormLayout>
     </div>
   );

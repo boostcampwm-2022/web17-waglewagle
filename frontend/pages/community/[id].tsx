@@ -6,11 +6,13 @@ import {
   KeywordBubbleChart,
 } from '@components/community';
 import KeywordAdder from '@components/community/KeywordAdder';
+import AddCircleIcon from '@public/images/add-circle.svg';
 import { KEYWORD_ADDER_THEME } from '@constants/constants';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import useUserMe from '@hooks/useUserMe';
 
 const Community = () => {
-  const [userData, setUserData] = useState<string | null>('');
+  const userData = useUserMe();
   const [isOpenLoginModal, setIsOpenLoginModal] = useState<boolean>(false);
   const [isOpenKeywordModal, setIsOpenKeywordModal] = useState<boolean>(false);
 
@@ -22,28 +24,29 @@ const Community = () => {
     setIsOpenKeywordModal(true);
   };
 
-  useEffect(() => {
-    const username = localStorage.getItem('waglewagle-username');
-    if (username) {
-      setUserData(username);
-    }
-  }, []);
+  const closeLoginModal = () => {
+    setIsOpenLoginModal(false);
+  };
 
   return (
     <CommunityLayout>
       <CommunityHeader
         title='부스트캠프 7기'
-        userData={userData}
         handleClickKeywordModal={handleClickKeywordModal}
         handleClickEnter={handleClickEnter}
       />
       <KeywordBubbleChart />
-      <KeywordAdder theme={KEYWORD_ADDER_THEME.MAIN} />
+      {userData && (
+        <KeywordAdder
+          theme={KEYWORD_ADDER_THEME.MAIN}
+          addButtonValue={<AddCircleIcon />}
+        />
+      )}
       <Modal
         isOpenModal={isOpenLoginModal}
         closeModal={() => setIsOpenLoginModal(false)}
       >
-        <LoginModalContent />
+        <LoginModalContent closeLoginModal={closeLoginModal} />
       </Modal>
       <Modal
         isOpenModal={isOpenKeywordModal}
