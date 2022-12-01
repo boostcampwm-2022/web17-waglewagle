@@ -51,22 +51,11 @@ public class KeywordDTO {
     }
 
     @Getter
+    @NoArgsConstructor
     public static class DisjoinKeywordDTO {
 
         private Long keywordId;
         private Long communityId;
-
-        public void setKeywordId(String keywordId) {
-            this.keywordId = Long.parseLong(keywordId);
-        }
-
-        public void setCommunityId(String communityId) {
-            this.communityId = Long.parseLong(communityId);
-        }
-
-        public boolean isValid() {
-            return keywordId != null && communityId != null;
-        }
     }
 
     @Getter

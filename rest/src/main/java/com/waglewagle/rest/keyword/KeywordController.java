@@ -3,6 +3,8 @@ package com.waglewagle.rest.keyword;
 import com.waglewagle.rest.community.CommunityService;
 import com.waglewagle.rest.keyword.KeywordDTO.*;
 import com.waglewagle.rest.keyword.association.AssociationDTO;
+import com.waglewagle.rest.keywordUser.KeywordUserRepository;
+import com.waglewagle.rest.keywordUser.KeywordUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,7 @@ public class KeywordController {
 
     private final KeywordService keywordService;
     private final CommunityService communityService;
+    private final KeywordUserService keywordUserService;
 
     /**
      * 키워드 생성
@@ -61,7 +64,7 @@ public class KeywordController {
     public ResponseEntity<List<KeywordDTO>> getAllKeywordInCommunity(@PathVariable("community_id") Long communityId) {
 
         // TODO: Exception Handler
-        // return type이 정해져 있어 에러 메시지를 string이나 객체로 만들 수 없음.
+        // return type이 정해져 있어 가에러 메시지를 string이나 객체로 만들 수 없음.
         if (!communityService.isExistCommunity(communityId)) {
             return ResponseEntity.badRequest().build();
         }
@@ -88,5 +91,20 @@ public class KeywordController {
 
         keywordService.joinKeyword(joinKeywordInputDTO, userId);
         return new ResponseEntity(null, HttpStatus.CREATED);
+    }
+
+    /**
+     * 키워드 참가 취소s
+     * 11.29
+     */
+    @ResponseBody
+    @PostMapping("/disjoin")
+    public ResponseEntity disjoinKeyword(
+            @RequestBody DisjoinKeywordDTO disjoinKeywordDTO,
+            @CookieValue("user_id") Long userId) {
+
+        keywordUserService.disjoinKeyword(disjoinKeywordDTO, userId);
+
+        return ResponseEntity.ok(null);
     }
 }
