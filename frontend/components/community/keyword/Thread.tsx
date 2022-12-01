@@ -5,13 +5,14 @@ import DeleteIcon from '@public/images/delete.svg';
 import CommentIcon from '@public/images/comment.svg';
 
 import { CommentData, ThreadData } from '../../../types/types';
+import calculateTimeGap from '@utils/calculateTimeGap';
 const cx = classnames.bind(styles);
 
 interface ThreadProps {
   id: string;
   username: string;
   profileURL?: string;
-  createAt: number;
+  createAt: string;
   contents: string;
   comments: CommentData[];
   toggleSidebar(thread: ThreadData): void;
@@ -53,7 +54,7 @@ const Thread = ({
       <div>
         <div className={cx('name-time')}>
           <p>{username}</p>
-          <p className={cx('post-time')}>{createAt}</p>
+          <p className={cx('post-time')}>{calculateTimeGap(createAt)}</p>
         </div>
         <p>{contents}</p>
       </div>

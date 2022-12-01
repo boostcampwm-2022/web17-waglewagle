@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CommentData, KeywordData, ThreadData } from '../../../types/types';
+import { KeywordData, ThreadData } from '../../../types/types';
 import ThreadList from './ThreadList';
 import styles from '@sass/components/community/keyword/KeywordMain.module.scss';
 import classnames from 'classnames/bind';
@@ -8,15 +8,9 @@ import Sidebar from './Sidebar';
 const cx = classnames.bind(styles);
 
 const KeywordMain = () => {
-  const [threadSidebar, setThreadSidebar] = useState<{
-    isOpen: boolean;
-    id?: string;
-    profileURL?: string;
-    username?: string;
-    createAt?: number;
-    contents?: string;
-    comments?: CommentData[];
-  }>({
+  const [threadSidebar, setThreadSidebar] = useState<
+    Partial<ThreadData> & { isOpen: boolean }
+  >({
     isOpen: false,
   });
 

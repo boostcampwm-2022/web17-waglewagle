@@ -2,13 +2,14 @@ import Image from 'next/image';
 import { CommentData } from '../../../types/types';
 import styles from '@sass/components/community/keyword/Sidebar.module.scss';
 import classnames from 'classnames/bind';
+import calculateTimeGap from '@utils/calculateTimeGap';
 const cx = classnames.bind(styles);
 
 interface SidebarProps {
   id?: string;
   profileURL?: string;
   username?: string;
-  createAt?: number;
+  createAt?: string;
   contents?: string;
   comments?: CommentData[];
 }
@@ -35,7 +36,7 @@ const Sidebar = ({
         <div>
           <div className={cx('name-time')}>
             <p>{username}</p>
-            <p className={cx('post-time')}>{createAt}</p>
+            <p className={cx('post-time')}>{calculateTimeGap(createAt!)}</p>
           </div>
           <p>{contents}</p>
         </div>
@@ -54,7 +55,9 @@ const Sidebar = ({
             <div>
               <div className={cx('name-time')}>
                 <p>{comment.username}</p>
-                <p className={cx('post-time')}>{comment.createAt}</p>
+                <p className={cx('post-time')}>
+                  {calculateTimeGap(comment.createAt)}
+                </p>
               </div>
               <p>{comment.content}</p>
             </div>

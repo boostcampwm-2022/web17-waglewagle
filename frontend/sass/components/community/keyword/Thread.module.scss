@@ -14,12 +14,14 @@
 
 .name-time {
   display: flex;
+  align-items: center;
   margin-bottom: 10px;
   gap: 5px;
 }
 
 .post-time {
   color: #ccc;
+  font-size: 12px;
 }
 
 .buttons {

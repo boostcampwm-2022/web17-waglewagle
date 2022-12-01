@@ -24,7 +24,7 @@ export type ThreadData = {
   id: string;
   profileURL?: string;
   username: string;
-  createAt: number;
+  createAt: string;
   contents: string;
   comments: CommentData[];
 };
