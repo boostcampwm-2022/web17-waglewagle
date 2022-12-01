@@ -28,36 +28,3 @@
 .user-count {
   font-size: 24px;
 }
-
-.sidebar {
-  width: 30%;
-  border: 1px solid black;
-  border-radius: 10px;
-  animation: open-sidebar 0.5s;
-
-  &.close {
-    animation: close-sidebar 0.5s;
-  }
-}
-
-@keyframes open-sidebar {
-  from {
-    width: 0;
-    opacity: 0;
-  }
-  to {
-    width: 30%;
-    opacity: 1;
-  }
-}
-
-@keyframes close-sidebar {
-  from {
-    width: 30%;
-    opacity: 1;
-  }
-  to {
-    width: 0;
-    opacity: 0;
-  }
-}

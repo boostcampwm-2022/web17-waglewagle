@@ -1,6 +1,7 @@
 import styles from '@sass/components/community/keyword/Thread.module.scss';
 import classnames from 'classnames/bind';
 import Image from 'next/image';
+import { CommentData, ThreadData } from '../../../types/types';
 const cx = classnames.bind(styles);
 
 interface ThreadProps {
@@ -9,8 +10,8 @@ interface ThreadProps {
   profileURL?: string;
   createAt: number;
   contents: string;
-  comments: Comment[];
-  toggleSidebar(id: string): void;
+  comments: CommentData[];
+  toggleSidebar(thread: ThreadData): void;
 }
 
 const Thread = ({
@@ -19,10 +20,23 @@ const Thread = ({
   username,
   createAt,
   contents,
+  comments,
   toggleSidebar,
 }: ThreadProps) => {
   return (
-    <li className={cx('thread')} onClick={() => toggleSidebar(id)}>
+    <li
+      className={cx('thread')}
+      onClick={() =>
+        toggleSidebar({
+          id,
+          profileURL,
+          username,
+          createAt,
+          contents,
+          comments,
+        })
+      }
+    >
       <Image
         className={cx('profile-image')}
         src={

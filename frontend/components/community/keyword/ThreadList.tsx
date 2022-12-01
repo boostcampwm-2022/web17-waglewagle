@@ -2,30 +2,44 @@ import { useState } from 'react';
 import Thread from './Thread';
 import styles from '@sass/components/community/keyword/ThreadList.module.scss';
 import classnames from 'classnames/bind';
+import { ThreadData } from '../../../types/types';
 const cx = classnames.bind(styles);
 
 interface ThreadListProps {
-  toggleSidebar(id: string): void;
+  toggleSidebar(thread: ThreadData): void;
 }
 
 const ThreadList = ({ toggleSidebar }: ThreadListProps) => {
-  const [threadDataList] = useState<
-    {
-      id: string;
-      profileURL?: string;
-      username: string;
-      createAt: number;
-      contents: string;
-      comments: [];
-    }[]
-  >([
+  const [threadDataList] = useState<ThreadData[]>([
     {
       id: '1',
       username: '김관경',
       contents:
         '개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!',
       createAt: 201020,
-      comments: [],
+      comments: [
+        {
+          id: '1',
+          content: '개발 최고!',
+          username: '김관경',
+          createAt: '1분 전',
+          profileURL: '/images/default-profile.png',
+        },
+        {
+          id: '2',
+          content: '개발 최고!',
+          username: '김관경',
+          createAt: '2분 전',
+          profileURL: '/images/default-profile.png',
+        },
+        {
+          id: '3',
+          content: '개발 최고!',
+          username: '김관경',
+          createAt: '3분 전',
+          profileURL: '/images/default-profile.png',
+        },
+      ],
     },
     {
       id: '2',

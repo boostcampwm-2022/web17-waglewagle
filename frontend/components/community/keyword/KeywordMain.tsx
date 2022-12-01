@@ -1,16 +1,25 @@
 import { useState } from 'react';
-import { KeywordData } from '../../../types/types';
+import { CommentData, KeywordData, ThreadData } from '../../../types/types';
 import ThreadList from './ThreadList';
 import styles from '@sass/components/community/keyword/KeywordMain.module.scss';
 import classnames from 'classnames/bind';
 import PostThread from './ThreadForm';
+import Sidebar from './Sidebar';
 const cx = classnames.bind(styles);
 
 const KeywordMain = () => {
-  const [threadSidebar, setThreadSidebar] = useState({
-    isOpen: false,
-    threadId: '',
+  const [threadSidebar, setThreadSidebar] = useState<{
+    isOpen: boolean;
+    id?: string;
+    profileURL?: string;
+    username?: string;
+    createAt?: number;
+    contents?: string;
+    comments?: CommentData[];
+  }>({
+    isOpen: true,
   });
+
   const [isClosing, setIsClosing] = useState(false);
 
   const [keywordData] = useState<KeywordData>({
@@ -19,16 +28,13 @@ const KeywordMain = () => {
     memberCount: 3,
   });
 
-  const toggleSidebar = (id: string) => {
+  const toggleSidebar = (thread: ThreadData) => {
     if (!threadSidebar.isOpen) {
-      setThreadSidebar({ isOpen: true, threadId: id });
+      setThreadSidebar({ isOpen: true, ...thread });
       return;
     }
     setIsClosing(true);
-    setTimeout(() => {
-      setThreadSidebar({ isOpen: false, threadId: '' });
-      setIsClosing(false);
-    }, 500);
+    setThreadSidebar({ isOpen: false });
   };
 
   return (
@@ -45,9 +51,7 @@ const KeywordMain = () => {
           <PostThread />
         </div>
         {threadSidebar.isOpen && (
-          <div className={cx('sidebar', { close: isClosing })}>
-            <h4>스레드</h4>
-          </div>
+          <Sidebar {...threadSidebar} isClosing={isClosing} />
         )}
       </div>
     </main>
