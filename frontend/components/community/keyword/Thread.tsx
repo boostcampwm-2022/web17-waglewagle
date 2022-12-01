@@ -1,6 +1,9 @@
 import styles from '@sass/components/community/keyword/Thread.module.scss';
 import classnames from 'classnames/bind';
 import Image from 'next/image';
+import DeleteIcon from '@public/images/delete.svg';
+import CommentIcon from '@public/images/comment.svg';
+
 import { CommentData, ThreadData } from '../../../types/types';
 const cx = classnames.bind(styles);
 
@@ -55,8 +58,12 @@ const Thread = ({
         <p>{contents}</p>
       </div>
       <div className={cx('buttons')}>
-        <button className={cx('comment-button')}>댓글</button>
-        <button className={cx('delete-button')}>삭제</button>
+        <button className={cx('comment-button')}>
+          <CommentIcon />
+        </button>
+        <button className={cx('delete-button')}>
+          <DeleteIcon />
+        </button>
       </div>
     </li>
   );

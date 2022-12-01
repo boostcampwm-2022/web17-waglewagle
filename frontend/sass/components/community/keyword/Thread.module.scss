@@ -28,4 +28,16 @@
   bottom: 10px;
   display: flex;
   gap: 10px;
+
+  button {
+    width: 20px;
+    height: 20px;
+
+    border: none;
+    background: none;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
 }
