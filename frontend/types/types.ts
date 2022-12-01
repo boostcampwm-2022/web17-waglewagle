@@ -11,3 +11,20 @@ export type BubbleData = {
   count: number;
   circle: Circle;
 };
+
+export type CommentData = {
+  id: string;
+  content: string;
+  username: string;
+  createAt: string;
+  profileURL?: string;
+};
+
+export type ThreadData = {
+  id: string;
+  profileURL?: string;
+  username: string;
+  createAt: string;
+  contents: string;
+  comments: CommentData[];
+};
