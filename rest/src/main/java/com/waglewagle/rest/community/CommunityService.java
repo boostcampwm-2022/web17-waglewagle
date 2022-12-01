@@ -2,7 +2,9 @@ package com.waglewagle.rest.community;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -15,5 +17,12 @@ public class CommunityService {
         Community community = communityRepository.findOneById(communityId);
 
         return community != null;
+    }
+
+    @Transactional
+    public List<Community> getJoinedCommunities(Long userId) {
+        List<Community> communities = communityRepository.getJoinedCommunities(userId);
+
+        return communities;
     }
 }
