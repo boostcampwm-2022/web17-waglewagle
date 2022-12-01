@@ -6,7 +6,6 @@ import com.waglewagle.rest.keyword.KeywordDTO.*;
 import com.waglewagle.rest.keyword.association.AssociationCalculator;
 import com.waglewagle.rest.keyword.association.AssociationDTO;
 import com.waglewagle.rest.keywordUser.KeywordUser;
-import com.waglewagle.rest.keywordUser.KeywordUserRepository;
 import com.waglewagle.rest.user.User;
 import com.waglewagle.rest.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -54,8 +53,9 @@ public class KeywordService {
                     new KeywordDTO(
                             String.valueOf(keyword.getId()),
                             keyword.getKeyword(),
-                            keyword.getKeywordUsers().size() //TODO: N+1?
-            ));
+                            keyword.getKeywordUsers().size()
+                    )
+            );
         }
 
         return responseList;

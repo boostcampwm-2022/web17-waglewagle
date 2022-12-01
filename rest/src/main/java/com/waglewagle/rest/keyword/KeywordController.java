@@ -3,7 +3,6 @@ package com.waglewagle.rest.keyword;
 import com.waglewagle.rest.community.CommunityService;
 import com.waglewagle.rest.keyword.KeywordDTO.*;
 import com.waglewagle.rest.keyword.association.AssociationDTO;
-import com.waglewagle.rest.keywordUser.KeywordUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import org.springframework.http.HttpStatus;
@@ -22,7 +21,6 @@ public class KeywordController {
 
     private final KeywordService keywordService;
     private final CommunityService communityService;
-    private final KeywordUserService keywordUserService;
 
     /**
      * 키워드 생성
@@ -58,6 +56,7 @@ public class KeywordController {
         return ResponseEntity.ok(sortedList);
     }
 
+    @ResponseBody
     @GetMapping("/{community_id}")
     public ResponseEntity<List<KeywordDTO>> getAllKeywordInCommunity(@PathVariable("community_id") Long communityId) {
 
