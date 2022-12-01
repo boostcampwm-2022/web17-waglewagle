@@ -95,9 +95,9 @@ const KeywordAdder = ({ theme, addButtonValue }: KeywordAdderProps) => {
 
   // 이후 분리하여 상위 컴포넌트에서 사용 필요함.
   // TODO: 전역상태관리 쓸지 물어보기
-  // useEffect(() => {
-  //   console.log(keywordAssociations);
-  // }, [keywordAssociations]);
+  useEffect(() => {
+    console.log(keywordAssociations);
+  }, [keywordAssociations]);
 
   return (
     <div

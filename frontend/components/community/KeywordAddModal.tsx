@@ -1,45 +1,30 @@
-import React, { useEffect, useState, MouseEventHandler } from 'react';
+import React, { MouseEventHandler } from 'react';
 import MyKeyword from './MyKeyword';
 import MyKeywordList from './MyKeywordList';
 import KeywordAssociated from './KeywordAssociated';
 import styles from '@sass/components/community/KeywordAddModal.module.scss';
 import classnames from 'classnames/bind';
 import KeywordAdder from './KeywordAdder';
+import useUserKeywordList from '@hooks/useUserKeywordList';
 const cx = classnames.bind(styles);
 
-type keywordProps = {
-  keyword: string;
-  id: string;
-};
-
 const KeywordAddModal = () => {
-  const [myKeywordList, setMyKeywordList] = useState<keywordProps[] | []>([]);
+  const { myKeywordList, handleChangeMyKeywordList } = useUserKeywordList();
 
   const handleDeleteClick: MouseEventHandler<HTMLButtonElement> = (e) => {
     const target = e.target as HTMLElement;
     const filteredList = myKeywordList.filter(
-      (keyword) => keyword.keyword !== target.previousSibling?.textContent,
+      (keyword) => keyword.keywordName !== target.previousSibling?.textContent,
     );
-    setMyKeywordList(filteredList);
+    handleChangeMyKeywordList(filteredList);
   };
-
-  useEffect(() => {
-    setMyKeywordList([
-      {
-        keyword: '논',
-        id: '1',
-      },
-      {
-        keyword: '밭',
-        id: '2',
-      },
-    ]);
-  }, []);
 
   return (
     <div className={cx('container')}>
       <header className={cx('header')}>
-        <h3 className={cx('title')}>세 개 이상 추가해보세요</h3>
+        <h3 className={cx('title')}>
+          세 개 이상 추가해보세요 (키워드를 추가해보세요?)
+        </h3>
         {/* 지금은 필요 없어서 리셋버튼 삭제 */}
       </header>
       <main className={cx('main')}>
@@ -54,13 +39,14 @@ const KeywordAddModal = () => {
           <hr />
           <h4 className={cx('my-keyword-title')}>내 키워드</h4>
           <MyKeywordList>
-            {myKeywordList.map((keywordData) => (
-              <MyKeyword
-                handleDeleteClick={handleDeleteClick}
-                key={keywordData.id}
-                keyword={keywordData.keyword}
-              />
-            ))}
+            {myKeywordList &&
+              myKeywordList.map((keywordData) => (
+                <MyKeyword
+                  handleDeleteClick={handleDeleteClick}
+                  key={keywordData.keywordId}
+                  keyword={keywordData.keywordName}
+                />
+              ))}
           </MyKeywordList>
           <button className={cx('enter-button')}>입장하기</button>
         </section>
