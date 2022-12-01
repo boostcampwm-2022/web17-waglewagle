@@ -20,7 +20,9 @@ const ThreadList = ({ openSidebar }: ThreadListProps) => {
       comments: [
         {
           id: '1',
-          content: '개발 최고!',
+          content:
+            '개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!개발 최고!',
+
           username: '김관경',
           createAt: '2022-12-01T15:02:40.5836619',
           profileURL: '/images/default-profile.png',

@@ -3,7 +3,7 @@ import styles from '@sass/components/community/keyword/ThreadForm.module.scss';
 import classnames from 'classnames/bind';
 const cx = classnames.bind(styles);
 
-const PostThread = () => {
+const ThreadForm = () => {
   const [contentInputData, setContentInputData] = useState('');
 
   const handleChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
@@ -23,4 +23,4 @@ const PostThread = () => {
   );
 };
 
-export default PostThread;
+export default ThreadForm;
