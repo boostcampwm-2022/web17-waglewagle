@@ -1,4 +1,4 @@
-import { KeywordAssociationData } from './../types/types';
+import { KeywordAssociationData, UserData } from './../types/types';
 import axios from 'axios';
 import config from '../config';
 import { KeywordData } from '../types/types';
@@ -13,6 +13,12 @@ const fetchLogin = async (username: string) => {
   });
 
   return response;
+};
+
+const getUserMe = async (): Promise<UserData> => {
+  const response = await apiInstance.get('/v1/user/me');
+
+  return response.data;
 };
 
 const getKeywords = async (id: string): Promise<KeywordData[]> => {
@@ -41,6 +47,7 @@ const getKeywordAssociations = async (
 
 const apis = {
   fetchLogin,
+  getUserMe,
   getKeywords,
   getUserData,
   getKeywordAssociations,

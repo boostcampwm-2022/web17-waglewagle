@@ -1,5 +1,10 @@
 import Circle from '../circlepacker/Circle';
 
+export type MyKeywordData = {
+  keywordId: string;
+  keywordName: string;
+};
+
 export type KeywordData = {
   keywordId: string;
   keywordName: string;
@@ -18,4 +23,10 @@ export type BubbleData = {
   keyword: string;
   count: number;
   circle: Circle;
+};
+
+export type UserData = {
+  userId: string;
+  username: string;
+  profileImageUrl: string | null;
 };

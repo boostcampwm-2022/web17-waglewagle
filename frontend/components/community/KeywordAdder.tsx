@@ -15,7 +15,8 @@ import styles from '@sass/components/community/KeywordAdderLayout.module.scss';
 import classnames from 'classnames/bind';
 import useKeywordListQuery from '@hooks/useKeywordListQuery';
 import apis from '../../apis/apis';
-import { KeywordAssociationData } from '../../types/types';
+import useUserKeywordList from '@hooks/useUserKeywordList';
+import getKeywordIdByKeyword from '@utils/getKeywordIdByKeywordName';
 const cx = classnames.bind(styles);
 
 interface KeywordAdderProps {
@@ -27,57 +28,46 @@ const KeywordAdder = ({ theme, addButtonValue }: KeywordAdderProps) => {
   const router = useRouter();
   const communityId: string = router.query.id as string;
   const communityKeywordData = useKeywordListQuery(communityId);
+  const { searchKeyword, searchResult, changeSearchKeyword } =
+    useAutoComplete(communityKeywordData);
   const {
-    searchKeyword, // TODO: 이것을 여기서 useAutoComplete에서 관리해주는게 맞을까? 의존제어가 제대로 되고 있는걸까? 자식 컴포넌트처럼 생각해도 될까? 무언가 Badsmell. 그냥 어색한걸까?
-    searchResult,
-    changeSearchKeyword,
-  } = useAutoComplete(communityKeywordData);
+    myKeywordList,
+    recentAssociationKeywordList,
+    handleChangeMyKeywordList,
+    handleChangeRecentAssociationKeywordList,
+  } = useUserKeywordList();
 
   const [isOpenDropdown, setIsOpenDropDown] = useState<boolean>(false);
-  const [keywordAssociations, setKeywordAssociations] = useState<
-    KeywordAssociationData[]
-  >([]);
 
   const getKeywordAssociations = async (keywordId: string) => {
     const keywordAssociationsData = await apis.getKeywordAssociations(
       keywordId,
     );
     const slicedData = keywordAssociationsData.slice(0, 3);
-    setKeywordAssociations(slicedData);
-  };
-
-  // TODO: 테스트코드 작성 가능
-  const getKeywordIdByKeyword = (keyword: string): string | false => {
-    // 커뮤니티 키워드 데이터가 없으면 검색할 수 없다.
-    if (!communityKeywordData) {
-      return false;
-    }
-
-    // some을 쓰면 예외처리가 힘들 것 같아서 filter 사용
-    const result = communityKeywordData?.filter(
-      (keywordData) => keywordData.keywordName === keyword,
-    );
-
-    if (result.length === 0) {
-      return false;
-    }
-
-    if (result.length > 1) {
-      // TODO: 커스텀 에러 객체 만들기
-      throw new Error('중복된 id가 있습니다.');
-    }
-
-    return result[0].keywordId;
+    handleChangeRecentAssociationKeywordList(slicedData);
   };
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
+
+    const keywordId = getKeywordIdByKeyword(
+      searchKeyword,
+      communityKeywordData,
+    );
+
+    if (keywordId) {
+      // 내 키워드에 추가 => 이후에는 Mutation으로 수정 필요
+      // memberCount를 넣으려면 키워드 추가, 키워드 참여 api 수신 시 모두 memberCount를 포함해서 받거나 memberCount까지 가져와야하기 때문에 myKeywordList에서는 memberCount 제외
+      const newMyKeyword = { keywordId, keywordName: searchKeyword };
+      const updatedMyKeywordList = [...myKeywordList, newMyKeyword];
+      handleChangeMyKeywordList(updatedMyKeywordList);
+      await getKeywordAssociations(keywordId);
+    } else {
+      // 키워드 추가 API, 이후 keyword id를 반환받아서 참가하기 => 이후에는 Mutation으로 수정됨.
+    }
+
     setIsOpenDropDown(false);
     changeSearchKeyword('');
-    const keywordId = getKeywordIdByKeyword(searchKeyword);
-    if (keywordId) {
-      await getKeywordAssociations(keywordId);
-    }
   };
 
   const handleChangeSearchKeyword: ChangeEventHandler<HTMLInputElement> = (
@@ -96,8 +86,8 @@ const KeywordAdder = ({ theme, addButtonValue }: KeywordAdderProps) => {
   // 이후 분리하여 상위 컴포넌트에서 사용 필요함.
   // TODO: 전역상태관리 쓸지 물어보기
   useEffect(() => {
-    console.log(keywordAssociations);
-  }, [keywordAssociations]);
+    console.log(recentAssociationKeywordList);
+  }, [recentAssociationKeywordList]);
 
   return (
     <div
