@@ -98,4 +98,11 @@ public class KeywordService {
 
         keyword.addKeywordUser(new KeywordUser(joinKeywordDTO));
     }
+
+    @Transactional
+    public List<KeywordResponseDTO> getJoinedKeywords(Long userId, Long communityId) {
+
+        List<Keyword> keywords = keywordRepository.getJoinedKeywords(userId, communityId);
+        return KeywordResponseDTO.createKeywordResponses(keywords);
+    }
 }
