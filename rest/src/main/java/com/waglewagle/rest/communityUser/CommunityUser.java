@@ -50,7 +50,7 @@ public class CommunityUser {
     public CommunityUser (User user, Community community) {
         this.user = user;
         this.community = community;
-        isFirstVisit = false;
+        isFirstVisit = true;
     }
 
     public void updateProfile(UpdateCommunityProfileInputDTO updateCommunityProfileInputDTO) {
