@@ -32,7 +32,7 @@ public class CommunityUser {
     private User user;
 
     //유저의 커뮤니티별 추가 특성(멀티 프로필, ...)
-    private String ProfileImageUrl;
+    private String profileImageUrl;
 
     private String communityUsername;
 
@@ -49,5 +49,6 @@ public class CommunityUser {
     public CommunityUser (User user, Community community) {
         this.user = user;
         this.community = community;
+        isFirstVisit = false;
     }
 }
