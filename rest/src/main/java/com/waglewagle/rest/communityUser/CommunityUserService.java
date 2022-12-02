@@ -18,7 +18,7 @@ public class CommunityUserService {
 
     @Transactional
     public boolean joinCommunity(Long userId, Long communityId) {
-        if (communityUserRepository.findByUserIdCommunityId(userId, communityId) != null) {
+        if (communityUserRepository.findByUserIdAndCommunityId(userId, communityId) != null) {
             System.out.println("Validated");
             return false;
         }
