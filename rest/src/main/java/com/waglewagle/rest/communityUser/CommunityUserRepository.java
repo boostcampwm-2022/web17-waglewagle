@@ -16,8 +16,8 @@ public class CommunityUserRepository {
         em.persist(communityUser);
     }
 
-    public CommunityUser findByUserIdCommunityId(Long userId, Long communityId) {
-        List<CommunityUser> communityUsers = em.createQuery("SELECT cu FROM CommunityUser cu WHERE cu.user.id = :userId AND cu.community.id = :communityId")
+    public CommunityUser findByUserIdAndCommunityId(Long userId, Long communityId) {
+        List<CommunityUser> communityUsers = em.createQuery("SELECT cu FROM CommunityUser cu WHERE cu.user.id = :userId AND cu.community.id = :communityId", CommunityUser.class)
                 .setParameter("userId", userId)
                 .setParameter("communityId", communityId)
                 .getResultList();

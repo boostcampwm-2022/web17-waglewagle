@@ -10,6 +10,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
+import static com.waglewagle.rest.user.dto.UserInfoDTO.*;
+
 @Controller
 @RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
@@ -52,8 +54,10 @@ public class UserController {
 
     @GetMapping("/me")
     @ResponseBody
-    public ResponseEntity<UserInfoDTO> getUserInfo(@CookieValue(name = "user_id") Long userId) {
-        UserInfoDTO userInfoDTO = userService.getUserInfo(userId);
+    public ResponseEntity<UserInfoResDTO> getUserInfo(@CookieValue(name = "user_id") Long userId,
+                                                      @RequestParam("community-id") Long communityId) {
+
+        UserInfoResDTO userInfoDTO = userService.getUserInfo(userId, communityId);
 
         return ResponseEntity.ok(userInfoDTO);
     }

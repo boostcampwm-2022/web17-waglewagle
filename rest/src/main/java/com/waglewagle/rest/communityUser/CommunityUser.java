@@ -11,6 +11,13 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        columnNames = {"community_id", "user_id"}
+                )
+        }
+)
 @Getter
 @NoArgsConstructor
 public class CommunityUser {
@@ -24,9 +31,12 @@ public class CommunityUser {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
+    //유저의 커뮤니티별 추가 특성(멀티 프로필, ...)
     private String ProfileImageUrl;
 
     private String communityUsername;
+
+    private Boolean isFirstVisit;
 
     @CreationTimestamp
     LocalDateTime createdAt;
