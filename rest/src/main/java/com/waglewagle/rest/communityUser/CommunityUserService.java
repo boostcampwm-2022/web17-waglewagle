@@ -16,19 +16,22 @@ public class CommunityUserService {
     private final CommunityRepository communityRepository;
     private final UserRepository userRepository;
 
+
     @Transactional
-    public boolean joinCommunity(Long userId, Long communityId) {
-        if (communityUserRepository.findByUserIdAndCommunityId(userId, communityId) != null) {
-            System.out.println("Validated");
-            return false;
+    public boolean isAlreadyJoined(Long userId, Long communityId) {
+        return communityUserRepository.findByUserIdAndCommunityId(userId, communityId) != null;
         }
+
+
+    @Transactional
+    public void joinCommunity(Long userId, Long communityId) {
 
         User user = userRepository.findById(userId);
         Community community = communityRepository.findOneById(communityId);
         CommunityUser communityUser = new CommunityUser(user, community);
 
         communityUserRepository.save(communityUser);
-        return true;
+    }
 
     }
 }
