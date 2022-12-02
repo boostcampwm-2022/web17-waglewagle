@@ -39,4 +39,15 @@ public class CommunityUserService {
         CommunityUser communityUser = communityUserRepository.findByUserIdAndCommunityId(userId, communityId);
         communityUser.updateProfile(updateCommunityProfileInputDTO);
     }
+
+    @Transactional
+    public boolean isFirstVisit(Long userId, Long communityId) {
+        return communityUserRepository.findByUserIdAndCommunityId(userId, communityId).getIsFirstVisit();
+    }
+
+    @Transactional
+    public void updateIsFirstVisit(Long userId, Long communityId) {
+        CommunityUser communityUser = communityUserRepository.findByUserIdAndCommunityId(userId, communityId);
+        communityUser.updateIsFirstVisit();
+    }
 }

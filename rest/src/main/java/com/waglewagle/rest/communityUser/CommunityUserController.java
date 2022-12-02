@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
+
 
 @Controller
 @RequestMapping("/api/v1/community-user")
@@ -49,6 +51,22 @@ public class CommunityUserController {
 
         communityUserService.updateCommunityUserProfile(updateCommunityProfileInputDTO, communityId, userId);
 
+
+        return new ResponseEntity(null, HttpStatus.OK);
+    }
+
+    @PutMapping("{community_id}/first-visit")
+    public ResponseEntity updateIsFirstVisit(@PathVariable("community_id") Long communityId,
+                                             @CookieValue("user_id") Long userId) {
+
+        if (!communityUserService.isAlreadyJoined(userId, communityId)) {
+            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+        }
+        if (!communityUserService.isFirstVisit(userId, communityId)) {
+            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+        }
+
+        communityUserService.updateIsFirstVisit(userId, communityId);
 
         return new ResponseEntity(null, HttpStatus.OK);
     }

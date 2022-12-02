@@ -57,4 +57,8 @@ public class CommunityUser {
         communityUsername = updateCommunityProfileInputDTO.getUsername();
         profileImageUrl = updateCommunityProfileInputDTO.getProfileImageUrl();
     }
+
+    public void updateIsFirstVisit() {
+            isFirstVisit = false;
+    }
 }
