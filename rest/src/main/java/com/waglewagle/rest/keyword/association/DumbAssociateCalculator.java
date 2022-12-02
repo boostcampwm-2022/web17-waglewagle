@@ -39,6 +39,10 @@ public class DumbAssociateCalculator implements AssociationCalculator {
             rank++;
         }
 
+        if (returnList.size() > 10) {
+            returnList = returnList.subList(0, 10);
+        }
+
         return returnList;
     }
 }
