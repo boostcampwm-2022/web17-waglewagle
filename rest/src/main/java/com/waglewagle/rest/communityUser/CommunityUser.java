@@ -1,6 +1,7 @@
 package com.waglewagle.rest.communityUser;
 
 import com.waglewagle.rest.community.Community;
+import com.waglewagle.rest.communityUser.CommunityUserDTO.UpdateCommunityProfileInputDTO;
 import com.waglewagle.rest.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -50,5 +51,10 @@ public class CommunityUser {
         this.user = user;
         this.community = community;
         isFirstVisit = false;
+    }
+
+    public void updateProfile(UpdateCommunityProfileInputDTO updateCommunityProfileInputDTO) {
+        communityUsername = updateCommunityProfileInputDTO.getUsername();
+        profileImageUrl = updateCommunityProfileInputDTO.getProfileImageUrl();
     }
 }

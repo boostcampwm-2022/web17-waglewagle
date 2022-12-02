@@ -11,4 +11,17 @@ public class CommunityUserDTO {
 
         private String communityId;
     }
+
+    @Getter
+    @Setter
+    public static class UpdateCommunityProfileInputDTO {
+
+        private String profileImageUrl;
+        private String username;
+
+
+        public boolean isEmpty() {
+            return profileImageUrl == null && username == null;
+        }
+    }
 }
