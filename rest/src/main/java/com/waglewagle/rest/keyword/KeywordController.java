@@ -98,7 +98,7 @@ public class KeywordController {
      * 11.29
      */
     @ResponseBody
-    @PostMapping("/disjoin")
+    @DeleteMapping("/disjoin")
     public ResponseEntity disjoinKeyword(
             @RequestBody DisjoinKeywordDTO disjoinKeywordDTO,
             @CookieValue("user_id") Long userId) {
