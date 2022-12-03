@@ -32,24 +32,6 @@ const KeywordBubbleChart = () => {
     };
   };
 
-  // TODO: 애니메이션 setInrevl로 할지 requestAnimationFrame으로 할지 정해서  변수명 정하고 update 함수 리팩토링하기
-  // circleContainer가 아닌 이곳에 있는 이유는, 이 함수는 연산보다는 렌더링에 가까운 로직이기 때문 (setIsMove를 토글하여 리렌더링 시킴)
-  const animate = () => {
-    const update = () => {
-      if (circleContainerRef.current?.isStatic) {
-        clearInterval(requestAnimationId.current!);
-        return;
-      }
-
-      setIsMove((prev) => !prev);
-      circleContainerRef.current?.update();
-    };
-
-    requestAnimationId.current = setInterval(() => {
-      update();
-    }, 300);
-  };
-
   useEffect(() => {
     if (!fetchedKeywordData) {
       return;
@@ -81,10 +63,11 @@ const KeywordBubbleChart = () => {
   }, [slicedCommunityKeywordData]);
 
   useEffect(() => {
-    if (bubbleDataList.length) {
-      animate();
-    }
-    // 매번 이전 interval을 지우고 새로운 interval로 교체되며 움직임이 빨라지지 않음.
+    requestAnimationId.current = setInterval(() => {
+      setIsMove((prev) => !prev);
+      circleContainerRef.current?.update();
+    }, 500);
+
     return () => {
       clearInterval(requestAnimationId.current!);
     };
