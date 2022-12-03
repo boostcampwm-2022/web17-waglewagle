@@ -1,6 +1,7 @@
 package com.waglewagle.rest.communityUser;
 
 import com.waglewagle.rest.community.Community;
+import com.waglewagle.rest.communityUser.CommunityUserDTO.UpdateCommunityProfileInputDTO;
 import com.waglewagle.rest.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,7 +33,7 @@ public class CommunityUser {
     private User user;
 
     //유저의 커뮤니티별 추가 특성(멀티 프로필, ...)
-    private String ProfileImageUrl;
+    private String profileImageUrl;
 
     private String communityUsername;
 
@@ -49,5 +50,15 @@ public class CommunityUser {
     public CommunityUser (User user, Community community) {
         this.user = user;
         this.community = community;
+        isFirstVisit = true;
+    }
+
+    public void updateProfile(UpdateCommunityProfileInputDTO updateCommunityProfileInputDTO) {
+        communityUsername = updateCommunityProfileInputDTO.getUsername();
+        profileImageUrl = updateCommunityProfileInputDTO.getProfileImageUrl();
+    }
+
+    public void updateIsFirstVisit() {
+            isFirstVisit = false;
     }
 }

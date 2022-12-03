@@ -5,17 +5,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import javax.websocket.server.PathParam;
+
 
 @Controller
 @RequestMapping("/api/v1/community-user")
 @RequiredArgsConstructor
 public class CommunityUserController {
 
-        private final CommunityUserService communityUserService;
+    private final CommunityUserService communityUserService;
 
     /**
      * 커뮤니티 가입하기
@@ -23,12 +23,52 @@ public class CommunityUserController {
      */
     @PostMapping("")
     public ResponseEntity joinCommunity(@RequestBody JoinCommunityInputDTO joinCommunityInputDTO, @CookieValue("user_id") Long userId) {
-            Long communityId = Long.parseLong(joinCommunityInputDTO.getCommunityId());
+        Long communityId = Long.parseLong(joinCommunityInputDTO.getCommunityId());
 
-            if (!communityUserService.joinCommunity(userId, communityId)) {
-                return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
-            }
-
-            return new ResponseEntity(null, HttpStatus.CREATED);
+        if (communityUserService.isAlreadyJoined(userId, communityId)) {
+            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
         }
+
+        communityUserService.joinCommunity(userId, communityId);
+
+        return new ResponseEntity(null, HttpStatus.CREATED);
+    }
+
+    /**
+     * 커뮤니티 프로필 수정하기
+     */
+    @PutMapping("/{community_id}/profile")
+    public ResponseEntity updateCommunityUserProfile(@RequestBody UpdateCommunityProfileInputDTO updateCommunityProfileInputDTO,
+                                                 @PathVariable("community_id") Long communityId,
+                                                 @CookieValue("user_id") Long userId) {
+
+        if (updateCommunityProfileInputDTO.isEmpty()) {
+            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+        }
+        if (!communityUserService.isAlreadyJoined(userId, communityId)) {
+            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+        }
+
+        communityUserService.updateCommunityUserProfile(updateCommunityProfileInputDTO, communityId, userId);
+
+
+        return new ResponseEntity(null, HttpStatus.OK);
+    }
+
+    @PutMapping("{community_id}/first-visit")
+    public ResponseEntity updateIsFirstVisit(@PathVariable("community_id") Long communityId,
+                                             @CookieValue("user_id") Long userId) {
+
+        if (!communityUserService.isAlreadyJoined(userId, communityId)) {
+            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+        }
+        if (!communityUserService.isFirstVisit(userId, communityId)) {
+            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+        }
+
+        communityUserService.updateIsFirstVisit(userId, communityId);
+
+        return new ResponseEntity(null, HttpStatus.OK);
+    }
+
 }
