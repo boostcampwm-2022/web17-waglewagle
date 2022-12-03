@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ThreadDTO {
 
@@ -52,40 +53,40 @@ public class ThreadDTO {
 
         }
 
-
-        @Getter
-        public static class ThreadResponseDTO {
-
-            private String threadId;
-            private String content;
-            private LocalDateTime createdAt;
-            private LocalDateTime updatedAt;
-            private AuthorDTO author;
-            private List<ThreadResponseDTO> childThreads;
-
-//            protected ThreadResponseDTO () {}
-//
-//            /**
-//             * 이거 머지?
-//             */
-//            public static ThreadResponseDTO createThreadResponseDTO (Thread thread) {
-//                ThreadResponseDTO threadResponseDTO = new ThreadResponseDTO();
-//
-//                threadResponseDTO.threadId = thread.getId().toString();
-//                threadResponseDTO.content = thread.getContent();
-//                threadResponseDTO.createdAt = thread.getCreatedAt();
-//                threadResponseDTO.updatedAt = thread.getUpdatedAt();
-//                threadResponseDTO.childThreads = thread.getChildren().stream()
-//                        .map(ThreadResponseDTO::createThreadResponseDTO)
-//                        .collect(Collectors.toList());
-//
-//
-//
-//                return threadResponseDTO;
-//            }
-        }
-
     }
+
+
+    @Getter
+    public static class ThreadResponseDTO {
+
+        private String threadId;
+        private String content;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+        private AuthorDTO author;
+        private List<ThreadResponseDTO> childThreads;
+        private Integer childThreadCount;
+
+        public static ThreadResponseDTO of(Thread thread) {
+            ThreadResponseDTO threadResponseDTO = new ThreadResponseDTO();
+            threadResponseDTO.threadId = thread.getId().toString();
+            threadResponseDTO.content = thread.getContent();
+            threadResponseDTO.createdAt = thread.getCreatedAt();
+            threadResponseDTO.updatedAt = thread.getUpdatedAt();
+            threadResponseDTO.author = AuthorDTO.createAuthorDTO(thread.getAuthor());
+            if (thread.getParentThread() == null) {
+                threadResponseDTO.childThreads = thread
+                        .getChildren()
+                        .stream()
+                        .map(ThreadResponseDTO::of)
+                        .collect(Collectors.toList());
+                threadResponseDTO.childThreadCount = threadResponseDTO.childThreads.size();
+            }
+            return threadResponseDTO;
+        }
+    }
+
+
 
     @Getter
     @NoArgsConstructor
