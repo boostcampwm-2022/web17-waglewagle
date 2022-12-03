@@ -15,8 +15,9 @@ const KeywordBubbleChart = () => {
   const router = useRouter();
   const communityId: string = router.query.id as string;
   const [bubbleDataList, setBubbleDataList] = useState<BubbleData[]>([]);
-  const [_, setIsMove] = useState<boolean>(false);
-  const requestAnimationId = useRef<NodeJS.Timer | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  // const [_, setIsMove] = useState<boolean>(false);
+  const requestAnimationId = useRef<number>(0);
   const circleContainerRef = useRef<CircleContainer | null>(null);
   const fetchedKeywordData = useKeywordListQuery(communityId);
   // 여기에서는 slice된 keywordData를 가지고 있기 때문에 fetched와 별도의 상태로 관리됨.
@@ -30,6 +31,39 @@ const KeywordBubbleChart = () => {
       count: keywordData.memberCount,
       circle: circleData,
     };
+  };
+
+  const animate = () => {
+    const update = () => {
+      circleContainerRef.current?.update();
+
+      const ctx = canvasRef.current?.getContext('2d');
+      ctx?.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+      if (!circleContainerRef.current?.circles) {
+        return;
+      }
+
+      const circleKeys: string[] = Object.keys(
+        circleContainerRef.current?.circles,
+      );
+
+      circleKeys.forEach((circleId) => {
+        const circle = circleContainerRef.current?.circles[circleId];
+        ctx?.beginPath();
+        ctx?.arc(circle!.x, circle!.y, circle!.radius, 0, 360);
+        ctx!.fillStyle = '#133d59';
+        ctx?.stroke();
+        ctx?.fill();
+        ctx!.font = `${10 + circle!.radius * 1}px Nanum BugGeugSeong`;
+        ctx!.fillStyle = '#fcfcfc';
+        ctx?.fillText(circle!.innerText, circle!.x, circle!.y);
+      });
+
+      requestAnimationId.current = requestAnimationFrame(update);
+    };
+
+    requestAnimationId.current = requestAnimationFrame(update);
   };
 
   useEffect(() => {
@@ -63,28 +97,32 @@ const KeywordBubbleChart = () => {
   }, [slicedCommunityKeywordData]);
 
   useEffect(() => {
-    requestAnimationId.current = setInterval(() => {
-      setIsMove((prev) => !prev);
-      circleContainerRef.current?.update();
-    }, 500);
+    if (!canvasRef.current) {
+      return;
+    }
+
+    canvasRef.current.width = window.innerWidth;
+    canvasRef.current.height = window.innerHeight;
+    animate();
 
     return () => {
-      clearInterval(requestAnimationId.current!);
+      cancelAnimationFrame(requestAnimationId.current!);
     };
   }, [bubbleDataList]);
 
   return (
-    <div className={cx('chart-container')}>
-      {bubbleDataList.map((bubbleData, index) => (
-        <KeywordBubble
-          key={index}
-          keyword={bubbleData.keyword}
-          posX={bubbleData.circle.x}
-          posY={bubbleData.circle.y}
-          radius={bubbleData.circle.radius}
-        />
-      ))}
-    </div>
+    <canvas ref={canvasRef} />
+    // <div className={cx('chart-container')}>
+    //   {bubbleDataList.map((bubbleData, index) => (
+    //     <KeywordBubble
+    //       key={index}
+    //       keyword={bubbleData.keyword}
+    //       posX={bubbleData.circle.x}
+    //       posY={bubbleData.circle.y}
+    //       radius={bubbleData.circle.radius}
+    //     />
+    //   ))}
+    // </div>
   );
 };
 
