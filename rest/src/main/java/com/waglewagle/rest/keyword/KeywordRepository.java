@@ -2,7 +2,6 @@ package com.waglewagle.rest.keyword;
 
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.waglewagle.rest.community.Community;
 import com.waglewagle.rest.keyword.KeywordDTO.*;
 import com.waglewagle.rest.user.QUser;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +30,9 @@ public class KeywordRepository {
         return jpaQueryFactory
                 .selectFrom(keyword1)
                 .innerJoin(keyword1.community, community)
+                .innerJoin(keyword1.keywordUsers, keywordUser)
                 .where(community.id.eq(communityId))
+                .fetchJoin()
                 .fetch(); //TODO: fetchJoin?
     }
 
@@ -61,5 +62,14 @@ public class KeywordRepository {
     public void saveKeyword(Keyword keyword) {
         em.persist(keyword);
 //        return keyword;
+    }
+
+    public List<Keyword> getJoinedKeywords(Long userId, Long communityId) {
+        return jpaQueryFactory
+                .select(keywordUser.keyword)
+                .from(keywordUser)
+                .where(keywordUser.user.id.eq(userId))
+                .where(keywordUser.community.id.eq(communityId))
+                .fetch();
     }
 }

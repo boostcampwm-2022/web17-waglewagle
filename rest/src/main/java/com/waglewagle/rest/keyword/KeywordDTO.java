@@ -4,6 +4,9 @@ import com.waglewagle.rest.community.Community;
 import com.waglewagle.rest.user.User;
 import lombok.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Getter
 @ToString
 @AllArgsConstructor
@@ -74,18 +77,6 @@ public class KeywordDTO {
     }
 
     @Getter
-    public static class CreateKeywordResponse {
-
-        private final String keywordId;
-        private final String keywordName;
-
-        CreateKeywordResponse(Keyword keyword) {
-            keywordId = String.valueOf(keyword.getId());
-            keywordName = keyword.getKeyword();
-        }
-    }
-
-    @Getter
     @NoArgsConstructor
     public static class CreateKeywordDTO {
 
@@ -101,6 +92,22 @@ public class KeywordDTO {
             this.author = author;
             this.community = community;
             this.keywordName = keywordName;
+        }
+    }
+
+    @Getter
+    public static class KeywordResponseDTO {
+
+        private final String keywordId;
+        private final String keywordName;
+
+        public KeywordResponseDTO(Keyword keyword) {
+            keywordId = String.valueOf(keyword.getId());
+            keywordName = keyword.getKeyword();
+        }
+
+        static List<KeywordResponseDTO> createKeywordResponses(List<Keyword> keywords) {
+            return keywords.stream().map(keyword -> new KeywordResponseDTO(keyword)).collect(Collectors.toList());
         }
     }
 }
