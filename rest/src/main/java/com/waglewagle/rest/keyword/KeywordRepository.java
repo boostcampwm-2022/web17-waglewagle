@@ -30,7 +30,9 @@ public class KeywordRepository {
         return jpaQueryFactory
                 .selectFrom(keyword1)
                 .innerJoin(keyword1.community, community)
+                .innerJoin(keyword1.keywordUsers, keywordUser)
                 .where(community.id.eq(communityId))
+                .fetchJoin()
                 .fetch(); //TODO: fetchJoin?
     }
 

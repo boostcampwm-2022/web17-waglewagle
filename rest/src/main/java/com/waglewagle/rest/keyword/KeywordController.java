@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -64,16 +65,16 @@ public class KeywordController {
         // TODO: Exception Handler
         // return type이 정해져 있어 가에러 메시지를 string이나 객체로 만들 수 없음.
         if (!communityService.isExistCommunity(communityId)) {
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
         }
 
         List<KeywordDTO> keywordListInCommunity = keywordService.getKeywordListInCommunity(communityId);
 
         if (keywordListInCommunity.isEmpty()) {
-            return ResponseEntity.noContent().build();
+            return new ResponseEntity(new ArrayList<>(), HttpStatus.NO_CONTENT);
         }
 
-        return ResponseEntity.ok(keywordListInCommunity);
+        return new ResponseEntity(keywordListInCommunity, HttpStatus.OK);
     }
 
     /**

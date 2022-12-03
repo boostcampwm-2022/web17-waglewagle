@@ -12,8 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -45,20 +45,15 @@ public class KeywordService {
     public List<KeywordDTO> getKeywordListInCommunity(Long communityId) {
 
         List<Keyword> allKeywordInCommunity = keywordRepository.findAllByCommunityId(communityId);
-        List<KeywordDTO> responseList = new ArrayList<>();
 
-        for (Keyword keyword : allKeywordInCommunity) {
+        return allKeywordInCommunity
+                .stream()
+                .map(keyword -> new KeywordDTO(
+                                        keyword.getId().toString(),
+                                        keyword.getKeyword(),
+                                        keyword.getKeywordUsers().size()))
+                .collect(Collectors.toList());
 
-            responseList.add(
-                    new KeywordDTO(
-                            String.valueOf(keyword.getId()),
-                            keyword.getKeyword(),
-                            keyword.getKeywordUsers().size()
-                    )
-            );
-        }
-
-        return responseList;
     }
 
     @Transactional
