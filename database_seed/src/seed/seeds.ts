@@ -92,34 +92,34 @@ const plan =
 
     const communityToKeyword: { [key: string]: { userId: string; keywordId: string }[] } = {};
     const keywords: Keyword[] = [];
-    let id = 1;
     communityUsers.forEach(({ communityId, userId }) => {
-      const eachKeywordCount = Math.round(Math.random() ** 2 * 4);
+      const eachKeywordCount = Math.round(Math.random() ** 5 * 10);
       for (let i = 0; i < eachKeywordCount; i++) {
         const keyword = new Keyword();
-        keyword.id = id.toString();
         keyword.authorId = userId;
         keyword.keyword = wordGenerator.value;
         keyword.communityId = communityId;
-        id++;
+        keywords.push(keyword);
         if (communityId && userId) {
           communityToKeyword[communityId] = communityToKeyword[communityId] || [];
-          communityToKeyword[communityId].push({ userId, keywordId: id.toString() });
+          communityToKeyword[communityId].push({ userId, keywordId: keywords.length.toString() });
         }
-        keywords.push(keyword);
       }
     });
 
     console.log('1-4 keywords 완료!');
 
+    const keywordToUser: { [key: string]: Array<string> } = {};
     const keywordUsers: KeywordUser[] = [];
-    keywords.forEach(({ id: keywordId, authorId, communityId }) => {
+    keywords.forEach(({ authorId, communityId }, idx) => {
       {
         const keywordUser = new KeywordUser();
         keywordUser.communityId = communityId;
         keywordUser.userId = authorId;
-        keywordUser.keywordId = keywordId;
+        keywordUser.keywordId = (idx + 1).toString();
         keywordUsers.push(keywordUser);
+        keywordToUser[(idx + 1).toString()] = keywordToUser[(idx + 1).toString()] || [];
+        keywordToUser[(idx + 1).toString()].push(authorId as string);
       }
       if (!communityId) return;
 
@@ -130,16 +130,20 @@ const plan =
           const keywordUser = new KeywordUser();
           keywordUser.communityId = communityId;
           keywordUser.userId = userId;
-          keywordUser.keywordId = keywordId;
+          keywordUser.keywordId = (idx + 1).toString();
           keywordUsers.push(keywordUser);
         });
     });
 
     console.log('1-5 keywordUsers 완료!');
-
+    const keywordToThread: { [key: string]: Array<string> } = {};
     const threads: Thread[] = [];
+    const childThreads: Thread[] = [];
     keywordUsers.forEach(({ keywordId, userId }) => {
-      const count = Math.round(Math.random() * 4);
+      if (!keywordId) return;
+      keywordToThread[keywordId] = keywordToThread[keywordId] || [];
+
+      const count = 1 + Math.round(Math.random() ** 5 * 9);
       for (let i = 0; i < count; i++) {
         const thread = new Thread();
         thread.createdAt = faker.date.past();
@@ -147,8 +151,26 @@ const plan =
         thread.authorId = userId;
         thread.content = phraseGenerator.value;
         threads.push(thread);
+        keywordToThread[keywordId].push(threads.length.toString());
       }
     });
+
+    for (const [keywordId, threadIds] of Object.entries(keywordToThread)) {
+      if (!threadIds.length) continue;
+      while (Math.random() > 0.2) {
+        const threadId = threadIds[Math.floor(Math.random() * threadIds.length)];
+
+        const thread = new Thread();
+        thread.parentThreadId = threadId;
+        thread.createdAt = faker.date.past();
+        thread.keywordId = keywordId;
+        thread.authorId = keywordToUser[keywordId][Math.floor(Math.random() * keywordToUser[keywordId].length)];
+        if (!thread.authorId) console.log('시발');
+
+        thread.content = phraseGenerator.value;
+        childThreads.push(thread);
+      }
+    }
 
     console.log('1-6 threads 완료!');
 
@@ -157,7 +179,7 @@ const plan =
     console.log(communityUsers.length);
     console.log(keywords.length);
     console.log(keywordUsers.length);
-    console.log(threads.length);
+    console.log(threads.length + childThreads.length);
 
     await dataSource.createQueryBuilder().insert().into(User).values(users).execute();
     console.log('2-1 users 완료!');
@@ -187,6 +209,16 @@ const plan =
     for (const threads of threadBatch) {
       await dataSource.createQueryBuilder().insert().into(Thread).values(threads).execute();
     }
+
+    const childThreadsBatch: Thread[][] = [];
+    for (let i = 0; i < Math.min(); i++) {
+      childThreadsBatch.push(childThreads.slice(i * 1000, (i + 1) * 1000));
+      if ((i + 1) * 1000 > childThreads.length) break;
+    }
+    for (const threads of childThreadsBatch) {
+      await dataSource.createQueryBuilder().insert().into(Thread).values(threads).execute();
+    }
+
     console.log('2-6 threads 완료!');
 
     process.exit();
