@@ -20,7 +20,7 @@ const handleAuthenticationCode: requestHandler = async (req, res) => {
   const access_token = await getAccessToken(code);
   const { id, login, avatar_url } = await getUserProfile(access_token);
   const user = await userRepository.handleUserProfile({ id: id.toString(), login, avatar_url });
-  res.cookie('user_id', user.id);
+  res.cookie('user_id', user.id, { httpOnly: true });
   res.redirect('/');
   return;
 };
