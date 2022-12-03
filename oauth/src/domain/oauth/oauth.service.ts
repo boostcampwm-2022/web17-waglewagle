@@ -12,47 +12,51 @@ const redirectToGithubLogin: requestHandler = (_, res) => {
 
 const handleAuthenticationCode: requestHandler = async (req, res) => {
   const code = req.query.code as string | undefined;
-  if (!code) {
+  if (typeof code !== 'string') {
     res.redirect(ENV.SERVER.HOST);
+    return;
   }
 
-  axios
-    .post(
-      ENV.GITHUB.REQUEST_TOKEN_URL,
-      {
-        client_id: ENV.GITHUB.CLIENT_ID,
-        client_secret: ENV.GITHUB.CLIENT_SECRET,
-        code,
-        redirect_uri: ENV.SERVER.HOST + ENV.GITHUB.REDIRECT_URL,
-      },
-      {
-        headers: {
-          Accept: 'application/json',
-          'accept-encoding': null,
-          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        },
-      }
-    )
-    .then(({ data }) => {
-      const { access_token: accessToken } = data as { access_token: string };
+  const access_token = await getAccessToken(code);
+  const { id, login, avatar_url } = await getUserProfile(access_token);
+  const user = await userRepository.handleUserProfile({ id: id.toString(), login, avatar_url });
+  res.cookie('user_id', user.id);
+  res.redirect('/');
+  return;
+};
 
-      axios
-        .get(ENV.GITHUB.REQUEST_USER_PROFILE, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            Accept: 'application/json',
-            'accept-encoding': null,
-            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-          },
-        })
-        .then(({ data }) => {
-          const { id, login, avatar_url } = data as { id: number; login: string; avatar_url: string };
-          userRepository.handleUserProfile({ id: id.toString(), login, avatar_url }).then((user) => {
-            res.cookie('user_id', user.id, { expires: new Date(Date.now() + 900000), httpOnly: true });
-            res.redirect('/');
-          });
-        });
-    });
+const getAccessToken = async (code: string) => {
+  const { data } = await axios.post(
+    ENV.GITHUB.REQUEST_TOKEN_URL,
+    {
+      client_id: ENV.GITHUB.CLIENT_ID,
+      client_secret: ENV.GITHUB.CLIENT_SECRET,
+      code,
+      redirect_uri: ENV.SERVER.HOST + ENV.GITHUB.REDIRECT_URL,
+    },
+    {
+      headers: {
+        Accept: 'application/json',
+        'accept-encoding': null,
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      },
+    }
+  );
+
+  return data.access_token as string;
+};
+
+const getUserProfile = async (accessToken: string) => {
+  const { data } = await axios.get(ENV.GITHUB.REQUEST_USER_PROFILE, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      Accept: 'application/json',
+      'accept-encoding': null,
+      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+    },
+  });
+  const { id, login, avatar_url } = data as { id: number; login: string; avatar_url: string };
+  return { id, login, avatar_url };
 };
 
 export { redirectToGithubLogin, handleAuthenticationCode };
