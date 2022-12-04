@@ -9,9 +9,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
 
-import static com.waglewagle.rest.user.dto.UserInfoDTO.*;
+import static com.waglewagle.rest.user.dto.UserInfoDTO.UserInfoResDTO;
 
 @Controller
 @RequestMapping("/api/v1/user")
@@ -39,7 +40,7 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<UpdateProfileResponseDTO> updateProfile(@RequestBody UpdateProfileDTO updateProfileDTO, @CookieValue(name = "user_id") Long userId) {
 
-        if(updateProfileDTO.isEmpty()) {
+        if (updateProfileDTO.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -68,5 +69,21 @@ public class UserController {
         userService.updateLastActivity(userId);
 
         return new ResponseEntity(null, HttpStatus.OK);
+    }
+
+    @GetMapping("keyword")
+    public ResponseEntity getUserInfoInKeyword(@RequestParam("keyword-id") Long keywordId) {
+
+        List<UserConnectionStatusDTO> userConnectionStatusDTOS = userService.getUserInfoInKeyword(keywordId);
+
+        return new ResponseEntity(userConnectionStatusDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping("community")
+    public ResponseEntity getUserInfoInCommunity(@RequestParam("community-id") Long communityId) {
+
+        List<UserConnectionStatusDTO> userConnectionStatusDTOS = userService.getUserInfoInCommunity(communityId);
+
+        return new ResponseEntity(userConnectionStatusDTOS, HttpStatus.OK);
     }
 }
