@@ -2,7 +2,7 @@ function deepFreeze<T extends object>(data: T): T {
   Object.freeze(data);
 
   Object.values(data).forEach((value) => {
-    if (value === 'object') {
+    if (typeof value === 'object') {
       Object.freeze(value);
       deepFreeze(value);
     }
@@ -12,4 +12,3 @@ function deepFreeze<T extends object>(data: T): T {
 }
 
 export { deepFreeze };
-const a: Iterable<number> = [1, 2, 3];
