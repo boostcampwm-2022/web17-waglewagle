@@ -5,6 +5,10 @@ const Document = () => {
     <Html>
       <Head>
         <title>와글와글</title>
+        <link
+          href='https://hangeul.pstatic.net/hangeul_static/css/NanumBugGeugSeong.css'
+          rel='stylesheet'
+        ></link>
       </Head>
       <body>
         <Main />

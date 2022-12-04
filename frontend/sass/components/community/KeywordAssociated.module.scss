@@ -1,14 +1,39 @@
+@import '@sass/variables.scss';
+
 .container {
   position: absolute;
   right: 0;
   bottom: 0;
   display: flex;
+  gap: 10px;
 }
 
 .keyword-section {
   display: flex;
   flex-direction: column;
+  gap: 10px;
   ul {
     display: flex;
+  }
+}
+
+.chat-bubble {
+  position: relative;
+  height: 30px;
+  padding: 5px 10px;
+  border: 1px solid $charcoal-color;
+  background-color: $off-white-color;
+  transform: translateY(-10px);
+  font-family: 'Noto Sans';
+  font-size: 1.2rem;
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: 0px;
+    top: 30px;
+    border-left: 20px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid $off-white-color;
   }
 }
