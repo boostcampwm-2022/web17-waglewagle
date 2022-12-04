@@ -5,7 +5,6 @@ import KeywordAssociated from './KeywordAssociated';
 import styles from '@sass/components/community/KeywordAddModal.module.scss';
 import classnames from 'classnames/bind';
 import KeywordAdder from './KeywordAdder';
-import useUserKeywordList from '@hooks/useUserKeywordList';
 import { KeywordRelatedData, MyKeywordData } from '../../types/types';
 import { KEYWORD_ADDER_THEME } from '@constants/constants';
 const cx = classnames.bind(styles);
