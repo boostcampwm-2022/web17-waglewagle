@@ -1,5 +1,6 @@
 package com.waglewagle.rest.user;
 
+import com.querydsl.jpa.JPQLQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,7 @@ import java.util.Optional;
 public class UserRepository {
 
     private final EntityManager em;
+    private final JPQLQueryFactory jpqlQueryFactory;
 
     @Transactional
     public User save(User user) {
@@ -71,4 +73,5 @@ public class UserRepository {
     public List<User> findByUsername(String username) {
         return em.createQuery("SELECT u FROM User u WHERE u.username = :username").setParameter("username", username).getResultList();
     }
+
 }

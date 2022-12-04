@@ -4,7 +4,6 @@ import com.waglewagle.rest.communityUser.CommunityUser;
 import com.waglewagle.rest.communityUser.CommunityUserRepository;
 import com.waglewagle.rest.keywordUser.KeywordUser;
 import com.waglewagle.rest.user.dto.UpdateProfileDTO;
-import com.waglewagle.rest.user.dto.UserInfoDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -76,5 +75,13 @@ public class UserService {
     public List<KeywordUser> getUserKeywords(Long userId) {
         User user = userRepository.findById(userId);
         return null;
+    }
+
+    @Transactional
+    public void updateLastActivity(Long userId) {
+        User user = userRepository.findById(userId);
+
+        user.updateLastActivity();
+
     }
 }

@@ -2,6 +2,7 @@ package com.waglewagle.rest.user;
 
 import com.waglewagle.rest.user.dto.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -60,5 +61,12 @@ public class UserController {
         UserInfoResDTO userInfoDTO = userService.getUserInfo(userId, communityId);
 
         return ResponseEntity.ok(userInfoDTO);
+    }
+
+    @PutMapping("/last-activity")
+    public ResponseEntity updateLastActivity(@CookieValue("user_id") Long userId) {
+        userService.updateLastActivity(userId);
+
+        return new ResponseEntity(null, HttpStatus.OK);
     }
 }
