@@ -17,10 +17,12 @@ const KeywordAssociated = ({
   return (
     <div className={cx('container')}>
       <section className={cx('keyword-section')}>
-        <div className={cx('chat-bubble')}>
-          <b>&apos;{prevAddedKeyword}&apos;</b>을 추가하셨다면 이런 키워드는
-          어떠신가요?
-        </div>
+        {prevAddedKeyword && (
+          <div className={cx('chat-bubble')}>
+            <b>&apos;{prevAddedKeyword}&apos;</b>을 추가하셨다면 이런 키워드는
+            어떠신가요?
+          </div>
+        )}
         <ul>
           {relatedKeywordList.map((keyword) => (
             <li key={keyword.keywordId}>{keyword.keywordName}</li>
@@ -30,8 +32,8 @@ const KeywordAssociated = ({
       <section className={cx('image-section')}>
         <Image
           src='/images/window-dog.png'
-          width={66}
-          height={70}
+          width={76}
+          height={80}
           alt='추천 키워드를 알려주는 강아지 캐릭터'
         />
       </section>
