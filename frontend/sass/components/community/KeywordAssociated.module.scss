@@ -2,4 +2,13 @@
   position: absolute;
   right: 0;
   bottom: 0;
+  display: flex;
+}
+
+.keyword-section {
+  display: flex;
+  flex-direction: column;
+  ul {
+    display: flex;
+  }
 }
