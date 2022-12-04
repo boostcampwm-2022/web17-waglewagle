@@ -20,6 +20,7 @@ const handleUserProfile = ({
           oauthMethod: 'GITHUB',
         },
       });
+
       if (existingUser) return resolve(existingUser);
 
       const user = new User();
@@ -29,7 +30,7 @@ const handleUserProfile = ({
       user.profileImageUrl = avatar_url;
       if (email) user.email = email;
 
-      return resolve(em.save(user));
+      return resolve(await em.save(user));
     });
   });
 };
