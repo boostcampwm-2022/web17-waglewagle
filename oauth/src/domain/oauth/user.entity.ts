@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { RoleEnum } from '../../enum/roll.enum';
 
 @Entity('user')
 export class User extends BaseEntity {
@@ -29,6 +30,19 @@ export class User extends BaseEntity {
     length: 255,
   })
   username: string | null;
+
+  @Column('varchar', { name: 'role', nullable: false, default: () => RoleEnum.USER })
+  role: string;
+
+  @Column('varchar', { name: 'email' })
+  email: string;
+
+  @Column('datetime', {
+    name: 'last_activity',
+    nullable: false,
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  lastActivity: Date;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

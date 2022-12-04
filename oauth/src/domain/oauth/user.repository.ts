@@ -5,12 +5,14 @@ const handleUserProfile = ({
   id,
   login,
   avatar_url,
+  email,
 }: {
   id: string;
   login: string;
   avatar_url: string;
+  email?: string;
 }): Promise<User> => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     dataSource.transaction(async (em) => {
       const existingUser = await em.getRepository(User).findOne({
         where: {
@@ -23,8 +25,10 @@ const handleUserProfile = ({
       const user = new User();
       user.oauthMethod = 'GITHUB';
       user.oauthKey = id;
-      user.username = (await em.getRepository(User).findOneBy({ username: login })) ? crypto.randomUUID() : login;
+      user.username = (await em.getRepository(User).countBy({ username: login })) ? crypto.randomUUID() : login;
       user.profileImageUrl = avatar_url;
+      if (email) user.email = email;
+
       return resolve(em.save(user));
     });
   });
