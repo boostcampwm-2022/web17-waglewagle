@@ -7,10 +7,12 @@ import com.waglewagle.rest.user.User;
 import com.waglewagle.rest.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -64,5 +66,14 @@ public class ThreadService {
 
         threadRepository.deleteAllByParentThreadId(threadId); //TODO: 아직 동작 확인 못함(테스트코드)
         threadRepository.deleteById(threadId);
+    }
+
+    @Transactional
+    public List<ThreadResponseDTO> getThreadsInKeyword(Long keywordId) {
+        List<Thread> threads = threadRepository.findThreadsByParentThreadIsNullAndKeywordId(keywordId);
+        return threads
+                .stream()
+                .map(ThreadResponseDTO::of)
+                .collect(Collectors.toList());
     }
 }

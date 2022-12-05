@@ -1,5 +1,6 @@
 package com.waglewagle.rest.thread;
 
+import com.waglewagle.rest.keyword.KeywordService;
 import com.waglewagle.rest.thread.ThreadDTO.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import java.util.List;
 public class ThreadController {
 
     private final ThreadService threadService;
+    private final KeywordService keywordService;
 
     /**
      * Thread 생성
@@ -58,4 +60,20 @@ public class ThreadController {
      *   updated_at: Date(?)
      * }
      */
+    @GetMapping("/keyword")
+    public ResponseEntity 함수_이름_뭐로_짓는_게_좋을까(@RequestParam("keyword-id") Long keywordId) {
+
+        if (!keywordService.isKeywordExist(keywordId)) {
+            // TODO : Error code
+            return new ResponseEntity(null, HttpStatus.NOT_FOUND);
+        }
+
+        List<ThreadResponseDTO> threadResponseDTOS = threadService.getThreadsInKeyword(keywordId);
+
+        if (threadResponseDTOS.isEmpty()) {
+            return new ResponseEntity(threadResponseDTOS, HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity(threadResponseDTOS, HttpStatus.OK);
+
+    }
 }

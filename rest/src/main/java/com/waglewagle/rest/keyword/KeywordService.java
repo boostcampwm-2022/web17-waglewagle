@@ -100,4 +100,9 @@ public class KeywordService {
         List<Keyword> keywords = keywordRepository.getJoinedKeywords(userId, communityId);
         return KeywordResponseDTO.createKeywordResponses(keywords);
     }
+
+    @Transactional
+    public boolean isKeywordExist(Long keywordId) {
+        return keywordRepository.findOne(keywordId) != null;
+    }
 }

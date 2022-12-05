@@ -35,9 +35,10 @@ public class Thread {
     private Keyword keyword;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_thread_id")
     private Thread parentThread;
 
-    @OneToMany(mappedBy = "id")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentThread")
     private List<Thread> children = new ArrayList<>();
 
     @CreationTimestamp

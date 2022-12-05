@@ -22,6 +22,8 @@ public interface ThreadRepository extends JpaRepository<Thread, Long> {
     @Override
     void deleteById(Long id);
 
+    List<Thread> findThreadsByParentThreadIsNullAndKeywordId(Long keywordId);
+
     //    public Thread createThread(CreateThreadDTO createThreadDTO) {
 //
 //        Thread thread = new Thread(createThreadDTO);
