@@ -4,7 +4,7 @@ import com.waglewagle.rest.communityUser.CommunityUser;
 import com.waglewagle.rest.communityUser.CommunityUserRepository;
 import com.waglewagle.rest.keywordUser.KeywordUser;
 import com.waglewagle.rest.user.dto.UpdateProfileDTO;
-import com.waglewagle.rest.user.dto.UserInfoDTO;
+import com.waglewagle.rest.user.dto.UserConnectionStatusDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +13,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.waglewagle.rest.user.dto.UserInfoDTO.*;
 
@@ -76,5 +77,29 @@ public class UserService {
     public List<KeywordUser> getUserKeywords(Long userId) {
         User user = userRepository.findById(userId);
         return null;
+    }
+
+    @Transactional
+    public void updateLastActivity(Long userId) {
+        User user = userRepository.findById(userId);
+
+        user.updateLastActivity();
+
+    }
+
+    public List<UserConnectionStatusDTO> getUserInfoInKeyword(Long keywordId) {
+        return userRepository
+                .findByKeywordUserKeywordId(keywordId)
+                .stream()
+                .map(UserConnectionStatusDTO::of)
+                .collect(Collectors.toList());
+    }
+
+    public List<UserConnectionStatusDTO> getUserInfoInCommunity(Long communityId) {
+        return userRepository
+                .findByCommunityUserCommunityId(communityId)
+                .stream()
+                .map(UserConnectionStatusDTO::of)
+                .collect(Collectors.toList());
     }
 }

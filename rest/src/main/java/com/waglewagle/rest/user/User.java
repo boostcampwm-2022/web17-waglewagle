@@ -33,6 +33,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    private LocalDateTime lastActivity = LocalDateTime.now();
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 
@@ -80,6 +82,10 @@ public class User {
         if (updateProfileDTO.getUsername() != null){
             username = updateProfileDTO.getUsername();
         }
+    }
+
+    public void updateLastActivity() {
+        lastActivity = LocalDateTime.now();
     }
 }
 
