@@ -5,6 +5,9 @@ import com.waglewagle.rest.communityUser.CommunityUserService;
 import com.waglewagle.rest.keyword.KeywordDTO.*;
 import com.waglewagle.rest.keyword.association.AssociationDTO;
 import com.waglewagle.rest.keywordUser.KeywordUserService;
+import com.waglewagle.rest.user.Role;
+import com.waglewagle.rest.user.User;
+import com.waglewagle.rest.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +26,8 @@ public class KeywordController {
     private final CommunityService communityService;
     private final KeywordUserService keywordUserService;
     private final CommunityUserService communityUserService;
+
+    private final UserRepository userRepository;
 
     /**
      * 키워드 생성
@@ -123,5 +128,31 @@ public class KeywordController {
 
         return new ResponseEntity(keywordResponseDTODTOS, HttpStatus.OK);
 
+    }
+
+    @PutMapping("/merge")
+    public ResponseEntity mergeKeywords(@CookieValue("user_id") Long userId,
+                                        @RequestBody KeywordMergeReq keywordMergeReq) {
+
+        User requester = userRepository.findById(userId);
+        if (!requester.getRole().equals(Role.ADMIN))
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+
+        keywordService.keywordMerge(keywordMergeReq);
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @DeleteMapping("")
+    public ResponseEntity deleteKeywords(@CookieValue("user_id") Long userId,
+                                         @RequestBody DeleteReq deleteReq) {
+
+        User requester = userRepository.findById(userId);
+        if (!requester.getRole().equals(Role.ADMIN))
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+
+        keywordService.keywordDelete(deleteReq);
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 }
