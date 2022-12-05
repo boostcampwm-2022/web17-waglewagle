@@ -9,6 +9,7 @@ import { NextPageContext } from 'next';
 import useKeywordListQuery from '@hooks/useKeywordListQuery';
 import styles from '@sass/components/community/KeywordBubbleChart.module.scss';
 import classnames from 'classnames/bind';
+import { Loading } from '@components/common';
 const cx = classnames.bind(styles);
 
 const KeywordBubbleChart = () => {
@@ -18,7 +19,8 @@ const KeywordBubbleChart = () => {
   const [_, setIsMove] = useState<boolean>(false);
   const requestAnimationId = useRef<NodeJS.Timer | null>(null);
   const circleContainerRef = useRef<CircleContainer | null>(null);
-  const fetchedKeywordData = useKeywordListQuery(communityId);
+  const { data: fetchedKeywordData, isLoading } =
+    useKeywordListQuery(communityId);
   // 여기에서는 slice된 keywordData를 가지고 있기 때문에 fetched와 별도의 상태로 관리됨.
   const [slicedCommunityKeywordData, setSlicedCommunityKeywordData] = useState<
     KeywordData[]
@@ -92,6 +94,7 @@ const KeywordBubbleChart = () => {
 
   return (
     <div className={cx('chart-container')}>
+      {isLoading && <Loading />}
       {bubbleDataList.map((bubbleData, index) => (
         <KeywordBubble
           key={index}
