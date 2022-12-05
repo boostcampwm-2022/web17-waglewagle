@@ -5,6 +5,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.waglewagle.rest.keyword.KeywordDTO.*;
 import com.waglewagle.rest.user.QUser;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -71,5 +72,19 @@ public class KeywordRepository {
                 .where(keywordUser.user.id.eq(userId))
                 .where(keywordUser.community.id.eq(communityId))
                 .fetch();
+    }
+
+    public List<Keyword> findAllByIdList(List<Long> idList) {
+        return em.createQuery("select distinct k from Keyword k join fetch k.keywordUsers where k.id in :idList ", Keyword.class)
+                .setParameter("idList", idList)
+                .getResultList();
+    }
+
+    @Modifying(clearAutomatically = true) //TODO: 이거 안먹혔다. & jpa (1차?) 캐시는 트랜잭션 단위다? (트랜잭션 끼리 캐시를 공유하지 않는다? / 트랜잭션 마다 캐시를 가진다.)
+    int deleteAllByIdInBulk(List<Long> targetIdList) {
+        return (int)jpaQueryFactory.delete(keyword1).where(keyword1.id.in(targetIdList)).execute();
+//        return em.createQuery("DELETE FROM Keyword WHERE Keyword.id IN :targetIdList", Keyword.class)
+//                .setParameter("targetIdList", targetIdList)
+//                .executeUpdate();
     }
 }
