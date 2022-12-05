@@ -55,7 +55,7 @@ class CircleContainer {
       x,
       y,
       innerText,
-      radius,
+      (radius * this.width) / 2000 + 10,
       this.calcInitVector(x, y),
     );
     this.circles[circleId] = newCircle;
