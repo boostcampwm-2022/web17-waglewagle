@@ -28,13 +28,3 @@ a {
 li {
   list-style: none;
 }
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-  body {
-    background: #112a4a;
-    color: #fcfcfc;
-  }
-}
