@@ -197,6 +197,7 @@ class CircleContainer {
       const circle = this.circles[id];
       circle.x *= widthFactor;
       circle.y *= heightFactor;
+      circle.radius *= widthFactor;
     }
     this.width = newWidth;
     this.height = newHeight;
