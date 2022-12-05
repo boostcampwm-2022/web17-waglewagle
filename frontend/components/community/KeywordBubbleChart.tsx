@@ -92,6 +92,16 @@ const KeywordBubbleChart = () => {
     };
   }, [bubbleDataList]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      circleContainerRef.current?.resize(window.innerWidth, window.innerHeight);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
     <div className={cx('chart-container')}>
       {isLoading && <Loading />}
