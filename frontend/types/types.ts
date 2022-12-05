@@ -1,4 +1,4 @@
-import Circle from '../circlepacker/Circle';
+import Circle from '../utils/circlepacker/Circle';
 
 export type MyKeywordData = {
   keywordId: string;

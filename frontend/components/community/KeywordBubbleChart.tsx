@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { BubbleData, KeywordData } from '../../types/types';
 import KeywordBubble from './KeywordBubble';
-import CircleContainer from '../../circlepacker/CircleContainer';
-import Circle from '../../circlepacker/Circle';
+import CircleContainer from '../../utils/circlepacker/CircleContainer';
+import Circle from '../../utils/circlepacker/Circle';
 import { useRouter } from 'next/router';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { NextPageContext } from 'next';
@@ -10,6 +10,7 @@ import useKeywordListQuery from '@hooks/useKeywordListQuery';
 import styles from '@sass/components/community/KeywordBubbleChart.module.scss';
 import classnames from 'classnames/bind';
 import { Loading } from '@components/common';
+import debounce from '@utils/debounce';
 const cx = classnames.bind(styles);
 
 const KeywordBubbleChart = () => {
@@ -93,9 +94,9 @@ const KeywordBubbleChart = () => {
   }, [bubbleDataList]);
 
   useEffect(() => {
-    const handleResize = () => {
+    const handleResize = debounce(() => {
       circleContainerRef.current?.resize(window.innerWidth, window.innerHeight);
-    };
+    }, 200);
     window.addEventListener('resize', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
