@@ -6,22 +6,26 @@ import com.waglewagle.rest.keyword.KeywordDTO.*;
 import com.waglewagle.rest.keyword.association.AssociationCalculator;
 import com.waglewagle.rest.keyword.association.AssociationDTO;
 import com.waglewagle.rest.keywordUser.KeywordUser;
+import com.waglewagle.rest.keywordUser.KeywordUserRepository;
+import com.waglewagle.rest.thread.ThreadRepository;
 import com.waglewagle.rest.user.User;
 import com.waglewagle.rest.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class KeywordService {
 
     private final KeywordRepository keywordRepository;
+    private final KeywordUserRepository keywordUserRepository;
     private final UserRepository userRepository;
     private final CommunityRepository communityRepository;
+    private final ThreadRepository threadRepository;
 
     private final AssociationCalculator associationCalculator;
 
@@ -45,20 +49,15 @@ public class KeywordService {
     public List<KeywordDTO> getKeywordListInCommunity(Long communityId) {
 
         List<Keyword> allKeywordInCommunity = keywordRepository.findAllByCommunityId(communityId);
-        List<KeywordDTO> responseList = new ArrayList<>();
 
-        for (Keyword keyword : allKeywordInCommunity) {
+        return allKeywordInCommunity
+                .stream()
+                .map(keyword -> new KeywordDTO(
+                                        keyword.getId().toString(),
+                                        keyword.getKeyword(),
+                                        keyword.getKeywordUsers().size()))
+                .collect(Collectors.toList());
 
-            responseList.add(
-                    new KeywordDTO(
-                            String.valueOf(keyword.getId()),
-                            keyword.getKeyword(),
-                            keyword.getKeywordUsers().size()
-                    )
-            );
-        }
-
-        return responseList;
     }
 
     @Transactional
@@ -97,5 +96,52 @@ public class KeywordService {
         JoinKeywordDTO joinKeywordDTO = JoinKeywordDTO.createJoinKeywordDTO(user, community, keyword);
 
         keyword.addKeywordUser(new KeywordUser(joinKeywordDTO));
+    }
+
+    @Transactional
+    public List<KeywordResponseDTO> getJoinedKeywords(Long userId, Long communityId) {
+
+        List<Keyword> keywords = keywordRepository.getJoinedKeywords(userId, communityId);
+        return KeywordResponseDTO.createKeywordResponses(keywords);
+    }
+
+    @Transactional
+    public void keywordMerge(KeywordMergeReq keywordMergeReq) {
+
+        //keywordUser.keywordId 수정
+        int updatedKeywordUserNum = keywordUserRepository.updateAllKeywordIdByIdInBulk(keywordMergeReq.getSourceKeywordIdList(),
+                keywordMergeReq.getDestinationKeywordId());
+
+        //thread.keywordId 수정
+        int updatedThreadNum = threadRepository.updateAllKeywordIdByIdInBulk(keywordMergeReq.getSourceKeywordIdList(),
+                keywordMergeReq.getDestinationKeywordId());
+
+        //keyword 삭제
+        int deletedKeywordNum = keywordRepository.deleteAllByIdInBulk(keywordMergeReq.getSourceKeywordIdList());
+    }
+    //1. 병합/삭제 진행중인 키워드 그룹에 인터랙션을 진행함(참여, 페이지 이동) >> test?
+    //2. 병합/삭제 대상의 키워드 그룹 페이지에 있던 있던 유저(그리고 글을 쓰고있었다?) >> short polling으로
+
+    //키워드 삭제(선택한 복수개)
+    @Transactional
+    public void keywordDelete(DeleteReq deleteReq) {
+
+        //keywordUser 삭제
+        int deletedKeywordUserNum = keywordUserRepository.deleteAllByKeywordIdInBulk(deleteReq.getKeywordIdList());
+        System.out.println(deletedKeywordUserNum);
+
+        //thread 삭제
+        int deletedChildThreadNum = threadRepository.deleteAllChildThreadByKeywordIdInBulk(deleteReq.getKeywordIdList());
+        int deletedParentThreadNum = threadRepository.deleteAllParentThreadByKeywordIdInBulk(deleteReq.getKeywordIdList());
+        System.out.println(deletedParentThreadNum + deletedChildThreadNum);
+
+        //keyword 삭제
+        int deletedKeywordNum = keywordRepository.deleteAllByIdInBulk(deleteReq.getKeywordIdList());
+        System.out.println(deletedKeywordNum);
+    }
+
+    @Transactional
+    public boolean isKeywordExist(Long keywordId) {
+        return keywordRepository.findOne(keywordId) != null;
     }
 }

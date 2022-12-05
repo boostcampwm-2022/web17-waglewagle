@@ -1,16 +1,17 @@
 package com.waglewagle.rest.keyword;
 
 import com.waglewagle.rest.community.CommunityService;
+import com.waglewagle.rest.communityUser.CommunityUserService;
 import com.waglewagle.rest.keyword.KeywordDTO.*;
 import com.waglewagle.rest.keyword.association.AssociationDTO;
-import com.waglewagle.rest.keywordUser.KeywordUserRepository;
 import com.waglewagle.rest.keywordUser.KeywordUserService;
+import com.waglewagle.rest.user.Role;
+import com.waglewagle.rest.user.User;
+import com.waglewagle.rest.user.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -24,6 +25,9 @@ public class KeywordController {
     private final KeywordService keywordService;
     private final CommunityService communityService;
     private final KeywordUserService keywordUserService;
+    private final CommunityUserService communityUserService;
+
+    private final UserRepository userRepository;
 
     /**
      * 키워드 생성
@@ -31,7 +35,7 @@ public class KeywordController {
      */
     @ResponseBody
     @PostMapping("")
-    public ResponseEntity<CreateKeywordResponse> createKeyword(@RequestBody CreateKeywordInputDTO createKeywordInputDTO, @CookieValue("user_id") Long userId) {
+    public ResponseEntity<KeywordResponseDTO> createKeyword(@RequestBody CreateKeywordInputDTO createKeywordInputDTO, @CookieValue("user_id") Long userId) {
 
         if (keywordService.isDuplicated(createKeywordInputDTO)) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -42,7 +46,7 @@ public class KeywordController {
 
         Keyword keyword = keywordService.createKeyword(userId, communityId, keywordName);
 
-        return new ResponseEntity<>(new KeywordDTO.CreateKeywordResponse(keyword), HttpStatus.CREATED);
+        return new ResponseEntity<>(new KeywordResponseDTO(keyword), HttpStatus.CREATED);
     }
 
     //spring controller parameter
@@ -66,16 +70,16 @@ public class KeywordController {
         // TODO: Exception Handler
         // return type이 정해져 있어 가에러 메시지를 string이나 객체로 만들 수 없음.
         if (!communityService.isExistCommunity(communityId)) {
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
         }
 
         List<KeywordDTO> keywordListInCommunity = keywordService.getKeywordListInCommunity(communityId);
 
         if (keywordListInCommunity.isEmpty()) {
-            return ResponseEntity.noContent().build();
+            return new ResponseEntity(new ArrayList<>(), HttpStatus.NO_CONTENT);
         }
 
-        return ResponseEntity.ok(keywordListInCommunity);
+        return new ResponseEntity(keywordListInCommunity, HttpStatus.OK);
     }
 
     /**
@@ -98,7 +102,7 @@ public class KeywordController {
      * 11.29
      */
     @ResponseBody
-    @PostMapping("/disjoin")
+    @DeleteMapping("/disjoin")
     public ResponseEntity disjoinKeyword(
             @RequestBody DisjoinKeywordDTO disjoinKeywordDTO,
             @CookieValue("user_id") Long userId) {
@@ -106,5 +110,49 @@ public class KeywordController {
         keywordUserService.disjoinKeyword(disjoinKeywordDTO, userId);
 
         return ResponseEntity.ok(null);
+    }
+
+    @GetMapping("/user/{community_id}")
+    public ResponseEntity getJoinedKeywords (@PathVariable("community_id") Long communityId,
+                               @CookieValue("user_id") Long userId) {
+        if (!communityUserService.isAlreadyJoined(userId, communityId)) {
+            // 참여하지 않은 커뮤니티의 키워드를 요청했다.
+            // not found?
+            // unauthorized?
+            // bad request?
+            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+        }
+
+        List<KeywordResponseDTO> keywordResponseDTODTOS = keywordService.getJoinedKeywords(userId, communityId);
+
+
+        return new ResponseEntity(keywordResponseDTODTOS, HttpStatus.OK);
+
+    }
+
+    @PutMapping("/merge")
+    public ResponseEntity mergeKeywords(@CookieValue("user_id") Long userId,
+                                        @RequestBody KeywordMergeReq keywordMergeReq) {
+
+        User requester = userRepository.findById(userId);
+        if (!requester.getRole().equals(Role.ADMIN))
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+
+        keywordService.keywordMerge(keywordMergeReq);
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @DeleteMapping("")
+    public ResponseEntity deleteKeywords(@CookieValue("user_id") Long userId,
+                                         @RequestBody DeleteReq deleteReq) {
+
+        User requester = userRepository.findById(userId);
+        if (!requester.getRole().equals(Role.ADMIN))
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+
+        keywordService.keywordDelete(deleteReq);
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

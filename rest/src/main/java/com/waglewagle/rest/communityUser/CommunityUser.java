@@ -1,8 +1,10 @@
 package com.waglewagle.rest.communityUser;
 
 import com.waglewagle.rest.community.Community;
+import com.waglewagle.rest.communityUser.CommunityUserDTO.UpdateCommunityProfileInputDTO;
 import com.waglewagle.rest.user.User;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -10,7 +12,15 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        columnNames = {"community_id", "user_id"}
+                )
+        }
+)
 @Getter
+@NoArgsConstructor
 public class CommunityUser {
     @Id
     @GeneratedValue
@@ -22,9 +32,12 @@ public class CommunityUser {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    private String ProfileImageUrl;
+    //유저의 커뮤니티별 추가 특성(멀티 프로필, ...)
+    private String profileImageUrl;
 
     private String communityUsername;
+
+    private Boolean isFirstVisit;
 
     @CreationTimestamp
     LocalDateTime createdAt;
@@ -33,4 +46,19 @@ public class CommunityUser {
     LocalDateTime updatedAt;
 
     LocalDateTime deletedAt;
+
+    public CommunityUser (User user, Community community) {
+        this.user = user;
+        this.community = community;
+        isFirstVisit = true;
+    }
+
+    public void updateProfile(UpdateCommunityProfileInputDTO updateCommunityProfileInputDTO) {
+        communityUsername = updateCommunityProfileInputDTO.getUsername();
+        profileImageUrl = updateCommunityProfileInputDTO.getProfileImageUrl();
+    }
+
+    public void updateIsFirstVisit() {
+            isFirstVisit = false;
+    }
 }

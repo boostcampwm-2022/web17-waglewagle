@@ -1,8 +1,10 @@
 package com.waglewagle.rest.user;
 
+import com.waglewagle.rest.communityUser.CommunityUser;
+import com.waglewagle.rest.communityUser.CommunityUserRepository;
 import com.waglewagle.rest.keywordUser.KeywordUser;
 import com.waglewagle.rest.user.dto.UpdateProfileDTO;
-import com.waglewagle.rest.user.dto.UserInfoDTO;
+import com.waglewagle.rest.user.dto.UserConnectionStatusDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,12 +13,16 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static com.waglewagle.rest.user.dto.UserInfoDTO.*;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
+    private final CommunityUserRepository communityUserRepository;
 
     @Transactional
     public Long authenticateWithUsername(String username) {
@@ -55,17 +61,45 @@ public class UserService {
         return user;
     }
 
-    public UserInfoDTO getUserInfo(Long userId) {
+    @Transactional
+    public UserInfoResDTO getUserInfo(Long userId, Long communityId) {
         User user = userRepository.findById(userId);
+        CommunityUser communityUser = communityUserRepository.findByUserIdAndCommunityId(userId, communityId);
+
+        //TODO: null에 대한 Http 'Bad Request(or No Content?)'처리가 필요함(지금은 Conroller에서 Http.ok(200)에 null만 태워서 보냄)
         if (Objects.isNull(user)) {
             return null;
         }
 
-        return new UserInfoDTO(user);
+        return new UserInfoResDTO(user, communityUser);
     }
 
     public List<KeywordUser> getUserKeywords(Long userId) {
         User user = userRepository.findById(userId);
         return null;
+    }
+
+    @Transactional
+    public void updateLastActivity(Long userId) {
+        User user = userRepository.findById(userId);
+
+        user.updateLastActivity();
+
+    }
+
+    public List<UserConnectionStatusDTO> getUserInfoInKeyword(Long keywordId) {
+        return userRepository
+                .findByKeywordUserKeywordId(keywordId)
+                .stream()
+                .map(UserConnectionStatusDTO::of)
+                .collect(Collectors.toList());
+    }
+
+    public List<UserConnectionStatusDTO> getUserInfoInCommunity(Long communityId) {
+        return userRepository
+                .findByCommunityUserCommunityId(communityId)
+                .stream()
+                .map(UserConnectionStatusDTO::of)
+                .collect(Collectors.toList());
     }
 }

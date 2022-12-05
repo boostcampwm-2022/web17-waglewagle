@@ -2,13 +2,17 @@ package com.waglewagle.rest.user;
 
 import com.waglewagle.rest.user.dto.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+
+import static com.waglewagle.rest.user.dto.UserInfoDTO.UserInfoResDTO;
 
 @Controller
 @RequestMapping("/api/v1/user")
@@ -36,7 +40,7 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<UpdateProfileResponseDTO> updateProfile(@RequestBody UpdateProfileDTO updateProfileDTO, @CookieValue(name = "user_id") Long userId) {
 
-        if(updateProfileDTO.isEmpty()) {
+        if (updateProfileDTO.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -52,9 +56,34 @@ public class UserController {
 
     @GetMapping("/me")
     @ResponseBody
-    public ResponseEntity<UserInfoDTO> getUserInfo(@CookieValue(name = "user_id") Long userId) {
-        UserInfoDTO userInfoDTO = userService.getUserInfo(userId);
+    public ResponseEntity<UserInfoResDTO> getUserInfo(@CookieValue(name = "user_id") Long userId,
+                                                      @RequestParam("community-id") Long communityId) {
+
+        UserInfoResDTO userInfoDTO = userService.getUserInfo(userId, communityId);
 
         return ResponseEntity.ok(userInfoDTO);
+    }
+
+    @PutMapping("/last-activity")
+    public ResponseEntity updateLastActivity(@CookieValue("user_id") Long userId) {
+        userService.updateLastActivity(userId);
+
+        return new ResponseEntity(null, HttpStatus.OK);
+    }
+
+    @GetMapping("keyword")
+    public ResponseEntity getUserInfoInKeyword(@RequestParam("keyword-id") Long keywordId) {
+
+        List<UserConnectionStatusDTO> userConnectionStatusDTOS = userService.getUserInfoInKeyword(keywordId);
+
+        return new ResponseEntity(userConnectionStatusDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping("community")
+    public ResponseEntity getUserInfoInCommunity(@RequestParam("community-id") Long communityId) {
+
+        List<UserConnectionStatusDTO> userConnectionStatusDTOS = userService.getUserInfoInCommunity(communityId);
+
+        return new ResponseEntity(userConnectionStatusDTOS, HttpStatus.OK);
     }
 }

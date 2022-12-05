@@ -1,11 +1,13 @@
 package com.waglewagle.rest.thread;
 
 import com.waglewagle.rest.keyword.Keyword;
+import com.waglewagle.rest.thread.ThreadDTO.*;
 import com.waglewagle.rest.user.User;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -14,6 +16,8 @@ import java.util.List;
 
 @Entity
 @Getter
+@Setter
+@NoArgsConstructor
 public class Thread {
 
     @Id
@@ -31,9 +35,10 @@ public class Thread {
     private Keyword keyword;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_thread_id")
     private Thread parentThread;
 
-    @OneToMany(mappedBy = "id")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentThread")
     private List<Thread> children = new ArrayList<>();
 
     @CreationTimestamp
@@ -43,4 +48,11 @@ public class Thread {
     private LocalDateTime updatedAt;
 
     private LocalDateTime deletedAt;
+
+    public Thread(CreateThreadDTO createThreadDTO) {
+        author = createThreadDTO.getAuthor();
+        parentThread = createThreadDTO.getParentThread();
+        content = createThreadDTO.getContent();
+        keyword = createThreadDTO.getKeyword();
+    }
 }

@@ -1,5 +1,6 @@
 package com.waglewagle.rest.user;
 
+import com.querydsl.jpa.JPQLQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,11 +11,15 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
+import static com.waglewagle.rest.keywordUser.QKeywordUser.keywordUser;
+import static com.waglewagle.rest.communityUser.QCommunityUser.communityUser;
+
 @Repository
 @RequiredArgsConstructor
 public class UserRepository {
 
     private final EntityManager em;
+    private final JPQLQueryFactory jpqlQueryFactory;
 
     @Transactional
     public User save(User user) {
@@ -70,5 +75,23 @@ public class UserRepository {
 
     public List<User> findByUsername(String username) {
         return em.createQuery("SELECT u FROM User u WHERE u.username = :username").setParameter("username", username).getResultList();
+    }
+
+    public List<User> findByKeywordUserKeywordId(Long keywordId) {
+        return jpqlQueryFactory
+                .select(keywordUser.user)
+                .from(keywordUser)
+                .where(keywordUser.keyword.id.eq(keywordId))
+                .orderBy(keywordUser.user.username.asc())
+                .fetch();
+    }
+
+    public List<User> findByCommunityUserCommunityId(Long communityId) {
+        return jpqlQueryFactory
+                .select(communityUser.user)
+                .from(communityUser)
+                .where(communityUser.community.id.eq(communityId))
+                .orderBy(communityUser.user.username.asc())
+                .fetch();
     }
 }
