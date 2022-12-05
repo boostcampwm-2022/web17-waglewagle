@@ -18,8 +18,8 @@ const handleAuthenticationCode: requestHandler = async (req, res) => {
   }
 
   const access_token = await getAccessToken(code);
-  const { id, login, avatar_url } = await getUserProfile(access_token);
-  const user = await userRepository.handleUserProfile({ id: id.toString(), login, avatar_url });
+  const { id, login, avatar_url, email } = await getUserProfile(access_token);
+  const user = await userRepository.handleUserProfile({ id: id.toString(), login, avatar_url, email });
   res.cookie('user_id', user.id, { httpOnly: true });
   res.redirect('/');
   return;
@@ -55,8 +55,8 @@ const getUserProfile = async (accessToken: string) => {
       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
     },
   });
-  const { id, login, avatar_url } = data as { id: number; login: string; avatar_url: string };
-  return { id, login, avatar_url };
+  const { id, login, avatar_url, email } = data as { id: number; login: string; avatar_url: string; email?: string };
+  return { id, login, avatar_url, email };
 };
 
 export { redirectToGithubLogin, handleAuthenticationCode };
