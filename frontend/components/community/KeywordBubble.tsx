@@ -1,10 +1,18 @@
-import { Modal } from '@components/common';
+import { Loading, Modal } from '@components/common';
 import useUserMe from '@hooks/useUserMe';
 import styles from '@sass/components/community/KeywordBubble.module.scss';
 import classnames from 'classnames/bind';
+import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
-import KeywordModalContent from './keyword/KeywordModalContent';
 const cx = classnames.bind(styles);
+
+const KeywordModalContent = dynamic(
+  () => import('./keyword/KeywordModalContent'),
+  {
+    loading: () => <Loading />,
+  },
+);
 
 interface KeywordBubbleProps {
   keyword: string;
@@ -15,7 +23,9 @@ interface KeywordBubbleProps {
 
 // requestAnimationFrame으로 이동
 const KeywordBubble = ({ keyword, posX, posY, radius }: KeywordBubbleProps) => {
-  const userData = useUserMe();
+  const router = useRouter();
+  const communityId: string = router.query.id as string;
+  const userData = useUserMe(communityId);
   const [isHover, setIsHover] = useState<boolean>(false);
   const [isOpenKeywordModal, setIsOpenKeywordModal] = useState<boolean>(false);
 

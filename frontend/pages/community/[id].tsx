@@ -11,10 +11,12 @@ import { KEYWORD_ADDER_THEME } from '@constants/constants';
 import { useState } from 'react';
 import useUserMe from '@hooks/useUserMe';
 import { KeywordRelatedData, MyKeywordData } from '../../types/types';
-import { NextPageContext } from 'next';
+import { useRouter } from 'next/router';
 
 const Community = () => {
-  const userData = useUserMe();
+  const router = useRouter();
+  const { id } = router.query;
+  const userData = useUserMe(id as string);
   const [isOpenLoginModal, setIsOpenLoginModal] = useState<boolean>(false);
   const [isOpenKeywordModal, setIsOpenKeywordModal] = useState<boolean>(false);
   // ======== 이하는 서버 상태 관리르 분리되어야함. ========

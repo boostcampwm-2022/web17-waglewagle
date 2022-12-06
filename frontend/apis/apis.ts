@@ -33,8 +33,12 @@ const joinKeyword = async (joinKeywordData: JoinKeywordData) => {
   });
 };
 
-const getUserData = async (): Promise<UserData> => {
-  const response = await apiInstance.get('/v1/user/me');
+const getUserData = async (communityId: string): Promise<UserData> => {
+  const response = await apiInstance.get('/v1/user/me', {
+    params: {
+      'community-id': communityId,
+    },
+  });
 
   return response.data;
 };

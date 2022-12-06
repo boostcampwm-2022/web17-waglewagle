@@ -3,12 +3,17 @@ import { useQuery } from '@tanstack/react-query';
 import apis from '../apis/apis';
 import { UserData } from '../types/types';
 
-const useUserMe = () => {
-  const fetchUserMe = async () => {
-    const data = await apis.getUserData();
-    return data;
-  };
-  const { data } = useQuery<UserData>([REACT_QUERY_KEY.USERME], fetchUserMe);
+const useUserMe = (communityId?: string) => {
+  const { data } = useQuery<UserData>(
+    [REACT_QUERY_KEY.USERME],
+    () => {
+      const data = apis.getUserData(communityId ?? '');
+      return data;
+    },
+    {
+      enabled: !!communityId,
+    },
+  );
 
   return data;
 };
