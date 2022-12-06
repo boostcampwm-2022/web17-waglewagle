@@ -50,7 +50,7 @@ const KeywordBubbleChart = () => {
 
     requestAnimationId.current = setInterval(() => {
       update();
-    }, 300);
+    }, 500);
   };
 
   useEffect(() => {

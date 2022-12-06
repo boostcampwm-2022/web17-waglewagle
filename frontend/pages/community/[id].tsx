@@ -11,6 +11,7 @@ import { KEYWORD_ADDER_THEME } from '@constants/constants';
 import { useState } from 'react';
 import useUserMe from '@hooks/useUserMe';
 import { KeywordRelatedData, MyKeywordData } from '../../types/types';
+import { NextPageContext } from 'next';
 
 const Community = () => {
   const userData = useUserMe();
