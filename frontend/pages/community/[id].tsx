@@ -1,8 +1,7 @@
-import { Modal, LoginModalContent } from '@components/common';
+import { Modal, Loading } from '@components/common';
 import {
   CommunityHeader,
   CommunityLayout,
-  KeywordAddModal,
   KeywordBubbleChart,
 } from '@components/community';
 import KeywordAdder from '@components/community/KeywordAdder';
@@ -12,6 +11,23 @@ import { useState } from 'react';
 import useUserMe from '@hooks/useUserMe';
 import { KeywordRelatedData, MyKeywordData } from '../../types/types';
 import { useRouter } from 'next/router';
+import dynamic from 'next/dynamic';
+import SeoHead from '@components/common/Head';
+import config from '../../config';
+
+const LoginModalContent = dynamic(
+  () => import('../../components/common/LoginModalContent'),
+  {
+    loading: () => <Loading />,
+  },
+);
+
+const KeywordAddModal = dynamic(
+  () => import('../../components/community/KeywordAddModal'),
+  {
+    loading: () => <Loading />,
+  },
+);
 
 const Community = () => {
   const router = useRouter();
@@ -54,6 +70,11 @@ const Community = () => {
 
   return (
     <CommunityLayout>
+      <SeoHead
+        title='와글와글 | 부스트캠프 7기'
+        description='데이터 시각화를 통한 중규모 커뮤니티 소모임 관리 서비스'
+        url={`${config.HOST}${router.asPath}`}
+      />
       <CommunityHeader
         title='부스트캠프 7기'
         handleClickKeywordModal={handleClickKeywordModal}
