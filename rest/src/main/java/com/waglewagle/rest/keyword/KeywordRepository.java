@@ -30,11 +30,12 @@ public class KeywordRepository {
     public List<Keyword> findAllByCommunityId(Long communityId) {
         return jpaQueryFactory
                 .selectFrom(keyword1)
+                .distinct()
                 .innerJoin(keyword1.community, community)
                 .innerJoin(keyword1.keywordUsers, keywordUser)
-                .where(community.id.eq(communityId))
                 .fetchJoin()
-                .fetch(); //TODO: fetchJoin?
+                .where(community.id.eq(communityId))
+                .fetch();
     }
 
     public List<Keyword> findAssociatedKeywords(Keyword keyword) {
