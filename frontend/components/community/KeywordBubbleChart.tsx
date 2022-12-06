@@ -97,6 +97,7 @@ const KeywordBubbleChart = () => {
     const handleResize = debounce(() => {
       circleContainerRef.current?.resize(window.innerWidth, window.innerHeight);
     }, 200);
+
     window.addEventListener('resize', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
