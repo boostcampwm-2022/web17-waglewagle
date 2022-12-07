@@ -5,6 +5,8 @@ import DeleteIcon from '@public/images/delete.svg';
 import CommentIcon from '@public/images/comment.svg';
 import { Author, ThreadData } from '../../../types/types';
 import calculateTimeGap from '@utils/calculateTimeGap';
+import apis from '../../../apis/apis';
+import { useMutation } from '@tanstack/react-query';
 const cx = classnames.bind(styles);
 
 interface ThreadProps {
@@ -28,6 +30,11 @@ const Thread = ({
   author: { userId, username, profileImageUrl },
   openSidebar,
 }: ThreadProps) => {
+  // setQueryData 통해서 데이터 수정 추가
+  const { mutate } = useMutation({
+    mutationFn: () => apis.deleteThread(threadId),
+  });
+
   return (
     <li className={cx('thread')}>
       <Image
@@ -66,7 +73,12 @@ const Thread = ({
         >
           <CommentIcon />
         </button>
-        <button className={cx('delete-button')}>
+        <button
+          className={cx('delete-button')}
+          onClick={() => {
+            mutate();
+          }}
+        >
           <DeleteIcon />
         </button>
       </div>

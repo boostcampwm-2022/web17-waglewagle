@@ -106,6 +106,14 @@ const addComments = async (
   return response.data;
 };
 
+const deleteThread = async (threadId: string) => {
+  const response = await apiInstance.delete('/v1/thread', {
+    data: { threadId },
+  });
+
+  return response.data;
+};
+
 const apis = {
   fetchLogin,
   getKeywords,
@@ -116,7 +124,8 @@ const apis = {
   getKeywordThreads,
   getKeywordUsers,
   addThread,
-  addComments
+  addComments,
+  deleteThread,
 };
 
 export default apis;
