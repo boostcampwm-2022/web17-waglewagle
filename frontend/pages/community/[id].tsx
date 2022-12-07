@@ -95,7 +95,7 @@ const Community = () => {
         isOpenModal={isOpenLoginModal}
         closeModal={() => setIsOpenLoginModal(false)}
       >
-        <LoginModalContent closeLoginModal={closeLoginModal} />
+        <LoginModalContent />
       </Modal>
       <Modal
         isOpenModal={isOpenKeywordModal}

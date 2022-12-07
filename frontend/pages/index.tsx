@@ -26,14 +26,10 @@ const Home = () => {
     setIsOpenLoginModal(true);
   };
 
-  const closeLoginModal = () => {
-    setIsOpenLoginModal(false);
-  };
-
   useEffect(() => {
     if (mockUserData) {
       apis.joinCommunity(MVP_DEFAULT.COMMUNITY_ID);
-      // router.push('/main');
+      router.push('/main');
     }
   }, [mockUserData]);
 
@@ -55,7 +51,7 @@ const Home = () => {
         isOpenModal={isOpenLoginModal}
         closeModal={() => setIsOpenLoginModal(false)}
       >
-        <LoginModalContent closeLoginModal={closeLoginModal} />
+        <LoginModalContent />
       </Modal>
     </HomeLayout>
   );
