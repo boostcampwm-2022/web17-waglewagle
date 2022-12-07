@@ -35,13 +35,8 @@ const joinCommunity = async (communityId: string) => {
   });
 };
 
-const joinKeyword = async (joinKeywordData: JoinKeywordData) => {
-  await apiInstance.post('/v1/keyword/join', {
-    data: joinKeywordData,
-  });
-};
-
-const getUserData = async (communityId: string): Promise<UserData> => {
+// isFirstInCommunity가 없으면 isFirstLogin이 항상 null
+const getUserData = async (communityId?: string): Promise<UserData> => {
   const response = await apiInstance.get('/v1/user/me', {
     params: {
       'community-id': communityId,
@@ -66,11 +61,15 @@ const getKeywordAssociations = async (
 const addKeyword = async (
   addKeywordData: AddKeywordData,
 ): Promise<AddKeywordResponseData> => {
-  const response = await apiInstance.post('/v1/keyword', {
-    data: addKeywordData,
-  });
+  const response = await apiInstance.post('/v1/keyword', addKeywordData);
 
   return response.data;
+};
+
+const joinKeyword = async (joinKeywordData: JoinKeywordData) => {
+  await apiInstance.post('/v1/keyword/join', {
+    joinKeywordData,
+  });
 };
 
 const getKeywordThreads = async (keywordId: string): Promise<ThreadData[]> => {
