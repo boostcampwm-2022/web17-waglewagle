@@ -6,6 +6,7 @@ import com.waglewagle.rest.communityUser.repository.CommunityUserRepository;
 import com.waglewagle.rest.user.dto.UpdateProfileDTO;
 import com.waglewagle.rest.user.dto.UpdateProfileResponseDTO;
 import com.waglewagle.rest.user.dto.UserConnectionStatusDTO;
+import com.waglewagle.rest.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.Cookie;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.waglewagle.rest.user.dto.UserInfoDTO.*;
@@ -42,27 +44,36 @@ public class UserService {
 
     @Transactional
     public PreResponseDTO<UpdateProfileResponseDTO> updateUserProfile(Long userId,
-                                                                      UpdateProfileDTO updateProfileDTO) {
+                                                                      UpdateProfileDTO updateProfileDTO) throws IllegalArgumentException {
 
-        User user = userRepository.findById(userId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
         if (Objects.isNull(user)) return null;
 
         String username = updateProfileDTO.getUsername();
         if (username != null) {
-            User existingUser = userRepository.findByUsername(username);
-            if (existingUser != null && existingUser.getId() != userId ) {
-                return new PreResponseDTO(null, HttpStatus.BAD_REQUEST);
+            boolean isUsedUsername = userRepository.findByUsername(username)
+                    .filter(user1 -> !Objects.equals(user.getId(), userId))
+                    .isPresent();
+
+            if (isUsedUsername) {
+                return new PreResponseDTO("이미 사용중인 이름입니다.", HttpStatus.BAD_REQUEST);
             }
         }
 
         user.updateProfile(updateProfileDTO);
 
-        return new PreResponseDTO(new UpdateProfileResponseDTO(user), HttpStatus.OK);
+        return new PreResponseDTO<>(new UpdateProfileResponseDTO(user), HttpStatus.OK);
     }
 
     @Transactional
-    public PreResponseDTO<UserInfoResDTO> getUserInfo(Long userId, Long communityId) {
-        User user = userRepository.findById(userId);
+    public PreResponseDTO<UserInfoResDTO> getUserInfo(Long userId, Long communityId) throws IllegalArgumentException {
+        User user;
+        Optional<User> optUser = userRepository.findById(userId);
+        if (optUser.isPresent()) {
+            user = optUser.get();
+        } else {
+            return new PreResponseDTO("존재하지 않는 회원입니다.", HttpStatus.NOT_FOUND);
+        }
 
         if (communityId == null) {
             return new PreResponseDTO<>(new UserInfoResDTO(user), HttpStatus.OK);
@@ -79,10 +90,11 @@ public class UserService {
     }
     
     @Transactional
-    public void updateLastActivity(Long userId) {
-        User user = userRepository.findById(userId);
+    public void updateLastActivity(Long userId) throws IllegalArgumentException {
 
-        user.updateLastActivity();
+        userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않은 회원입니다."))
+                .updateLastActivity();
     }
 
     public List<UserConnectionStatusDTO> getUserInfoInKeyword(Long keywordId) {
@@ -102,7 +114,8 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public User getUser(Long userId) {
-        return userRepository.findById(userId);
+    public User getUser(Long userId) throws IllegalArgumentException {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
     }
 }

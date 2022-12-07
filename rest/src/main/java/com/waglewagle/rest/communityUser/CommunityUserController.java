@@ -20,18 +20,22 @@ public class CommunityUserController {
      * communityId: string
      */
     @PostMapping("")
-    public ResponseEntity joinCommunity(@RequestBody JoinCommunityInputDTO joinCommunityInputDTO,
-                                        @CookieValue("user_id") Long userId) {
+    public ResponseEntity<String> joinCommunity(@RequestBody JoinCommunityInputDTO joinCommunityInputDTO,
+                                                @CookieValue("user_id") Long userId) {
+
         Long communityId = Long.parseLong(joinCommunityInputDTO.getCommunityId());
 
         if (communityUserService.isJoined(userId, communityId)) {
-            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
 
+        try {
+            communityUserService.joinCommunity(userId, communityId);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
 
-        communityUserService.joinCommunity(userId, communityId);
-
-        return new ResponseEntity(null, HttpStatus.CREATED);
+        return new ResponseEntity<>(null, HttpStatus.CREATED);
     }
 
     /**

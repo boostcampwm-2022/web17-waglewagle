@@ -4,7 +4,7 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter()
-public class PreResponseDTO<T extends Object> {
+public class PreResponseDTO <T extends Object> {
 
     private T data;
     private HttpStatus httpStatus;

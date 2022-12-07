@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Objects;
 
 import static com.waglewagle.rest.user.dto.UserInfoDTO.UserInfoResDTO;
 
@@ -42,28 +41,34 @@ public class UserController {
     public ResponseEntity<UpdateProfileResponseDTO> updateProfile(@RequestBody UpdateProfileDTO updateProfileDTO, @CookieValue(name = "user_id") Long userId) {
 
         if (updateProfileDTO.isEmpty()) {
-            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
 
-        PreResponseDTO preResponseDTO = userService.updateUserProfile(userId, updateProfileDTO);
+        PreResponseDTO<UpdateProfileResponseDTO> preResponseDTO = userService.updateUserProfile(userId, updateProfileDTO);
 
-        return new ResponseEntity(preResponseDTO.getData(), preResponseDTO.getHttpStatus());
+        return new ResponseEntity<>(preResponseDTO.getData(), preResponseDTO.getHttpStatus());
     }
 
     @GetMapping("/me")
     @ResponseBody
     public ResponseEntity<UserInfoResDTO> getUserInfo(@CookieValue(name = "user_id") Long userId,
                                                       @RequestParam(name="community-id", required= false) Long communityId) {
+
         PreResponseDTO<UserInfoResDTO> preResponseDTO = userService.getUserInfo(userId, communityId);
 
         return new ResponseEntity(preResponseDTO.getData(), preResponseDTO.getHttpStatus());
     }
 
     @PutMapping("/last-activity")
-    public ResponseEntity updateLastActivity(@CookieValue("user_id") Long userId) {
-        userService.updateLastActivity(userId);
+    public ResponseEntity<String> updateLastActivity(@CookieValue("user_id") Long userId) {
 
-        return new ResponseEntity(null, HttpStatus.OK);
+        try {
+            userService.updateLastActivity(userId);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     @GetMapping("keyword")
