@@ -1,8 +1,8 @@
-import { useMemo } from 'react';
-import styles from '@sass/components/community/keyword/KeywordUserList.module.scss';
-import classnames from 'classnames/bind';
 import useKeywordUserListQuery from '@hooks/useKeywordUserListQuery';
+import styles from '@sass/components/community/keyword/KeywordUserList.module.scss';
 import calculateTimeGap from '@utils/calculateTimeGap';
+import classnames from 'classnames/bind';
+import { useMemo } from 'react';
 const cx = classnames.bind(styles);
 
 const KeywordGroupUserList = () => {

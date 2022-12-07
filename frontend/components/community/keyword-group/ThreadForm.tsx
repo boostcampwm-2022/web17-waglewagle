@@ -1,8 +1,8 @@
-import { ChangeEventHandler, FormEventHandler, useState } from 'react';
 import styles from '@sass/components/community/keyword/ThreadForm.module.scss';
-import classnames from 'classnames/bind';
-import apis from '../../../apis/apis';
 import { useMutation } from '@tanstack/react-query';
+import classnames from 'classnames/bind';
+import { ChangeEventHandler, FormEventHandler, useState } from 'react';
+import apis from '../../../apis/apis';
 const cx = classnames.bind(styles);
 
 const ThreadForm = () => {

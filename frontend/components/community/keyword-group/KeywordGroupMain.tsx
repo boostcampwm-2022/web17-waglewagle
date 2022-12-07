@@ -1,10 +1,10 @@
+import { KeywordData, ThreadData } from '#types/types';
 import KeywordGroupSidebar from '@components/community/keyword-group/KeywordGroupSidebar';
-import { useState } from 'react';
-import { KeywordData, ThreadData } from '../../../types/types';
-import ThreadList from './ThreadList';
 import styles from '@sass/components/community/keyword/KeywordMain.module.scss';
 import classnames from 'classnames/bind';
+import { useState } from 'react';
 import PostThread from './ThreadForm';
+import ThreadList from './ThreadList';
 const cx = classnames.bind(styles);
 
 type Sidebar = { isOpen: false } | (ThreadData & { isOpen: true });

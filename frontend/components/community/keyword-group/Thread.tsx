@@ -1,12 +1,12 @@
+import { Author, ThreadData } from '#types/types';
+import CommentIcon from '@public/images/comment.svg';
+import DeleteIcon from '@public/images/delete.svg';
 import styles from '@sass/components/community/keyword/Thread.module.scss';
+import { useMutation } from '@tanstack/react-query';
+import calculateTimeGap from '@utils/calculateTimeGap';
 import classnames from 'classnames/bind';
 import Image from 'next/image';
-import DeleteIcon from '@public/images/delete.svg';
-import CommentIcon from '@public/images/comment.svg';
-import { Author, ThreadData } from '../../../types/types';
-import calculateTimeGap from '@utils/calculateTimeGap';
 import apis from '../../../apis/apis';
-import { useMutation } from '@tanstack/react-query';
 const cx = classnames.bind(styles);
 
 interface ThreadProps {

@@ -1,9 +1,9 @@
-import Image from 'next/image';
-import { Author, ThreadData } from '../../../types/types';
-import styles from '@sass/components/community/keyword/Sidebar.module.scss';
-import classnames from 'classnames/bind';
-import calculateTimeGap from '@utils/calculateTimeGap';
+import { Author, ThreadData } from '#types/types';
 import CloseIcon from '@public/images/close.svg';
+import styles from '@sass/components/community/keyword/Sidebar.module.scss';
+import calculateTimeGap from '@utils/calculateTimeGap';
+import classnames from 'classnames/bind';
+import Image from 'next/image';
 import CommentForm from './CommentForm';
 const cx = classnames.bind(styles);
 

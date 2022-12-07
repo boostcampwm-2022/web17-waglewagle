@@ -1,8 +1,8 @@
-import Thread from './Thread';
+import { ThreadData } from '#types/types';
+import useThreadListQuery from '@hooks/useThreadListQuery';
 import styles from '@sass/components/community/keyword/ThreadList.module.scss';
 import classnames from 'classnames/bind';
-import { ThreadData } from '../../../types/types';
-import useThreadListQuery from '@hooks/useThreadListQuery';
+import Thread from './Thread';
 const cx = classnames.bind(styles);
 
 interface ThreadListProps {
