@@ -19,7 +19,7 @@ public class CommunityUserService {
 
 
     @Transactional
-    public boolean isAlreadyJoined(Long userId, Long communityId) {
+    public boolean isJoined(Long userId, Long communityId) {
         return communityUserRepository.findByUserIdAndCommunityId(userId, communityId) != null;
     }
 
