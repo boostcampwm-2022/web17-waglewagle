@@ -2,13 +2,15 @@
 import { useEffect, useState } from 'react';
 
 const useMockUserMe = () => {
-  const [userData, setUserData] = useState<boolean>(false);
+  const [userData, setUserData] = useState<string>('');
 
   useEffect(() => {
-    const myCookieRegExp = /user_id/g;
+    const myCookieRegExp = /user_id=.+;?/;
     const cookieString = document.cookie.match(myCookieRegExp);
-    if (cookieString) {
-      setUserData(true);
+    const trimmedUserId =
+      cookieString && cookieString[0].split('=')[1].replace(';', '');
+    if (trimmedUserId) {
+      setUserData(trimmedUserId);
     }
   }, []);
 
