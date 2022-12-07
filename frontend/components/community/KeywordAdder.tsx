@@ -37,7 +37,7 @@ const KeywordAdder = ({
 }: KeywordAdderProps) => {
   const router = useRouter();
   const communityId: string = router.query.id as string;
-  const communityKeywordData = useKeywordListQuery(communityId);
+  const { data: communityKeywordData } = useKeywordListQuery(communityId);
   const { searchKeyword, searchResult, changeSearchKeyword } =
     useAutoComplete(communityKeywordData);
 

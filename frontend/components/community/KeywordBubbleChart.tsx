@@ -1,14 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 import { BubbleData, KeywordData } from '../../types/types';
 import KeywordBubble from './KeywordBubble';
-import CircleContainer from '../../circlepacker/CircleContainer';
-import Circle from '../../circlepacker/Circle';
+import CircleContainer from '../../utils/circlepacker/CircleContainer';
+import Circle from '../../utils/circlepacker/Circle';
 import { useRouter } from 'next/router';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { NextPageContext } from 'next';
 import useKeywordListQuery from '@hooks/useKeywordListQuery';
 import styles from '@sass/components/community/KeywordBubbleChart.module.scss';
 import classnames from 'classnames/bind';
+import { Loading } from '@components/common';
+import debounce from '@utils/debounce';
 const cx = classnames.bind(styles);
 
 const KeywordBubbleChart = () => {
@@ -18,7 +20,8 @@ const KeywordBubbleChart = () => {
   const [_, setIsMove] = useState<boolean>(false);
   const requestAnimationId = useRef<NodeJS.Timer | null>(null);
   const circleContainerRef = useRef<CircleContainer | null>(null);
-  const fetchedKeywordData = useKeywordListQuery(communityId);
+  const { data: fetchedKeywordData, isLoading } =
+    useKeywordListQuery(communityId);
   // 여기에서는 slice된 keywordData를 가지고 있기 때문에 fetched와 별도의 상태로 관리됨.
   const [slicedCommunityKeywordData, setSlicedCommunityKeywordData] = useState<
     KeywordData[]
@@ -90,8 +93,19 @@ const KeywordBubbleChart = () => {
     };
   }, [bubbleDataList]);
 
+  useEffect(() => {
+    const handleResize = debounce(() => {
+      circleContainerRef.current?.resize(window.innerWidth, window.innerHeight);
+    }, 200);
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
     <div className={cx('chart-container')}>
+      {isLoading && <Loading />}
       {bubbleDataList.map((bubbleData, index) => (
         <KeywordBubble
           key={index}
