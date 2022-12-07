@@ -3,6 +3,7 @@ package com.waglewagle.rest.communityUser;
 import com.waglewagle.rest.community.CommunityRepository;
 import com.waglewagle.rest.community.Community;
 import com.waglewagle.rest.communityUser.CommunityUserDTO.*;
+import com.waglewagle.rest.communityUser.repository.CommunityUserRepository;
 import com.waglewagle.rest.user.User;
 import com.waglewagle.rest.user.UserRepository;
 import lombok.RequiredArgsConstructor;
