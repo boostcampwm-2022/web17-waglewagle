@@ -33,37 +33,22 @@ const KeywordBubbleChart = () => {
     };
   };
 
+  // TODO: 애니메이션 setInrevl로 할지 requestAnimationFrame으로 할지 정해서  변수명 정하고 update 함수 리팩토링하기
+  // circleContainer가 아닌 이곳에 있는 이유는, 이 함수는 연산보다는 렌더링에 가까운 로직이기 때문 (setIsMove를 토글하여 리렌더링 시킴)
   const animate = () => {
     const update = () => {
-      circleContainerRef.current?.update();
-
-      const ctx = canvasRef.current?.getContext('2d');
-      ctx?.clearRect(0, 0, window.innerWidth, window.innerHeight);
-
-      if (!circleContainerRef.current?.circles) {
+      if (circleContainerRef.current?.isStatic) {
+        clearInterval(requestAnimationId.current!);
         return;
       }
 
-      const circleKeys: string[] = Object.keys(
-        circleContainerRef.current?.circles,
-      );
-
-      circleKeys.forEach((circleId) => {
-        const circle = circleContainerRef.current?.circles[circleId];
-        ctx?.beginPath();
-        ctx?.arc(circle!.x, circle!.y, circle!.radius, 0, 360);
-        ctx!.fillStyle = '#133d59';
-        ctx?.stroke();
-        ctx?.fill();
-        ctx!.font = `${10 + circle!.radius * 1}px Nanum BugGeugSeong`;
-        ctx!.fillStyle = '#fcfcfc';
-        ctx?.fillText(circle!.innerText, circle!.x, circle!.y);
-      });
-
-      requestAnimationId.current = requestAnimationFrame(update);
+      setIsMove((prev) => !prev);
+      circleContainerRef.current?.update();
     };
 
-    requestAnimationId.current = requestAnimationFrame(update);
+    requestAnimationId.current = setInterval(() => {
+      update();
+    }, 300);
   };
 
   useEffect(() => {
@@ -97,14 +82,10 @@ const KeywordBubbleChart = () => {
   }, [slicedCommunityKeywordData]);
 
   useEffect(() => {
-    if (!canvasRef.current) {
-      return;
+    if (bubbleDataList.length) {
+      animate();
     }
-
-    canvasRef.current.width = window.innerWidth;
-    canvasRef.current.height = window.innerHeight;
-    animate();
-
+    // 매번 이전 interval을 지우고 새로운 interval로 교체되며 움직임이 빨라지지 않음.
     return () => {
       cancelAnimationFrame(requestAnimationId.current!);
     };
