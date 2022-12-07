@@ -1,7 +1,7 @@
+import { UserData } from '#types/types';
 import { REACT_QUERY_KEY } from '@constants/constants';
 import { useQuery } from '@tanstack/react-query';
 import apis from '../apis/apis';
-import { UserData } from '../types/types';
 
 const useUserMe = (communityId?: string) => {
   const { data } = useQuery<UserData>(
