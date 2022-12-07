@@ -12,3 +12,7 @@ export enum REACT_QUERY_KEY {
   KEYWORD = 'keyword',
   USERME = 'userme',
 }
+
+export enum MVP_DEFAULT {
+  MAIN_PROFILE_URL = '/community/1',
+}

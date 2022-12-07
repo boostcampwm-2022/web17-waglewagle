@@ -20,7 +20,7 @@ const Home = () => {
 
   useEffect(() => {
     if (mockUserData) {
-      router.push('/community/1');
+      router.push('/main');
     }
   }, [mockUserData]);
 
