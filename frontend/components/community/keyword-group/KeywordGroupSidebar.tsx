@@ -8,6 +8,7 @@ import CommentForm from './CommentForm';
 const cx = classnames.bind(styles);
 
 interface SidebarProps {
+  keywordId: string;
   threadId: string;
   content: string;
   childThreadCount: number;
@@ -19,6 +20,7 @@ interface SidebarProps {
 }
 
 const KeywordGroupSidebar = ({
+  keywordId,
   threadId,
   content,
   childThreadCount,
@@ -55,7 +57,11 @@ const KeywordGroupSidebar = ({
             <li key={childThread.threadId} className={cx('comment')}>
               <Image
                 className={cx('profile-image')}
-                src={'/images/default-profile.png'}
+                src={
+                  childThread.author.profileImageUrl === null
+                    ? '/images/default-profile.png'
+                    : childThread.author.profileImageUrl
+                }
                 alt='프로필 이미지'
                 width={30}
                 height={30}
@@ -73,7 +79,7 @@ const KeywordGroupSidebar = ({
           ))}
         </ul>
       </div>
-      <CommentForm threadId={threadId} />
+      <CommentForm keywordId={keywordId} threadId={threadId} />
       <button className={cx('close-button')} onClick={closeSidebar}>
         <CloseIcon />
       </button>

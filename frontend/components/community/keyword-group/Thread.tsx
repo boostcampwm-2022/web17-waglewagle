@@ -1,4 +1,5 @@
 import { Author, ThreadData } from '#types/types';
+import useUserMe from '@hooks/useUserMe';
 import CommentIcon from '@public/images/comment.svg';
 import DeleteIcon from '@public/images/delete.svg';
 import styles from '@sass/components/community/keyword/Thread.module.scss';
@@ -35,12 +36,14 @@ const Thread = ({
     mutationFn: () => apis.deleteThread(threadId),
   });
 
+  const userData = useUserMe();
+
   return (
     <li className={cx('thread')}>
       <Image
         className={cx('profile-image')}
         src={
-          profileImageUrl === undefined
+          profileImageUrl === null
             ? '/images/default-profile.png'
             : profileImageUrl
         }
@@ -48,7 +51,6 @@ const Thread = ({
         width={30}
         height={30}
       />
-
       <div>
         <div className={cx('name-time')}>
           <p>{username}</p>
@@ -73,14 +75,16 @@ const Thread = ({
         >
           <CommentIcon />
         </button>
-        <button
-          className={cx('delete-button')}
-          onClick={() => {
-            mutate();
-          }}
-        >
-          <DeleteIcon />
-        </button>
+        {userId === userData?.userId && (
+          <button
+            className={cx('delete-button')}
+            onClick={() => {
+              mutate();
+            }}
+          >
+            <DeleteIcon />
+          </button>
+        )}
       </div>
     </li>
   );
