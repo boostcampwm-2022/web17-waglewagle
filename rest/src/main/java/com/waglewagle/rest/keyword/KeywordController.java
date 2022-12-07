@@ -115,7 +115,7 @@ public class KeywordController {
     @GetMapping("/user/{community_id}")
     public ResponseEntity getJoinedKeywords (@PathVariable("community_id") Long communityId,
                                @CookieValue("user_id") Long userId) {
-        if (!communityUserService.isAlreadyJoined(userId, communityId)) {
+        if (!communityUserService.isJoined(userId, communityId)) {
             // 참여하지 않은 커뮤니티의 키워드를 요청했다.
             // not found?
             // unauthorized?
