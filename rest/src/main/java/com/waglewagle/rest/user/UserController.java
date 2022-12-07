@@ -1,5 +1,6 @@
 package com.waglewagle.rest.user;
 
+import com.waglewagle.rest.common.PreResponseDTO;
 import com.waglewagle.rest.user.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -41,27 +42,21 @@ public class UserController {
     public ResponseEntity<UpdateProfileResponseDTO> updateProfile(@RequestBody UpdateProfileDTO updateProfileDTO, @CookieValue(name = "user_id") Long userId) {
 
         if (updateProfileDTO.isEmpty()) {
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
         }
 
-        User user = userService.updateUserProfile(userId, updateProfileDTO);
-        if (Objects.isNull(user)) {
-            return ResponseEntity.badRequest().build();
-        }
+        PreResponseDTO preResponseDTO = userService.updateUserProfile(userId, updateProfileDTO);
 
-        UpdateProfileResponseDTO updateProfileResponseDTO = new UpdateProfileResponseDTO(user);
-
-        return ResponseEntity.ok(updateProfileResponseDTO);
+        return new ResponseEntity(preResponseDTO.getData(), preResponseDTO.getHttpStatus());
     }
 
     @GetMapping("/me")
     @ResponseBody
     public ResponseEntity<UserInfoResDTO> getUserInfo(@CookieValue(name = "user_id") Long userId,
-                                                      @RequestParam("community-id") Long communityId) {
+                                                      @RequestParam(name="community-id", required= false) Long communityId) {
+        PreResponseDTO<UserInfoResDTO> preResponseDTO = userService.getUserInfo(userId, communityId);
 
-        UserInfoResDTO userInfoDTO = userService.getUserInfo(userId, communityId);
-
-        return ResponseEntity.ok(userInfoDTO);
+        return new ResponseEntity(preResponseDTO.getData(), preResponseDTO.getHttpStatus());
     }
 
     @PutMapping("/last-activity")

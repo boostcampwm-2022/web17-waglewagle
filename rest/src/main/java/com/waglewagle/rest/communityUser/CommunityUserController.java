@@ -7,8 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.websocket.server.PathParam;
-
 
 @Controller
 @RequestMapping("/api/v1/community-user")
@@ -22,12 +20,14 @@ public class CommunityUserController {
      * communityId: string
      */
     @PostMapping("")
-    public ResponseEntity joinCommunity(@RequestBody JoinCommunityInputDTO joinCommunityInputDTO, @CookieValue("user_id") Long userId) {
+    public ResponseEntity joinCommunity(@RequestBody JoinCommunityInputDTO joinCommunityInputDTO,
+                                        @CookieValue("user_id") Long userId) {
         Long communityId = Long.parseLong(joinCommunityInputDTO.getCommunityId());
 
-        if (communityUserService.isAlreadyJoined(userId, communityId)) {
+        if (communityUserService.isJoined(userId, communityId)) {
             return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
         }
+
 
         communityUserService.joinCommunity(userId, communityId);
 
@@ -39,18 +39,17 @@ public class CommunityUserController {
      */
     @PutMapping("/{community_id}/profile")
     public ResponseEntity updateCommunityUserProfile(@RequestBody UpdateCommunityProfileInputDTO updateCommunityProfileInputDTO,
-                                                 @PathVariable("community_id") Long communityId,
-                                                 @CookieValue("user_id") Long userId) {
+                                                     @PathVariable("community_id") Long communityId,
+                                                     @CookieValue("user_id") Long userId) {
 
         if (updateCommunityProfileInputDTO.isEmpty()) {
             return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
         }
-        if (!communityUserService.isAlreadyJoined(userId, communityId)) {
+        if (!communityUserService.isJoined(userId, communityId)) {
             return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
         }
 
         communityUserService.updateCommunityUserProfile(updateCommunityProfileInputDTO, communityId, userId);
-
 
         return new ResponseEntity(null, HttpStatus.OK);
     }
@@ -59,7 +58,7 @@ public class CommunityUserController {
     public ResponseEntity updateIsFirstVisit(@PathVariable("community_id") Long communityId,
                                              @CookieValue("user_id") Long userId) {
 
-        if (!communityUserService.isAlreadyJoined(userId, communityId)) {
+        if (!communityUserService.isJoined(userId, communityId)) {
             return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
         }
         if (!communityUserService.isFirstVisit(userId, communityId)) {

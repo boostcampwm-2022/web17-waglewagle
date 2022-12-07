@@ -16,11 +16,18 @@ public class UserInfoDTO {
         private Boolean isFirstInCommunity;
 
         public UserInfoResDTO (User user, CommunityUser communityUser) {
-            this.userId = String.valueOf(user.getId());
-            this.username = user.getUsername();
-            this.profileImageUrl = user.getProfileImageUrl();
-            this.role = user.getRole();
-            this.isFirstInCommunity = communityUser.getIsFirstVisit();
+            userId = String.valueOf(user.getId());
+            username = user.getUsername();
+            profileImageUrl = user.getProfileImageUrl();
+            role = user.getRole();
+            isFirstInCommunity = communityUser.getIsFirstVisit();
+        }
+
+        public UserInfoResDTO (User user) {
+            userId = String.valueOf(user.getId());
+            username = user.getUsername();
+            profileImageUrl = user.getProfileImageUrl();
+            role = user.getRole();
         }
     }
 }
