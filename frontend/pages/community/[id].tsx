@@ -14,6 +14,8 @@ import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import SeoHead from '@components/common/Head';
 import config from '../../config';
+import useUserKeywordList from '@hooks/useUserKeywordList';
+import useMyKeywordQuery from '@hooks/useMyKeywordQuery';
 
 const LoginModalContent = dynamic(
   () => import('../../components/common/LoginModalContent'),
@@ -31,8 +33,8 @@ const KeywordAddModal = dynamic(
 
 const Community = () => {
   const router = useRouter();
-  const { id } = router.query;
-  const userData = useUserMe(id as string);
+  const communityId = router.query.id as string;
+  const userData = useUserMe(communityId);
   const [isOpenLoginModal, setIsOpenLoginModal] = useState<boolean>(false);
   const [isOpenKeywordModal, setIsOpenKeywordModal] = useState<boolean>(false);
   // ======== 이하는 서버 상태 관리르 분리되어야함. ========
@@ -40,14 +42,15 @@ const Community = () => {
   const [relatedKeywordList, setRelatedKeywordList] = useState<
     KeywordRelatedData[]
   >([]);
-  const [myKeywordList, setMyKeywordList] = useState<MyKeywordData[]>([]);
+  const myKeywordList = useMyKeywordQuery(communityId);
+  const { mutate } = useUserKeywordList(communityId);
 
   const handleChangePrevAddedKeyword = (newPrevKeyword: string) => {
     setPrevAddedKeyword(newPrevKeyword);
   };
 
-  const handleChangeMyKeywordList = (newList: MyKeywordData[]) => {
-    setMyKeywordList(newList);
+  const handleChangeMyKeywordList = () => {
+    mutate();
   };
 
   const handleChangeRelatedKeywordList = (newList: KeywordRelatedData[]) => {
@@ -62,10 +65,6 @@ const Community = () => {
 
   const handleClickKeywordModal = () => {
     setIsOpenKeywordModal(true);
-  };
-
-  const closeLoginModal = () => {
-    setIsOpenLoginModal(false);
   };
 
   return (

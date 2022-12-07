@@ -59,7 +59,6 @@ const KeywordAdder = ({
     handleChangePrevAddedKeyword(searchKeyword);
 
     if (keywordId) {
-      console.log(keywordId);
       await apis.joinKeyword({ keywordId, communityId });
       const newMyKeyword = { keywordId, keywordName: searchKeyword };
       const updatedMyKeywordList = [...myKeywordList, newMyKeyword];

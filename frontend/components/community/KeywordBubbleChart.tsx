@@ -39,11 +39,6 @@ const KeywordBubbleChart = () => {
   // circleContainer가 아닌 이곳에 있는 이유는, 이 함수는 연산보다는 렌더링에 가까운 로직이기 때문 (setIsMove를 토글하여 리렌더링 시킴)
   const animate = () => {
     const update = () => {
-      if (circleContainerRef.current?.isStatic) {
-        clearInterval(requestAnimationId.current!);
-        return;
-      }
-
       setIsMove((prev) => !prev);
       circleContainerRef.current?.update();
     };

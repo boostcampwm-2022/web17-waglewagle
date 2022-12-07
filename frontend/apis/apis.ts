@@ -4,10 +4,11 @@ import {
   JoinKeywordData,
   KeywordRelatedData,
   KeywordUser,
+  MyKeywordData,
   ThreadData,
   UserData,
 } from './../types/types';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import config from '../config';
 import { KeywordData } from '../types/types';
 
@@ -117,6 +118,14 @@ const deleteThread = async (threadId: string) => {
   return response.data;
 };
 
+const getMyKeywordList = async (
+  communityId: string,
+): Promise<MyKeywordData[]> => {
+  const response = await apiInstance.get(`/v1/keyword/${communityId}`);
+
+  return response.data;
+};
+
 const apis = {
   fetchLogin,
   getKeywords,
@@ -130,6 +139,7 @@ const apis = {
   addThread,
   addComments,
   deleteThread,
+  getMyKeywordList,
 };
 
 export default apis;
