@@ -30,9 +30,24 @@ class Circle {
   }
 
   updatePosition() {
+    if (!this.isMoving) {
+      this.velocity.x = 0;
+      this.velocity.y = 0;
+      return;
+    }
+
     this.x += this.velocity.x;
     this.y += this.velocity.y;
     this.reduceVelocity();
+  }
+
+  get isMoving() {
+    // velocity가 높아지면 잔움직임이 적어진다.
+    if (Math.abs(this.velocity.x) > 0.1 && Math.abs(this.velocity.y) > 0.01) {
+      return true;
+    }
+
+    return false;
   }
 }
 
