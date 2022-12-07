@@ -11,6 +11,7 @@ const useMyKeywordQuery = (communityId: string) => {
       return data;
     },
     {
+      initialData: [],
       enabled: !!communityId,
     },
   );

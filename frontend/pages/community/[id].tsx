@@ -45,16 +45,8 @@ const Community = () => {
   const myKeywordList = useMyKeywordQuery(communityId);
   const { mutate } = useUserKeywordList(communityId);
 
-  const handleChangePrevAddedKeyword = (newPrevKeyword: string) => {
-    setPrevAddedKeyword(newPrevKeyword);
-  };
-
   const handleChangeMyKeywordList = () => {
     mutate();
-  };
-
-  const handleChangeRelatedKeywordList = (newList: KeywordRelatedData[]) => {
-    setRelatedKeywordList(newList);
   };
 
   // ======== 절취선 ========
@@ -84,10 +76,7 @@ const Community = () => {
         <KeywordAdder
           theme={KEYWORD_ADDER_THEME.MAIN}
           addButtonValue={<AddCircleIcon />}
-          myKeywordList={myKeywordList}
-          handleChangeMyKeywordList={handleChangeMyKeywordList}
-          handleChangePrevAddedKeyword={handleChangePrevAddedKeyword}
-          handleChangeRelatedKeywordList={handleChangeRelatedKeywordList}
+          isNeedRelated={false}
         />
       )}
       <Modal
@@ -105,8 +94,6 @@ const Community = () => {
           myKeywordList={myKeywordList}
           relatedKeywordList={relatedKeywordList}
           handleChangeMyKeywordList={handleChangeMyKeywordList}
-          handleChangePrevAddedKeyword={handleChangePrevAddedKeyword}
-          handleChangeRelatedKeywordList={handleChangeRelatedKeywordList}
         />
       </Modal>
     </CommunityLayout>

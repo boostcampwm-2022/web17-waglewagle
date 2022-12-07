@@ -13,9 +13,7 @@ interface KeywordAddModalProps {
   prevAddedKeyword: string;
   myKeywordList: MyKeywordData[];
   relatedKeywordList: KeywordRelatedData[];
-  handleChangePrevAddedKeyword: (newPrevKeyword: string) => void;
   handleChangeMyKeywordList: (newList: MyKeywordData[]) => void;
-  handleChangeRelatedKeywordList: (newList: KeywordRelatedData[]) => void;
 }
 
 const KeywordAddModal = ({
@@ -23,8 +21,6 @@ const KeywordAddModal = ({
   myKeywordList,
   relatedKeywordList,
   handleChangeMyKeywordList,
-  handleChangePrevAddedKeyword,
-  handleChangeRelatedKeywordList,
 }: KeywordAddModalProps) => {
   const handleDeleteClick: MouseEventHandler<HTMLButtonElement> = (e) => {
     const target = e.target as HTMLElement;
@@ -48,10 +44,7 @@ const KeywordAddModal = ({
             <KeywordAdder
               theme={KEYWORD_ADDER_THEME.MODAL}
               addButtonValue='추가하기'
-              myKeywordList={myKeywordList}
-              handleChangeMyKeywordList={handleChangeMyKeywordList}
-              handleChangePrevAddedKeyword={handleChangePrevAddedKeyword}
-              handleChangeRelatedKeywordList={handleChangeRelatedKeywordList}
+              isNeedRelated={true}
             />
           </div>
           {/* 키워드 추천은 추가 섹션과 기능적으로 연관되어있다고 할 수 있을까? */}

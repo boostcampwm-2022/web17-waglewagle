@@ -15,25 +15,19 @@ import classnames from 'classnames/bind';
 import useKeywordListQuery from '@hooks/useKeywordListQuery';
 import apis from '../../apis/apis';
 import getKeywordIdByKeyword from '@utils/getKeywordIdByKeywordName';
-import { KeywordRelatedData, MyKeywordData } from '../../types/types';
+import useAddKeywordMutation from '@hooks/useAddKeywordMutation';
 const cx = classnames.bind(styles);
 
 interface KeywordAdderProps {
   theme: string;
   addButtonValue: React.ReactNode | string;
-  myKeywordList: MyKeywordData[];
-  handleChangePrevAddedKeyword: (newPrevKeyword: string) => void;
-  handleChangeMyKeywordList: (newList: MyKeywordData[]) => void;
-  handleChangeRelatedKeywordList: (newList: KeywordRelatedData[]) => void;
+  isNeedRelated: boolean;
 }
 
 const KeywordAdder = ({
   theme,
   addButtonValue,
-  myKeywordList,
-  handleChangeMyKeywordList,
-  handleChangePrevAddedKeyword,
-  handleChangeRelatedKeywordList,
+  isNeedRelated,
 }: KeywordAdderProps) => {
   const router = useRouter();
   const communityId: string = router.query.id as string;
@@ -51,31 +45,29 @@ const KeywordAdder = ({
     return slicedData;
   };
 
+  const { addKeywordMutate } = useAddKeywordMutation();
+
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
     let keywordId = getKeywordIdByKeyword(searchKeyword, communityKeywordData);
 
-    handleChangePrevAddedKeyword(searchKeyword);
-
     if (keywordId) {
       await apis.joinKeyword({ keywordId, communityId });
-      const newMyKeyword = { keywordId, keywordName: searchKeyword };
-      const updatedMyKeywordList = [...myKeywordList, newMyKeyword];
-      handleChangeMyKeywordList(updatedMyKeywordList);
     } else {
       const body = {
         keywordName: searchKeyword,
         communityId,
       };
+      const mutationResult = addKeywordMutate(body);
       const result = await apis.addKeyword(body);
       keywordId = result.keywordId;
-      const updatedMyKeywordList = [...myKeywordList, result];
-      handleChangeMyKeywordList(updatedMyKeywordList);
     }
 
-    const slicedData = await getKeywordAssociations(keywordId);
-    handleChangeRelatedKeywordList(slicedData);
+    if (isNeedRelated) {
+      await getKeywordAssociations(keywordId);
+    }
+
     setIsOpenDropDown(false);
     changeSearchKeyword('');
   };
@@ -87,7 +79,7 @@ const KeywordAdder = ({
     changeSearchKeyword(e.target.value);
   };
 
-  const handleMouseDownkResultItem: MouseEventHandler<HTMLLIElement> = (e) => {
+  const handleMouseDownResultItem: MouseEventHandler<HTMLLIElement> = (e) => {
     e.preventDefault();
     const target = e.target as HTMLLIElement;
     changeSearchKeyword(target.innerText);
@@ -102,7 +94,7 @@ const KeywordAdder = ({
       {isOpenDropdown && (
         <SearchResultListLayout layoutTheme={theme}>
           {searchResult.map((word, index) => (
-            <li onMouseDown={handleMouseDownkResultItem} key={index}>
+            <li onMouseDown={handleMouseDownResultItem} key={index}>
               {word}
             </li>
           ))}

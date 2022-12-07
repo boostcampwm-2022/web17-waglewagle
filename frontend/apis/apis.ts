@@ -1,6 +1,5 @@
 import {
   AddKeywordData,
-  AddKeywordResponseData,
   JoinKeywordData,
   KeywordRelatedData,
   KeywordUser,
@@ -8,7 +7,7 @@ import {
   ThreadData,
   UserData,
 } from './../types/types';
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import config from '../config';
 import { KeywordData } from '../types/types';
 
@@ -61,7 +60,7 @@ const getKeywordAssociations = async (
 
 const addKeyword = async (
   addKeywordData: AddKeywordData,
-): Promise<AddKeywordResponseData> => {
+): Promise<MyKeywordData> => {
   const response = await apiInstance.post('/v1/keyword', addKeywordData);
 
   return response.data;
