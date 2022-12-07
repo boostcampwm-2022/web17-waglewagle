@@ -5,7 +5,7 @@ import {
   HomeTitle,
   HomeChevronDown,
 } from '@components/home';
-import StartButton from '@components/common/StartButton';
+import StartButton from '@components/home/StartButton';
 import HomeDescription from '@components/home/HomeDescription';
 import SeoHead from '@components/common/Head';
 import { useRouter } from 'next/router';
