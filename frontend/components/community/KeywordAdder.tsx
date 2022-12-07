@@ -59,8 +59,7 @@ const KeywordAdder = ({
     handleChangePrevAddedKeyword(searchKeyword);
 
     if (keywordId) {
-      // 내 키워드에 추가 => 이후에는 Mutation으로 수정 필요
-      // memberCount를 넣으려면 키워드 추가, 키워드 참여 api 수신 시 모두 memberCount를 포함해서 받거나 memberCount까지 가져와야하기 때문에 myKeywordList에서는 memberCount 제외
+      console.log(keywordId);
       await apis.joinKeyword({ keywordId, communityId });
       const newMyKeyword = { keywordId, keywordName: searchKeyword };
       const updatedMyKeywordList = [...myKeywordList, newMyKeyword];

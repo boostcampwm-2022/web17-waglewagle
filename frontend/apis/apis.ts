@@ -67,9 +67,7 @@ const addKeyword = async (
 };
 
 const joinKeyword = async (joinKeywordData: JoinKeywordData) => {
-  await apiInstance.post('/v1/keyword/join', {
-    joinKeywordData,
-  });
+  await apiInstance.post('/v1/keyword/join', joinKeywordData);
 };
 
 const getKeywordThreads = async (keywordId: string): Promise<ThreadData[]> => {
