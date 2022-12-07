@@ -1,16 +1,16 @@
-import { useEffect, useRef, useState } from 'react';
-import { BubbleData, KeywordData } from '../../types/types';
-import KeywordBubble from './KeywordBubble';
-import CircleContainer from '../../utils/circlepacker/CircleContainer';
-import Circle from '../../utils/circlepacker/Circle';
-import { useRouter } from 'next/router';
-import { dehydrate, QueryClient } from '@tanstack/react-query';
-import { NextPageContext } from 'next';
+import { BubbleData, KeywordData } from '#types/types';
+import { Loading } from '@components/common';
 import useKeywordListQuery from '@hooks/useKeywordListQuery';
 import styles from '@sass/components/community/KeywordBubbleChart.module.scss';
-import classnames from 'classnames/bind';
-import { Loading } from '@components/common';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
 import debounce from '@utils/debounce';
+import classnames from 'classnames/bind';
+import { NextPageContext } from 'next';
+import { useRouter } from 'next/router';
+import { useEffect, useRef, useState } from 'react';
+import Circle from '../../utils/circlepacker/Circle';
+import CircleContainer from '../../utils/circlepacker/CircleContainer';
+import KeywordBubble from './KeywordBubble';
 const cx = classnames.bind(styles);
 
 const KeywordBubbleChart = () => {
@@ -29,6 +29,7 @@ const KeywordBubbleChart = () => {
 
   const getBubbleData = (keywordData: KeywordData, circleData: Circle) => {
     return {
+      keywordId: keywordData.keywordId,
       keyword: keywordData.keywordName,
       count: keywordData.memberCount,
       circle: circleData,
@@ -110,6 +111,7 @@ const KeywordBubbleChart = () => {
       {bubbleDataList.map((bubbleData, index) => (
         <KeywordBubble
           key={index}
+          keywordId={bubbleData.keywordId}
           keyword={bubbleData.keyword}
           posX={bubbleData.circle.x}
           posY={bubbleData.circle.y}

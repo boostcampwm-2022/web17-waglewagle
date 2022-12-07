@@ -15,6 +15,7 @@ const KeywordModalContent = dynamic(
 );
 
 interface KeywordBubbleProps {
+  keywordId: string;
   keyword: string;
   posX: number;
   posY: number;
@@ -22,7 +23,13 @@ interface KeywordBubbleProps {
 }
 
 // requestAnimationFrame으로 이동
-const KeywordBubble = ({ keyword, posX, posY, radius }: KeywordBubbleProps) => {
+const KeywordBubble = ({
+  keywordId,
+  keyword,
+  posX,
+  posY,
+  radius,
+}: KeywordBubbleProps) => {
   const router = useRouter();
   const communityId: string = router.query.id as string;
   const userData = useUserMe(communityId);
@@ -61,7 +68,7 @@ const KeywordBubble = ({ keyword, posX, posY, radius }: KeywordBubbleProps) => {
         isOpenModal={isOpenKeywordModal}
         closeModal={() => setIsOpenKeywordModal(false)}
       >
-        <KeywordModalContent />
+        <KeywordModalContent keywordId={keywordId} keyword={keyword} />
       </Modal>
     </div>
   );
