@@ -83,6 +83,29 @@ const getKeywordUsers = async (keywordId: string): Promise<KeywordUser[]> => {
   return response.data;
 };
 
+const addThread = async (keywordId: string, content: string) => {
+  const response = await apiInstance.post('/v1/thread', {
+    keywordId,
+    content,
+  });
+
+  return response.data;
+};
+
+const addComments = async (
+  keywordId: string,
+  content: string,
+  parentThreadId: string,
+) => {
+  const response = await apiInstance.post('/v1/thread', {
+    keywordId,
+    content,
+    parentThreadId,
+  });
+
+  return response.data;
+};
+
 const apis = {
   fetchLogin,
   getKeywords,
@@ -92,6 +115,8 @@ const apis = {
   getKeywordAssociations,
   getKeywordThreads,
   getKeywordUsers,
+  addThread,
+  addComments
 };
 
 export default apis;

@@ -74,7 +74,7 @@ const Sidebar = ({
           ))}
         </ul>
       </div>
-      <CommentForm />
+      <CommentForm threadId={threadId} />
       <button className={cx('close-button')} onClick={closeSidebar}>
         <CloseIcon />
       </button>
