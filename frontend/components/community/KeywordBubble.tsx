@@ -26,16 +26,7 @@ const KeywordBubble = ({ keyword, posX, posY, radius }: KeywordBubbleProps) => {
   const router = useRouter();
   const communityId: string = router.query.id as string;
   const userData = useUserMe(communityId);
-  const [isHover, setIsHover] = useState<boolean>(false);
   const [isOpenKeywordModal, setIsOpenKeywordModal] = useState<boolean>(false);
-
-  const handleMouseEnter = () => {
-    setIsHover(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsHover(false);
-  };
 
   const handleClick = () => {
     userData && setIsOpenKeywordModal(true); // 유저 정보가 있을때만 모달창을 띄워줌
@@ -44,19 +35,17 @@ const KeywordBubble = ({ keyword, posX, posY, radius }: KeywordBubbleProps) => {
   return (
     <div
       onClick={handleClick}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
       className={cx('bubble')}
       style={{
-        transform: `translate(${posX - radius}px, ${posY - radius}px) scale(${
-          isHover ? 1.2 : 1.0
-        })`, // 원의 중앙이 좌표와 일치할 수 있도록 tranform
+        transform: `translate(${posX - radius}px, ${posY - radius}px)`,
         width: `${radius * 2}px`,
         height: `${radius * 2}px`,
         fontSize: `${10 + radius * 0.2}px`,
       }}
     >
-      <span>{keyword}</span>
+      <div>
+        <span>{keyword}</span>
+      </div>
       <Modal
         isOpenModal={isOpenKeywordModal}
         closeModal={() => setIsOpenKeywordModal(false)}
