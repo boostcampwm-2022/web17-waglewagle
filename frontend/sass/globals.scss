@@ -1,6 +1,11 @@
 @import '@sass/normalize';
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
-@import url('https://hangeul.pstatic.net/hangeul_static/css/NanumBugGeugSeong.css');
+
+@font-face {
+  font-family: 'NanumBugGeugSeong';
+  src: url('../public/fonts/NanumBugGeugSeong.woff2') format('woff2');
+  font-display: swap;
+}
 
 html {
   * {

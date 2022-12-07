@@ -50,7 +50,7 @@ const KeywordBubbleChart = () => {
 
     requestAnimationId.current = setInterval(() => {
       update();
-    }, 300);
+    }, 500);
   };
 
   useEffect(() => {
@@ -97,6 +97,7 @@ const KeywordBubbleChart = () => {
     const handleResize = debounce(() => {
       circleContainerRef.current?.resize(window.innerWidth, window.innerHeight);
     }, 200);
+
     window.addEventListener('resize', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
