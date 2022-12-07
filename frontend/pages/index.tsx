@@ -12,6 +12,8 @@ import { useRouter } from 'next/router';
 import config from '../config';
 import useMockUserMe from '@hooks/useMockUserMe';
 import { useEffect } from 'react';
+import apis from '../apis/apis';
+import { MVP_DEFAULT } from '@constants/constants';
 
 const Home = () => {
   const router = useRouter();
@@ -20,6 +22,7 @@ const Home = () => {
 
   useEffect(() => {
     if (mockUserData) {
+      apis.joinCommunity(MVP_DEFAULT.COMMUNITY_ID);
       router.push('/main');
     }
   }, [mockUserData]);

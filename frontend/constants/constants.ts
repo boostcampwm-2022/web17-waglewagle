@@ -15,4 +15,5 @@ export enum REACT_QUERY_KEY {
 
 export enum MVP_DEFAULT {
   MAIN_PROFILE_URL = '/community/1',
+  COMMUNITY_ID = '1',
 }

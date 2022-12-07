@@ -27,6 +27,12 @@ const getKeywords = async (id: string): Promise<KeywordData[]> => {
   return response.data;
 };
 
+const joinCommunity = async (communityId: string) => {
+  await apiInstance.post('/v1/community-user', {
+    communityId,
+  });
+};
+
 const joinKeyword = async (joinKeywordData: JoinKeywordData) => {
   await apiInstance.post('/v1/keyword/join', {
     data: joinKeywordData,
@@ -69,6 +75,7 @@ const apis = {
   fetchLogin,
   getKeywords,
   joinKeyword,
+  joinCommunity,
   addKeyword,
   getUserData,
   getKeywordAssociations,
