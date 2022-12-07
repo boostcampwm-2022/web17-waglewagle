@@ -1,18 +1,19 @@
 package com.waglewagle.rest.user;
 
+import com.waglewagle.rest.common.PreResponseDTO;
 import com.waglewagle.rest.communityUser.CommunityUser;
-import com.waglewagle.rest.communityUser.CommunityUserRepository;
-import com.waglewagle.rest.keywordUser.KeywordUser;
+import com.waglewagle.rest.communityUser.repository.CommunityUserRepository;
 import com.waglewagle.rest.user.dto.UpdateProfileDTO;
+import com.waglewagle.rest.user.dto.UpdateProfileResponseDTO;
 import com.waglewagle.rest.user.dto.UserConnectionStatusDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.Cookie;
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.waglewagle.rest.user.dto.UserInfoDTO.*;
@@ -40,51 +41,48 @@ public class UserService {
     }
 
     @Transactional
-    public User updateUserProfile(Long userId, UpdateProfileDTO updateProfileDTO) {
+    public PreResponseDTO<UpdateProfileResponseDTO> updateUserProfile(Long userId,
+                                                                      UpdateProfileDTO updateProfileDTO) {
+
         User user = userRepository.findById(userId);
         if (Objects.isNull(user)) return null;
 
         String username = updateProfileDTO.getUsername();
-        if (!Objects.isNull(updateProfileDTO.getUsername())) {
-            Optional<User> existingUsers = userRepository
-                    .findByUsername(username)
-                    .stream()
-                    .filter(
-                            foundUser -> Objects.equals(foundUser.getUsername(), updateProfileDTO.getUsername()))
-                    .findFirst();
-            if (existingUsers.isPresent()) {
-                return null;
+        if (username != null) {
+            User existingUser = userRepository.findByUsername(username);
+            if (existingUser != null && existingUser.getId() != userId ) {
+                return new PreResponseDTO(null, HttpStatus.BAD_REQUEST);
             }
         }
 
         user.updateProfile(updateProfileDTO);
-        return user;
+
+        return new PreResponseDTO(new UpdateProfileResponseDTO(user), HttpStatus.OK);
     }
 
     @Transactional
-    public UserInfoResDTO getUserInfo(Long userId, Long communityId) {
+    public PreResponseDTO<UserInfoResDTO> getUserInfo(Long userId, Long communityId) {
         User user = userRepository.findById(userId);
-        CommunityUser communityUser = communityUserRepository.findByUserIdAndCommunityId(userId, communityId);
 
-        //TODO: null에 대한 Http 'Bad Request(or No Content?)'처리가 필요함(지금은 Conroller에서 Http.ok(200)에 null만 태워서 보냄)
-        if (Objects.isNull(user)) {
-            return null;
+        if (communityId == null) {
+            return new PreResponseDTO<>(new UserInfoResDTO(user), HttpStatus.OK);
         }
 
-        return new UserInfoResDTO(user, communityUser);
-    }
+        CommunityUser communityUser = communityUserRepository
+                .findByUserIdAndCommunityId(userId, communityId);
 
-    public List<KeywordUser> getUserKeywords(Long userId) {
-        User user = userRepository.findById(userId);
-        return null;
-    }
+        if (communityUser == null) {
+            return new PreResponseDTO<>(null, HttpStatus.UNAUTHORIZED);
+        }
 
+        return new PreResponseDTO<>(new UserInfoResDTO(user, communityUser), HttpStatus.OK);
+    }
+    
     @Transactional
     public void updateLastActivity(Long userId) {
         User user = userRepository.findById(userId);
 
         user.updateLastActivity();
-
     }
 
     public List<UserConnectionStatusDTO> getUserInfoInKeyword(Long keywordId) {
@@ -101,5 +99,10 @@ public class UserService {
                 .stream()
                 .map(UserConnectionStatusDTO::of)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public User getUser(Long userId) {
+        return userRepository.findById(userId);
     }
 }
