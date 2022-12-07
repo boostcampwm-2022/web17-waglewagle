@@ -4,6 +4,7 @@ import HomeHero from '@components/home/HomeHero';
 import HomeTitle from '@components/home/HomeTitle';
 import HomeDescription from './HomeDescription';
 import HomeChevronDown from './HomeChevronDown';
+import StartButton from './StartButton';
 
 export {
   HomeTitle,
@@ -12,4 +13,5 @@ export {
   HomeLayout,
   HomeMainLayout,
   HomeChevronDown,
+  StartButton,
 };
