@@ -3,6 +3,7 @@ import {
   AddKeywordResponseData,
   JoinKeywordData,
   KeywordRelatedData,
+  ThreadData,
   UserData,
 } from './../types/types';
 import axios from 'axios';
@@ -65,6 +66,14 @@ const addKeyword = async (
   return response.data;
 };
 
+const getThreads = async (keywordId: string): Promise<ThreadData[]> => {
+  const response = await apiInstance.get(
+    `/v1/thread/keyword?keyword-id=${keywordId}`,
+  );
+
+  return response.data;
+};
+
 const apis = {
   fetchLogin,
   getKeywords,
@@ -72,6 +81,7 @@ const apis = {
   addKeyword,
   getUserData,
   getKeywordAssociations,
+  getThreads,
 };
 
 export default apis;

@@ -3,28 +3,29 @@ import classnames from 'classnames/bind';
 import Image from 'next/image';
 import DeleteIcon from '@public/images/delete.svg';
 import CommentIcon from '@public/images/comment.svg';
-
-import { CommentData, ThreadData } from '../../../types/types';
+import { Author, ThreadData } from '../../../types/types';
 import calculateTimeGap from '@utils/calculateTimeGap';
 const cx = classnames.bind(styles);
 
 interface ThreadProps {
-  id: string;
-  username: string;
-  profileURL?: string;
-  createAt: string;
-  contents: string;
-  comments: CommentData[];
+  threadId: string;
+  content: string;
+  childThreadCount: number;
+  childThreads: ThreadData[];
+  createdAt: string;
+  updatedAt: string;
+  author: Author;
   openSidebar(thread: ThreadData): void;
 }
 
 const Thread = ({
-  id,
-  profileURL,
-  username,
-  createAt,
-  contents,
-  comments,
+  threadId,
+  content,
+  childThreadCount,
+  childThreads,
+  createdAt,
+  updatedAt,
+  author: { userId, username, profileImageUrl },
   openSidebar,
 }: ThreadProps) => {
   return (
@@ -32,7 +33,9 @@ const Thread = ({
       <Image
         className={cx('profile-image')}
         src={
-          profileURL === undefined ? '/images/default-profile.png' : profileURL
+          profileImageUrl === undefined
+            ? '/images/default-profile.png'
+            : profileImageUrl
         }
         alt='프로필 이미지'
         width={30}
@@ -42,21 +45,22 @@ const Thread = ({
       <div>
         <div className={cx('name-time')}>
           <p>{username}</p>
-          <p className={cx('post-time')}>{calculateTimeGap(createAt)}</p>
+          <p className={cx('post-time')}>{calculateTimeGap(createdAt)}</p>
         </div>
-        <p>{contents}</p>
+        <p>{content}</p>
       </div>
       <div className={cx('buttons')}>
         <button
           className={cx('comment-button')}
           onClick={() =>
             openSidebar({
-              id,
-              profileURL,
-              username,
-              createAt,
-              contents,
-              comments,
+              threadId,
+              content,
+              childThreadCount,
+              childThreads,
+              createdAt,
+              updatedAt,
+              author: { userId, username, profileImageUrl },
             })
           }
         >

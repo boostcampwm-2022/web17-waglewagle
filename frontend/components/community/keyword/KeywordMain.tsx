@@ -7,10 +7,10 @@ import PostThread from './ThreadForm';
 import Sidebar from './Sidebar';
 const cx = classnames.bind(styles);
 
+type Sidebar = { isOpen: false } | (ThreadData & { isOpen: true });
+
 const KeywordMain = () => {
-  const [threadSidebar, setThreadSidebar] = useState<
-    Partial<ThreadData> & { isOpen: boolean }
-  >({
+  const [threadSidebar, setThreadSidebar] = useState<Sidebar>({
     isOpen: false,
   });
 
