@@ -1,7 +1,7 @@
 ---
 name: "[Fix]"
 about: 수정해야할 기능
-title: ''
+title: "[Fix]"
 labels: bug, fix
 assignees: ''
 

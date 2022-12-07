@@ -1,7 +1,7 @@
 ---
 name: "[Document]"
 about: 문서화가 필요한 작업
-title: ''
+title: "[Document]"
 labels: documentation
 assignees: ''
 

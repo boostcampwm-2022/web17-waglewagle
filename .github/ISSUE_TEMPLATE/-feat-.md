@@ -1,7 +1,7 @@
 ---
 name: "[Feat]"
 about: 구현해야할 기능
-title: ''
+title: "[Feat]"
 labels: feat
 assignees: ''
 
