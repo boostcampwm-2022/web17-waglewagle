@@ -3,6 +3,7 @@ import {
   AddKeywordResponseData,
   JoinKeywordData,
   KeywordRelatedData,
+  KeywordUser,
   ThreadData,
   UserData,
 } from './../types/types';
@@ -66,9 +67,17 @@ const addKeyword = async (
   return response.data;
 };
 
-const getThreads = async (keywordId: string): Promise<ThreadData[]> => {
+const getKeywordThreads = async (keywordId: string): Promise<ThreadData[]> => {
   const response = await apiInstance.get(
     `/v1/thread/keyword?keyword-id=${keywordId}`,
+  );
+
+  return response.data;
+};
+
+const getKeywordUsers = async (keywordId: string): Promise<KeywordUser[]> => {
+  const response = await apiInstance.get(
+    `/v1/user/keyword?keyword-id=${keywordId}`,
   );
 
   return response.data;
@@ -81,7 +90,8 @@ const apis = {
   addKeyword,
   getUserData,
   getKeywordAssociations,
-  getThreads,
+  getKeywordThreads,
+  getKeywordUsers,
 };
 
 export default apis;

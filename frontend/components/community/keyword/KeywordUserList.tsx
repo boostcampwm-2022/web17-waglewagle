@@ -1,19 +1,20 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import styles from '@sass/components/community/keyword/KeywordUserList.module.scss';
 import classnames from 'classnames/bind';
+import useKeywordUserListQuery from '@hooks/useKeywordUserListQuery';
+import calculateTimeGap from '@utils/calculateTimeGap';
 const cx = classnames.bind(styles);
 
-// TODO: user 수가 많아졌을 때 레이아웃 수정
 const KeywordUserList = () => {
-  const [userList] = useState([
-    { id: '1', username: '김관경', isOnline: true },
-    { id: '2', username: '문성현', isOnline: true },
-    { id: '3', username: '김대호', isOnline: false },
-    { id: '4', username: '이승민', isOnline: false },
-  ]);
+  const { data: userList } = useKeywordUserListQuery('123');
 
   const onlineUserCount = useMemo(
-    () => userList.filter(({ isOnline }) => isOnline).length,
+    () =>
+      userList?.reduce(
+        (result, { lastActivity }) =>
+          calculateTimeGap(lastActivity) === '방금 전' ? result + 1 : result,
+        0,
+      ),
     [userList],
   );
 
@@ -26,10 +27,14 @@ const KeywordUserList = () => {
         </p>
       </div>
       <ul>
-        {userList.map(({ id, username, isOnline }) => (
-          <li key={id} className={cx('user-list')}>
+        {userList?.map(({ userId, username, lastActivity }) => (
+          <li key={userId} className={cx('user-list')}>
             <p className={cx('username')}>{username}</p>
-            {isOnline && <div className={cx('online-badge')}></div>}
+            {calculateTimeGap(lastActivity) === '방금 전' ? (
+              <div className={cx('online-badge')}></div>
+            ) : (
+              calculateTimeGap(lastActivity)
+            )}
           </li>
         ))}
       </ul>

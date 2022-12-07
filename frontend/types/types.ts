@@ -61,3 +61,10 @@ export type ThreadData = {
   updatedAt: string;
   author: Author;
 };
+
+export type KeywordUser = {
+  userId: string;
+  username: string;
+  profileImageUrl: string;
+  lastActivity: string;
+};
