@@ -3,6 +3,8 @@ import {
   AddKeywordResponseData,
   JoinKeywordData,
   KeywordRelatedData,
+  KeywordUser,
+  ThreadData,
   UserData,
 } from './../types/types';
 import axios from 'axios';
@@ -65,6 +67,53 @@ const addKeyword = async (
   return response.data;
 };
 
+const getKeywordThreads = async (keywordId: string): Promise<ThreadData[]> => {
+  const response = await apiInstance.get(
+    `/v1/thread/keyword?keyword-id=${keywordId}`,
+  );
+
+  return response.data;
+};
+
+const getKeywordUsers = async (keywordId: string): Promise<KeywordUser[]> => {
+  const response = await apiInstance.get(
+    `/v1/user/keyword?keyword-id=${keywordId}`,
+  );
+
+  return response.data;
+};
+
+const addThread = async (keywordId: string, content: string) => {
+  const response = await apiInstance.post('/v1/thread', {
+    keywordId,
+    content,
+  });
+
+  return response.data;
+};
+
+const addComments = async (
+  keywordId: string,
+  content: string,
+  parentThreadId: string,
+) => {
+  const response = await apiInstance.post('/v1/thread', {
+    keywordId,
+    content,
+    parentThreadId,
+  });
+
+  return response.data;
+};
+
+const deleteThread = async (threadId: string) => {
+  const response = await apiInstance.delete('/v1/thread', {
+    data: { threadId },
+  });
+
+  return response.data;
+};
+
 const apis = {
   fetchLogin,
   getKeywords,
@@ -72,6 +121,11 @@ const apis = {
   addKeyword,
   getUserData,
   getKeywordAssociations,
+  getKeywordThreads,
+  getKeywordUsers,
+  addThread,
+  addComments,
+  deleteThread,
 };
 
 export default apis;

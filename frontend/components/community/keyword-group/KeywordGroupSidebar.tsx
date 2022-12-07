@@ -1,29 +1,30 @@
-import Image from 'next/image';
-import { CommentData } from '../../../types/types';
-import styles from '@sass/components/community/keyword/Sidebar.module.scss';
-import classnames from 'classnames/bind';
-import calculateTimeGap from '@utils/calculateTimeGap';
+import { Author, ThreadData } from '#types/types';
 import CloseIcon from '@public/images/close.svg';
+import styles from '@sass/components/community/keyword/Sidebar.module.scss';
+import calculateTimeGap from '@utils/calculateTimeGap';
+import classnames from 'classnames/bind';
+import Image from 'next/image';
 import CommentForm from './CommentForm';
 const cx = classnames.bind(styles);
 
 interface SidebarProps {
-  id?: string;
-  profileURL?: string;
-  username?: string;
-  createAt?: string;
-  contents?: string;
-  comments?: CommentData[];
+  threadId: string;
+  content: string;
+  childThreadCount: number;
+  childThreads: ThreadData[];
+  createdAt: string;
+  updatedAt: string;
+  author: Author;
   closeSidebar(): void;
 }
 
-const Sidebar = ({
-  id,
-  profileURL,
-  username,
-  createAt,
-  contents,
-  comments,
+const KeywordGroupSidebar = ({
+  threadId,
+  content,
+  childThreadCount,
+  childThreads,
+  createdAt,
+  author: { username, profileImageUrl },
   closeSidebar,
 }: SidebarProps) => {
   return (
@@ -33,7 +34,9 @@ const Sidebar = ({
         <div className={cx('thread')}>
           <Image
             className={cx('profile-image')}
-            src={profileURL ? profileURL : '/images/default-profile.png'}
+            src={
+              profileImageUrl ? profileImageUrl : '/images/default-profile.png'
+            }
             alt='프로필 이미지'
             width={30}
             height={30}
@@ -41,15 +44,15 @@ const Sidebar = ({
           <div>
             <div className={cx('name-time')}>
               <p>{username}</p>
-              <p className={cx('post-time')}>{calculateTimeGap(createAt!)}</p>
+              <p className={cx('post-time')}>{calculateTimeGap(createdAt)}</p>
             </div>
-            <p>{contents}</p>
+            <p>{content}</p>
           </div>
         </div>
-        <p className={cx('comment-count')}>{comments?.length}개의 댓글</p>
+        <p className={cx('comment-count')}>{childThreadCount}개의 댓글</p>
         <ul className={cx('comment-list')}>
-          {comments?.map((comment) => (
-            <li key={comment.id} className={cx('comment')}>
+          {childThreads?.map((childThread) => (
+            <li key={childThread.threadId} className={cx('comment')}>
               <Image
                 className={cx('profile-image')}
                 src={'/images/default-profile.png'}
@@ -59,18 +62,18 @@ const Sidebar = ({
               />
               <div>
                 <div className={cx('name-time')}>
-                  <p>{comment.username}</p>
+                  <p>{childThread.author.username}</p>
                   <p className={cx('post-time')}>
-                    {calculateTimeGap(comment.createAt)}
+                    {calculateTimeGap(childThread.createdAt)}
                   </p>
                 </div>
-                <p>{comment.content}</p>
+                <p>{childThread.content}</p>
               </div>
             </li>
           ))}
         </ul>
       </div>
-      <CommentForm />
+      <CommentForm threadId={threadId} />
       <button className={cx('close-button')} onClick={closeSidebar}>
         <CloseIcon />
       </button>
@@ -78,4 +81,4 @@ const Sidebar = ({
   );
 };
 
-export default Sidebar;
+export default KeywordGroupSidebar;

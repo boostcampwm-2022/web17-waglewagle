@@ -1,16 +1,16 @@
-import { useState } from 'react';
-import { KeywordData, ThreadData } from '../../../types/types';
-import ThreadList from './ThreadList';
+import { KeywordData, ThreadData } from '#types/types';
+import KeywordGroupSidebar from '@components/community/keyword-group/KeywordGroupSidebar';
 import styles from '@sass/components/community/keyword/KeywordMain.module.scss';
 import classnames from 'classnames/bind';
+import { useState } from 'react';
 import PostThread from './ThreadForm';
-import Sidebar from './Sidebar';
+import ThreadList from './ThreadList';
 const cx = classnames.bind(styles);
 
-const KeywordMain = () => {
-  const [threadSidebar, setThreadSidebar] = useState<
-    Partial<ThreadData> & { isOpen: boolean }
-  >({
+type Sidebar = { isOpen: false } | (ThreadData & { isOpen: true });
+
+const KeywordGroupMain = () => {
+  const [threadSidebar, setThreadSidebar] = useState<Sidebar>({
     isOpen: false,
   });
 
@@ -42,11 +42,11 @@ const KeywordMain = () => {
           <PostThread />
         </div>
         {threadSidebar.isOpen && (
-          <Sidebar {...threadSidebar} closeSidebar={closeSidebar} />
+          <KeywordGroupSidebar {...threadSidebar} closeSidebar={closeSidebar} />
         )}
       </div>
     </main>
   );
 };
 
-export default KeywordMain;
+export default KeywordGroupMain;

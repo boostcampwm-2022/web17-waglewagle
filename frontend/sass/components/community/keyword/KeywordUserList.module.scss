@@ -2,6 +2,8 @@
   padding: 15px 20px;
   border: 1px solid black;
   border-radius: 10px;
+  height: 100%;
+  overflow-y: scroll;
 }
 
 .header {
@@ -23,6 +25,7 @@
 .user-list {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   margin-bottom: 5px;
   gap: 14px;
 }

@@ -46,19 +46,25 @@ export type UserData = {
   profileImageUrl: string | null;
 };
 
-export type CommentData = {
-  id: string;
-  content: string;
+export type Author = {
+  userId: string;
   username: string;
-  createAt: string;
-  profileURL?: string;
+  profileImageUrl: string;
 };
 
 export type ThreadData = {
-  id: string;
-  profileURL?: string;
+  threadId: string;
+  content: string;
+  childThreadCount: number;
+  childThreads: ThreadData[];
+  createdAt: string;
+  updatedAt: string;
+  author: Author;
+};
+
+export type KeywordUser = {
+  userId: string;
   username: string;
-  createAt: string;
-  contents: string;
-  comments: CommentData[];
+  profileImageUrl: string;
+  lastActivity: string;
 };
