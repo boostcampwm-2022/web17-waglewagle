@@ -10,11 +10,32 @@ import AddCircleIcon from '@public/images/add-circle.svg';
 import { KEYWORD_ADDER_THEME } from '@constants/constants';
 import { useState } from 'react';
 import useUserMe from '@hooks/useUserMe';
+import { KeywordRelatedData, MyKeywordData } from '../../types/types';
 
 const Community = () => {
   const userData = useUserMe();
   const [isOpenLoginModal, setIsOpenLoginModal] = useState<boolean>(false);
   const [isOpenKeywordModal, setIsOpenKeywordModal] = useState<boolean>(false);
+  // ======== 이하는 서버 상태 관리르 분리되어야함. ========
+  const [prevAddedKeyword, setPrevAddedKeyword] = useState<string>('');
+  const [relatedKeywordList, setRelatedKeywordList] = useState<
+    KeywordRelatedData[]
+  >([]);
+  const [myKeywordList, setMyKeywordList] = useState<MyKeywordData[]>([]);
+
+  const handleChangePrevAddedKeyword = (newPrevKeyword: string) => {
+    setPrevAddedKeyword(newPrevKeyword);
+  };
+
+  const handleChangeMyKeywordList = (newList: MyKeywordData[]) => {
+    setMyKeywordList(newList);
+  };
+
+  const handleChangeRelatedKeywordList = (newList: KeywordRelatedData[]) => {
+    setRelatedKeywordList(newList);
+  };
+
+  // ======== 절취선 ========
 
   const handleClickEnter = () => {
     setIsOpenLoginModal(true);
@@ -40,6 +61,10 @@ const Community = () => {
         <KeywordAdder
           theme={KEYWORD_ADDER_THEME.MAIN}
           addButtonValue={<AddCircleIcon />}
+          myKeywordList={myKeywordList}
+          handleChangeMyKeywordList={handleChangeMyKeywordList}
+          handleChangePrevAddedKeyword={handleChangePrevAddedKeyword}
+          handleChangeRelatedKeywordList={handleChangeRelatedKeywordList}
         />
       )}
       <Modal
@@ -52,7 +77,14 @@ const Community = () => {
         isOpenModal={isOpenKeywordModal}
         closeModal={() => setIsOpenKeywordModal(false)}
       >
-        <KeywordAddModal />
+        <KeywordAddModal
+          prevAddedKeyword={prevAddedKeyword}
+          myKeywordList={myKeywordList}
+          relatedKeywordList={relatedKeywordList}
+          handleChangeMyKeywordList={handleChangeMyKeywordList}
+          handleChangePrevAddedKeyword={handleChangePrevAddedKeyword}
+          handleChangeRelatedKeywordList={handleChangeRelatedKeywordList}
+        />
       </Modal>
     </CommunityLayout>
   );

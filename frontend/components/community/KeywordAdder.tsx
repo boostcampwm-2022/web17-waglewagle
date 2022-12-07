@@ -3,7 +3,6 @@ import {
   ChangeEventHandler,
   FormEventHandler,
   useState,
-  useEffect,
 } from 'react';
 import { useRouter } from 'next/router';
 import useAutoComplete from '@hooks/useAutoComplete';
@@ -15,27 +14,32 @@ import styles from '@sass/components/community/KeywordAdderLayout.module.scss';
 import classnames from 'classnames/bind';
 import useKeywordListQuery from '@hooks/useKeywordListQuery';
 import apis from '../../apis/apis';
-import useUserKeywordList from '@hooks/useUserKeywordList';
 import getKeywordIdByKeyword from '@utils/getKeywordIdByKeywordName';
+import { KeywordRelatedData, MyKeywordData } from '../../types/types';
 const cx = classnames.bind(styles);
 
 interface KeywordAdderProps {
   theme: string;
   addButtonValue: React.ReactNode | string;
+  myKeywordList: MyKeywordData[];
+  handleChangePrevAddedKeyword: (newPrevKeyword: string) => void;
+  handleChangeMyKeywordList: (newList: MyKeywordData[]) => void;
+  handleChangeRelatedKeywordList: (newList: KeywordRelatedData[]) => void;
 }
 
-const KeywordAdder = ({ theme, addButtonValue }: KeywordAdderProps) => {
+const KeywordAdder = ({
+  theme,
+  addButtonValue,
+  myKeywordList,
+  handleChangeMyKeywordList,
+  handleChangePrevAddedKeyword,
+  handleChangeRelatedKeywordList,
+}: KeywordAdderProps) => {
   const router = useRouter();
   const communityId: string = router.query.id as string;
   const communityKeywordData = useKeywordListQuery(communityId);
   const { searchKeyword, searchResult, changeSearchKeyword } =
     useAutoComplete(communityKeywordData);
-  const {
-    myKeywordList,
-    relatedKeywordList,
-    handleChangeMyKeywordList,
-    handleChangeRelatedKeywordList,
-  } = useUserKeywordList();
 
   const [isOpenDropdown, setIsOpenDropDown] = useState<boolean>(false);
 
@@ -50,10 +54,9 @@ const KeywordAdder = ({ theme, addButtonValue }: KeywordAdderProps) => {
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
-    const keywordId = getKeywordIdByKeyword(
-      searchKeyword,
-      communityKeywordData,
-    );
+    let keywordId = getKeywordIdByKeyword(searchKeyword, communityKeywordData);
+
+    handleChangePrevAddedKeyword(searchKeyword);
 
     if (keywordId) {
       // 내 키워드에 추가 => 이후에는 Mutation으로 수정 필요
@@ -61,20 +64,19 @@ const KeywordAdder = ({ theme, addButtonValue }: KeywordAdderProps) => {
       const newMyKeyword = { keywordId, keywordName: searchKeyword };
       const updatedMyKeywordList = [...myKeywordList, newMyKeyword];
       handleChangeMyKeywordList(updatedMyKeywordList);
-      const slicedData = await getKeywordAssociations(keywordId);
-      handleChangeRelatedKeywordList(slicedData);
     } else {
       const body = {
         keywordName: searchKeyword,
         communityId,
       };
       const result = await apis.addKeyword(body);
+      keywordId = result.keywordId;
       const updatedMyKeywordList = [...myKeywordList, result];
       handleChangeMyKeywordList(updatedMyKeywordList);
-      const slicedData = await getKeywordAssociations(result.keywordId);
-      handleChangeRelatedKeywordList(slicedData);
     }
 
+    const slicedData = await getKeywordAssociations(keywordId);
+    handleChangeRelatedKeywordList(slicedData);
     setIsOpenDropDown(false);
     changeSearchKeyword('');
   };

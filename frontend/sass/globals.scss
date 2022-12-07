@@ -1,9 +1,6 @@
 @import '@sass/normalize';
-
-@font-face {
-  font-family: 'Nanum BugGeugSeong';
-  src: url('../public/fonts/nanum buggeugseong.ttf');
-}
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+@import url('https://hangeul.pstatic.net/hangeul_static/css/NanumBugGeugSeong.css');
 
 html {
   * {

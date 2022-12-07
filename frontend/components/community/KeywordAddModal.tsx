@@ -5,12 +5,27 @@ import KeywordAssociated from './KeywordAssociated';
 import styles from '@sass/components/community/KeywordAddModal.module.scss';
 import classnames from 'classnames/bind';
 import KeywordAdder from './KeywordAdder';
-import useUserKeywordList from '@hooks/useUserKeywordList';
+import { KeywordRelatedData, MyKeywordData } from '../../types/types';
+import { KEYWORD_ADDER_THEME } from '@constants/constants';
 const cx = classnames.bind(styles);
 
-const KeywordAddModal = () => {
-  const { myKeywordList, handleChangeMyKeywordList } = useUserKeywordList();
+interface KeywordAddModalProps {
+  prevAddedKeyword: string;
+  myKeywordList: MyKeywordData[];
+  relatedKeywordList: KeywordRelatedData[];
+  handleChangePrevAddedKeyword: (newPrevKeyword: string) => void;
+  handleChangeMyKeywordList: (newList: MyKeywordData[]) => void;
+  handleChangeRelatedKeywordList: (newList: KeywordRelatedData[]) => void;
+}
 
+const KeywordAddModal = ({
+  prevAddedKeyword,
+  myKeywordList,
+  relatedKeywordList,
+  handleChangeMyKeywordList,
+  handleChangePrevAddedKeyword,
+  handleChangeRelatedKeywordList,
+}: KeywordAddModalProps) => {
   const handleDeleteClick: MouseEventHandler<HTMLButtonElement> = (e) => {
     const target = e.target as HTMLElement;
     const filteredList = myKeywordList.filter(
@@ -30,10 +45,20 @@ const KeywordAddModal = () => {
       <main className={cx('main')}>
         <section className={cx('keyword-add-section')}>
           <div className={cx('keyword-add-container')}>
-            <KeywordAdder theme='modal' addButtonValue='추가하기' />
+            <KeywordAdder
+              theme={KEYWORD_ADDER_THEME.MODAL}
+              addButtonValue='추가하기'
+              myKeywordList={myKeywordList}
+              handleChangeMyKeywordList={handleChangeMyKeywordList}
+              handleChangePrevAddedKeyword={handleChangePrevAddedKeyword}
+              handleChangeRelatedKeywordList={handleChangeRelatedKeywordList}
+            />
           </div>
           {/* 키워드 추천은 추가 섹션과 기능적으로 연관되어있다고 할 수 있을까? */}
-          <KeywordAssociated />
+          <KeywordAssociated
+            prevAddedKeyword={prevAddedKeyword}
+            relatedKeywordList={relatedKeywordList}
+          />
         </section>
         <section className={cx('my-keyword-section')}>
           <hr />
