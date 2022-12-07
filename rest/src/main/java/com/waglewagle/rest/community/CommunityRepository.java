@@ -1,18 +1,14 @@
 package com.waglewagle.rest.community;
 
-import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.DateTimePath;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQueryFactory;
+import com.waglewagle.rest.communityUser.QCommunityUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import java.time.LocalDateTime;
 import java.util.List;
 
 
-import static com.waglewagle.rest.communityUser.QCommunityUser.communityUser;
 
 @Repository
 @RequiredArgsConstructor
@@ -27,10 +23,10 @@ public class CommunityRepository {
 
     public List<Community> getJoinedCommunities(Long userId) {
         return jpqlQueryFactory
-                .select(communityUser.community)
-                .from(communityUser)
-                .where(communityUser.user.id.eq(userId))
-                .groupBy(communityUser.community)
+                .select(QCommunityUser.communityUser.community)
+                .from(QCommunityUser.communityUser)
+                .where(QCommunityUser.communityUser.user.id.eq(userId))
+                .groupBy(QCommunityUser.communityUser.community)
                 .fetch();
 
     }

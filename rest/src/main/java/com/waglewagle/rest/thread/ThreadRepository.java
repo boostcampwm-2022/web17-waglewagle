@@ -9,12 +9,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 
-import static com.waglewagle.rest.keyword.QKeyword.keyword1;
-import static com.waglewagle.rest.thread.QThread.thread;
-import static  com.waglewagle.rest.communityUser.QCommunityUser.communityUser;
 
 @Repository
 public interface ThreadRepository extends JpaRepository<Thread, Long> {
