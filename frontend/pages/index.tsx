@@ -10,9 +10,20 @@ import HomeDescription from '@components/home/HomeDescription';
 import SeoHead from '@components/common/Head';
 import { useRouter } from 'next/router';
 import config from '../config';
+import useMockUserMe from '@hooks/useMockUserMe';
+import { useEffect } from 'react';
 
 const Home = () => {
   const router = useRouter();
+  // TODO: 나중에 /user/me 수정되면 삭제하기
+  const mockUserData = useMockUserMe();
+
+  useEffect(() => {
+    if (mockUserData) {
+      router.push('/community/1');
+    }
+  }, [mockUserData]);
+
   return (
     <HomeLayout>
       <SeoHead
