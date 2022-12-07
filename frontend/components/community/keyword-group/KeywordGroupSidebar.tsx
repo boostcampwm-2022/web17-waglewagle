@@ -18,14 +18,13 @@ interface SidebarProps {
   closeSidebar(): void;
 }
 
-const Sidebar = ({
+const KeywordGroupSidebar = ({
   threadId,
   content,
   childThreadCount,
   childThreads,
   createdAt,
-  updatedAt,
-  author: { userId, username, profileImageUrl },
+  author: { username, profileImageUrl },
   closeSidebar,
 }: SidebarProps) => {
   return (
@@ -82,4 +81,4 @@ const Sidebar = ({
   );
 };
 
-export default Sidebar;
+export default KeywordGroupSidebar;

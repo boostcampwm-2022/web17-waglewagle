@@ -8,7 +8,7 @@ import { useState } from 'react';
 const cx = classnames.bind(styles);
 
 const KeywordModalContent = dynamic(
-  () => import('./keyword/KeywordModalContent'),
+  () => import('./keyword-group/KeywordGroupModalContent'),
   {
     loading: () => <Loading />,
   },

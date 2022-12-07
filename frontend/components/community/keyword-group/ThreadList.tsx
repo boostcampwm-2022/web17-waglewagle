@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import Thread from './Thread';
 import styles from '@sass/components/community/keyword/ThreadList.module.scss';
 import classnames from 'classnames/bind';

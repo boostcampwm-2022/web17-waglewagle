@@ -5,7 +5,7 @@ import useKeywordUserListQuery from '@hooks/useKeywordUserListQuery';
 import calculateTimeGap from '@utils/calculateTimeGap';
 const cx = classnames.bind(styles);
 
-const KeywordUserList = () => {
+const KeywordGroupUserList = () => {
   const { data: userList } = useKeywordUserListQuery('123');
 
   const onlineUserCount = useMemo(
@@ -42,4 +42,4 @@ const KeywordUserList = () => {
   );
 };
 
-export default KeywordUserList;
+export default KeywordGroupUserList;

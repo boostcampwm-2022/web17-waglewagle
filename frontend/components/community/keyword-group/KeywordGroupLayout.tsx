@@ -7,8 +7,8 @@ interface ThreadLayoutProps {
   children: ReactNode;
 }
 
-const KeywordLayout = ({ children }: ThreadLayoutProps) => {
+const KeywordGroupLayout = ({ children }: ThreadLayoutProps) => {
   return <div className={cx('layout')}>{children}</div>;
 };
 
-export default KeywordLayout;
+export default KeywordGroupLayout;
