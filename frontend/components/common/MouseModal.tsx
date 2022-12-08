@@ -1,4 +1,4 @@
-import { MouseEventHandler, ReactNode, useState } from 'react';
+import { MouseEventHandler, ReactNode } from 'react';
 import ReactDOM from 'react-dom';
 import classnames from 'classnames/bind';
 import styles from '@sass/components/common/MouseModal.module.scss';

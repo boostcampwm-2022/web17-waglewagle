@@ -1,9 +1,7 @@
-import { MyKeywordData } from '#types/types';
 import useMyKeywordQuery from '@hooks/useMyKeywordQuery';
 import styles from '@sass/components/community/MyKeywordList.module.scss';
 import classnames from 'classnames/bind';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
 import MyKeyword from './MyKeyword';
 const cx = classnames.bind(styles);
 
