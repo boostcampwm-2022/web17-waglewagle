@@ -76,14 +76,6 @@ public class ThreadDTO {
             threadResponseDTO.createdAt = thread.getCreatedAt();
             threadResponseDTO.updatedAt = thread.getUpdatedAt();
             threadResponseDTO.author = AuthorDTO.createAuthorDTO(thread.getAuthor());
-            if (!thread.getChildren().isEmpty()) {
-                threadResponseDTO.childThreads = thread
-                        .getChildren()
-                        .stream()
-                        .map(ThreadResponseDTO::of)
-                        .collect(Collectors.toList());
-                threadResponseDTO.childThreadCount = threadResponseDTO.childThreads.size();
-            }
             return threadResponseDTO;
         }
     }

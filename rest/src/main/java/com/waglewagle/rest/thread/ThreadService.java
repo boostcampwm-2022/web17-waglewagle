@@ -11,9 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.waglewagle.rest.thread.ThreadDTO.CreateThreadDTO.createCreateThreadDTO;
@@ -67,12 +65,30 @@ public class ThreadService {
         threadRepository.deleteById(threadId);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<ThreadResponseDTO> getThreadsInKeyword(Long keywordId) {
-        List<Thread> threads = threadRepository.findThreadsByParentThreadIsNullAndKeywordId(keywordId);
-        return threads
-                .stream()
-                .map(ThreadResponseDTO::of)
-                .collect(Collectors.toList());
+        List<Thread> parentThreads = threadRepository.findParentThreadsInKeyword(keywordId);
+        List<Thread> childThreads = threadRepository.findChildThreads(parentThreads
+                                                                        .stream()
+                                                                        .map(t -> t.getId())
+                                                                        .collect(Collectors.toList()));
+        HashMap<Long, ThreadResponseDTO> idToDTO = new HashMap<>();
+        parentThreads.forEach(thread -> {
+            idToDTO.put(thread.getId(), ThreadResponseDTO.of(thread));
+        });
+        childThreads.forEach(thread -> {
+            idToDTO.get(thread.getParentThread().getId())
+                        .getChildThreads()
+                        .add(ThreadResponseDTO.of(thread));
+        });
+
+        List<ThreadResponseDTO> threadResponseDTOS = idToDTO
+                                                        .values()
+                                                        .stream()
+                                                        .collect(Collectors.toList());;
+                                                        
+        threadResponseDTOS.sort(Comparator.comparingLong(dto -> Long.parseLong(dto.getThreadId())));
+
+        return  threadResponseDTOS;
     }
 }
