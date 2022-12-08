@@ -1,6 +1,6 @@
 package com.waglewagle.rest.user.entity;
 
-import com.waglewagle.rest.user.data_object.dto.UpdateProfileDTO;
+import com.waglewagle.rest.user.data_object.dto.request.UserRequest;
 import com.waglewagle.rest.user.enums.OauthMethod;
 import com.waglewagle.rest.user.enums.Role;
 import lombok.Builder;
@@ -80,7 +80,7 @@ public class User {
         this.oauthKey = oauthKey;
     }
 
-    public void updateProfile(UpdateProfileDTO updateProfileDTO) {
+    public void updateProfile(UserRequest.UpdateProfileDTO updateProfileDTO) {
         if (updateProfileDTO.getProfileImageUrl() != null) {
             profileImageUrl = updateProfileDTO.getProfileImageUrl();
         }

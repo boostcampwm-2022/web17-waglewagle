@@ -3,9 +3,8 @@ package com.waglewagle.rest.user.service;
 import com.waglewagle.rest.common.PreResponseDTO;
 import com.waglewagle.rest.community.entity.CommunityUser;
 import com.waglewagle.rest.community.repository.CommunityUserRepository;
-import com.waglewagle.rest.user.data_object.dto.UpdateProfileDTO;
-import com.waglewagle.rest.user.data_object.dto.UpdateProfileResponseDTO;
-import com.waglewagle.rest.user.data_object.dto.UserConnectionStatusDTO;
+import com.waglewagle.rest.user.data_object.dto.request.UserRequest;
+import com.waglewagle.rest.user.data_object.dto.response.UserResponse;
 import com.waglewagle.rest.user.entity.User;
 import com.waglewagle.rest.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +18,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.waglewagle.rest.user.data_object.dto.UserInfoDTO.UserInfoResDTO;
 
 @Service
 @RequiredArgsConstructor
@@ -44,8 +42,8 @@ public class UserService {
     }
 
     @Transactional
-    public PreResponseDTO<UpdateProfileResponseDTO> updateUserProfile(Long userId,
-                                                                      UpdateProfileDTO updateProfileDTO) throws IllegalArgumentException {
+    public PreResponseDTO<UserResponse.UpdateProfileDTO> updateUserProfile(Long userId,
+                                                                           UserRequest.UpdateProfileDTO updateProfileDTO) throws IllegalArgumentException {
 
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
         if (Objects.isNull(user)) return null;
@@ -63,11 +61,11 @@ public class UserService {
 
         user.updateProfile(updateProfileDTO);
 
-        return new PreResponseDTO<>(new UpdateProfileResponseDTO(user), HttpStatus.OK);
+        return new PreResponseDTO<>(UserResponse.UpdateProfileDTO.of(user), HttpStatus.OK);
     }
 
     @Transactional
-    public PreResponseDTO<UserInfoResDTO> getUserInfo(Long userId, Long communityId) throws IllegalArgumentException {
+    public PreResponseDTO<UserResponse.UserInfoDTO> getUserInfo(Long userId, Long communityId) throws IllegalArgumentException {
         User user;
         Optional<User> optUser = userRepository.findById(userId);
         if (optUser.isPresent()) {
@@ -77,7 +75,7 @@ public class UserService {
         }
 
         if (communityId == null) {
-            return new PreResponseDTO<>(new UserInfoResDTO(user), HttpStatus.OK);
+            return new PreResponseDTO<>(UserResponse.UserInfoDTO.of(user), HttpStatus.OK);
         }
 
         CommunityUser communityUser = communityUserRepository
@@ -87,7 +85,7 @@ public class UserService {
             return new PreResponseDTO<>(null, HttpStatus.UNAUTHORIZED);
         }
 
-        return new PreResponseDTO<>(new UserInfoResDTO(user, communityUser), HttpStatus.OK);
+        return new PreResponseDTO<>(UserResponse.UserInfoDTO.from(user, communityUser), HttpStatus.OK);
     }
 
     @Transactional
@@ -98,19 +96,19 @@ public class UserService {
                 .updateLastActivity();
     }
 
-    public List<UserConnectionStatusDTO> getUserInfoInKeyword(Long keywordId) {
+    public List<UserResponse.LastActivityDTO> getUserInfoInKeyword(Long keywordId) {
         return userRepository
                 .findByKeywordUserKeywordId(keywordId)
                 .stream()
-                .map(UserConnectionStatusDTO::of)
+                .map(UserResponse.LastActivityDTO::of)
                 .collect(Collectors.toList());
     }
 
-    public List<UserConnectionStatusDTO> getUserInfoInCommunity(Long communityId) {
+    public List<UserResponse.LastActivityDTO> getUserInfoInCommunity(Long communityId) {
         return userRepository
                 .findByCommunityUserCommunityId(communityId)
                 .stream()
-                .map(UserConnectionStatusDTO::of)
+                .map(UserResponse.LastActivityDTO::of)
                 .collect(Collectors.toList());
     }
 

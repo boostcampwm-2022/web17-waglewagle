@@ -2,9 +2,9 @@ package com.waglewagle.rest.thread.controller;
 
 import com.waglewagle.rest.keyword.service.KeywordService;
 import com.waglewagle.rest.thread.ThreadService;
-import com.waglewagle.rest.thread.dto.ThreadDTO.CreateThreadInputDTO;
-import com.waglewagle.rest.thread.dto.ThreadDTO.DeleteThreadDTO;
-import com.waglewagle.rest.thread.dto.ThreadDTO.ThreadResponseDTO;
+import com.waglewagle.rest.thread.data_object.dto.ThreadDTO.CreateThreadInputDTO;
+import com.waglewagle.rest.thread.data_object.dto.ThreadDTO.DeleteThreadDTO;
+import com.waglewagle.rest.thread.data_object.dto.ThreadDTO.ThreadResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

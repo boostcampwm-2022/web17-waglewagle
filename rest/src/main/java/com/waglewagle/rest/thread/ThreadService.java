@@ -2,9 +2,9 @@ package com.waglewagle.rest.thread;
 
 import com.waglewagle.rest.keyword.entity.Keyword;
 import com.waglewagle.rest.keyword.repository.KeywordRepository;
-import com.waglewagle.rest.thread.dto.ThreadDTO.CreateThreadDTO;
-import com.waglewagle.rest.thread.dto.ThreadDTO.CreateThreadInputDTO;
-import com.waglewagle.rest.thread.dto.ThreadDTO.ThreadResponseDTO;
+import com.waglewagle.rest.thread.data_object.dto.ThreadDTO.CreateThreadDTO;
+import com.waglewagle.rest.thread.data_object.dto.ThreadDTO.CreateThreadInputDTO;
+import com.waglewagle.rest.thread.data_object.dto.ThreadDTO.ThreadResponseDTO;
 import com.waglewagle.rest.thread.entity.Thread;
 import com.waglewagle.rest.thread.repository.ThreadRepository;
 import com.waglewagle.rest.user.entity.User;
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.waglewagle.rest.thread.dto.ThreadDTO.CreateThreadDTO.from;
+import static com.waglewagle.rest.thread.data_object.dto.ThreadDTO.CreateThreadDTO.from;
 
 @Service
 @RequiredArgsConstructor
