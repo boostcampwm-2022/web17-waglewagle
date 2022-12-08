@@ -1,5 +1,5 @@
 import { REACT_QUERY_KEY } from '@constants/constants';
-import styles from '@sass/components/admin/keywordMergeModalContent.module.scss';
+import styles from '@sass/components/admin/KeywordMergeModalContent.module.scss';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import classnames from 'classnames/bind';
 import { useRouter } from 'next/router';
