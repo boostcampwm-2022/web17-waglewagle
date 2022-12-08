@@ -3,7 +3,7 @@ import KeywordDeleteModalContent from '@components/admin/KeywordDeleteModalConte
 import KeywordMergeModalContent from '@components/admin/KeywordMergeModalContent';
 import { Modal } from '@components/common';
 import { REACT_QUERY_KEY } from '@constants/constants';
-import styles from '@sass/components/admin/keywordControl.module.scss';
+import styles from '@sass/components/admin/KeywordControl.module.scss';
 import { useQuery } from '@tanstack/react-query';
 import classnames from 'classnames/bind';
 import { useRouter } from 'next/router';
