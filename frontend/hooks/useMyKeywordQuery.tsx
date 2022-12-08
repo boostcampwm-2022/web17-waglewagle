@@ -16,7 +16,7 @@ const useMyKeywordQuery = (communityId: string) => {
     },
   );
 
-  return data;
+  return { data };
 };
 
 export default useMyKeywordQuery;
