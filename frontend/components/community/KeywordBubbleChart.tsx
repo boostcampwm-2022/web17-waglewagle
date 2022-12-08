@@ -40,11 +40,6 @@ const KeywordBubbleChart = () => {
   // circleContainer가 아닌 이곳에 있는 이유는, 이 함수는 연산보다는 렌더링에 가까운 로직이기 때문 (setIsMove를 토글하여 리렌더링 시킴)
   const animate = () => {
     const update = () => {
-      if (circleContainerRef.current?.isStatic) {
-        clearInterval(requestAnimationId.current!);
-        return;
-      }
-
       setIsMove((prev) => !prev);
       circleContainerRef.current?.update();
     };
@@ -58,7 +53,10 @@ const KeywordBubbleChart = () => {
     if (!fetchedKeywordData) {
       return;
     }
-    const slicedData = fetchedKeywordData.slice(0, 30);
+
+    const slicedData = fetchedKeywordData
+      .filter((keywordData) => keywordData.memberCount !== 0)
+      .slice(0, 30);
     setSlicedCommunityKeywordData(slicedData);
   }, [fetchedKeywordData]);
 

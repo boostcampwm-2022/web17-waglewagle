@@ -8,7 +8,7 @@ const useUserMe = (communityId?: string) => {
   const { data } = useQuery<UserData>(
     [REACT_QUERY_KEY.USERME],
     () => {
-      const data = apis.getUserData(communityId ?? '');
+      const data = apis.getUserData(communityId);
       return data;
     },
     {

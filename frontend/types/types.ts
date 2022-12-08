@@ -16,11 +16,6 @@ export type AddKeywordData = {
   communityId: string;
 };
 
-export type AddKeywordResponseData = {
-  keywordId: string;
-  keywordName: string;
-};
-
 export type JoinKeywordData = {
   keywordId: string;
   communityId: string;
