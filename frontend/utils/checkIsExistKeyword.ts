@@ -1,7 +1,8 @@
 import { KeywordData } from '../types/types';
 
 // TODO: 테스트코드 작성 가능
-const getKeywordIdByKeyword = (
+// 키워드가 커뮤니티에 존재하는지 확인하여 id 혹은 false를 반환하는 함수
+const checkIsExistKeyword = (
   keyword: string,
   communityKeywordData: KeywordData[] | undefined,
 ): string | false => {
@@ -27,4 +28,4 @@ const getKeywordIdByKeyword = (
   return result[0].keywordId;
 };
 
-export default getKeywordIdByKeyword;
+export default checkIsExistKeyword;
