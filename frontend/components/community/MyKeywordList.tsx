@@ -3,7 +3,7 @@ import useMyKeywordQuery from '@hooks/useMyKeywordQuery';
 import styles from '@sass/components/community/MyKeywordList.module.scss';
 import classnames from 'classnames/bind';
 import { useRouter } from 'next/router';
-import { MouseEventHandler, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import MyKeyword from './MyKeyword';
 const cx = classnames.bind(styles);
 
@@ -13,14 +13,6 @@ const MyKeywordList = () => {
   const { data: myKeywordList } = useMyKeywordQuery(communityId);
 
   const [slicedMyKeyword, setSlicedMyKeyword] = useState<MyKeywordData[]>([]);
-
-  const handleDeleteClick: MouseEventHandler<HTMLButtonElement> = (e) => {
-    const target = e.target as HTMLElement;
-    const filteredList = myKeywordList.filter(
-      (keyword) => keyword.keywordName !== target.previousSibling?.textContent,
-    );
-    // keywordDistJoinMutation;
-  };
 
   useEffect(() => {
     // TODO: 개발을 위해서 최신순으로 정렬해둠. 이후에 삭제하기
@@ -35,11 +27,7 @@ const MyKeywordList = () => {
     <ol className={cx('list-container')}>
       {slicedMyKeyword &&
         slicedMyKeyword.map((keywordData) => (
-          <MyKeyword
-            handleDeleteClick={handleDeleteClick}
-            key={keywordData.keywordId}
-            keyword={keywordData.keywordName}
-          />
+          <MyKeyword key={keywordData.keywordId} keywordData={keywordData} />
         ))}
     </ol>
   );
