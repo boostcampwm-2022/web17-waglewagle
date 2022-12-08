@@ -1,25 +1,20 @@
-import { Loading, Modal } from '@components/common';
 import useUserMe from '@hooks/useUserMe';
-import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useState, MouseEventHandler } from 'react';
 import styles from '@sass/components/community/KeywordBubble.module.scss';
 import classnames from 'classnames/bind';
-import { KeywordGroupData } from '#types/types';
+import { ClickPosData, KeywordGroupData } from '#types/types';
+import KeywordGroupEnterModalContent from './KeywordGroupEnterModalContent';
+import MouseModal from '@components/common/MouseModal';
 import KeywordGroupInfoModalContent from './KeywordGroupInfoModalContent';
 const cx = classnames.bind(styles);
 
-const KeywordModalContent = dynamic(
-  () => import('./keyword-group/KeywordGroupModalContent'),
-  {
-    loading: () => <Loading />,
-  },
-);
-
 interface KeywordBubbleProps {
+  isJoined: boolean;
   isHighlight: boolean;
   keywordId: string;
   keyword: string;
+  memberCount: number;
   posX: number;
   posY: number;
   radius: number;
@@ -29,8 +24,10 @@ interface KeywordBubbleProps {
 // requestAnimationFrame으로 이동
 const KeywordBubble = ({
   isHighlight,
+  isJoined,
   keywordId,
   keyword,
+  memberCount,
   posX,
   posY,
   radius,
@@ -39,17 +36,24 @@ const KeywordBubble = ({
   const router = useRouter();
   const communityId: string = router.query.id as string;
   const userData = useUserMe(communityId);
+  const [modalPosData, setModalPosData] = useState<ClickPosData>();
   const [isOpenKeywordModal, setIsOpenKeywordModal] = useState<boolean>(false);
 
-  const handleClick = () => {
-    userData && handleChangeKeywordGroupData({ keywordId, keyword });
-    // userData && setIsOpenKeywordModal(true); // 유저 정보가 있을때만 모달창을 띄워줌
+  const closeKeywordModal = () => {
+    setTimeout(() => {
+      setIsOpenKeywordModal(false);
+    }); // TODO: setTimeout을 사용해야 닫을 수 있음.
+  };
+
+  const handleClick: MouseEventHandler<HTMLDivElement> = (e) => {
+    setModalPosData({ x: e.clientX, y: e.clientY });
+    setIsOpenKeywordModal(true);
   };
 
   return (
     <div
-      onClick={handleClick}
-      className={cx('bubble', { highlight: isHighlight })}
+      onClick={userData && handleClick}
+      className={cx('bubble', { highlight: isHighlight && isJoined })}
       style={{
         transform: `translate(${posX - radius}px, ${posY - radius}px)`,
         width: `${radius * 2}px`,
@@ -60,12 +64,28 @@ const KeywordBubble = ({
       <div>
         <span>{keyword}</span>
       </div>
-      <Modal
+      <MouseModal
+        left={modalPosData?.x}
+        top={modalPosData?.y}
         isOpenModal={isOpenKeywordModal}
         closeModal={() => setIsOpenKeywordModal(false)}
       >
-        <KeywordGroupInfoModalContent />
-      </Modal>
+        {isJoined ? (
+          <KeywordGroupEnterModalContent
+            keywordId={keywordId}
+            keyword={keyword}
+            memberCount={memberCount}
+            handleChangeKeywordGroupData={handleChangeKeywordGroupData}
+            closeKeywordModal={closeKeywordModal}
+          />
+        ) : (
+          <KeywordGroupInfoModalContent
+            keywordId={keywordId}
+            keyword={keyword}
+            memberCount={memberCount}
+          />
+        )}
+      </MouseModal>
     </div>
   );
 };

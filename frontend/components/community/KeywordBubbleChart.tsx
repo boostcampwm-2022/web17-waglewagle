@@ -122,11 +122,14 @@ const KeywordBubbleChart = ({
     <div className={cx('chart-container')}>
       {isLoading && <Loading />}
       {bubbleDataList.map((bubbleData, index) => (
+        // TODO:Lprops 깔끔하게 만들기
         <KeywordBubble
           key={index}
-          isHighlight={bubbleData.isJoined && isMyKeywordHighlight} // isJoined만 변경되었을때는 리렌더링이 발생하지 않도록함.
+          isHighlight={isMyKeywordHighlight}
+          isJoined={bubbleData.isJoined}
           keywordId={bubbleData.keywordId}
           keyword={bubbleData.keyword}
+          memberCount={bubbleData.count}
           posX={bubbleData.circle.x}
           posY={bubbleData.circle.y}
           radius={bubbleData.circle.radius}
