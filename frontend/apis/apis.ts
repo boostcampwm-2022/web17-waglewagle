@@ -125,6 +125,20 @@ const deleteKeyword = async (communityId: string, keywordIdList: string[]) => {
   return response.data;
 };
 
+const mergeKeyword = async (
+  communityId: string,
+  destinationKeywordId: string,
+  sourceKeywordIdList: string[],
+) => {
+  const response = await apiInstance.post('/v1/keyword/merge', {
+    communityId,
+    destinationKeywordId,
+    sourceKeywordIdList,
+  });
+
+  return response.data;
+};
+
 const apis = {
   fetchLogin,
   getKeywords,
@@ -138,6 +152,7 @@ const apis = {
   addComments,
   deleteThread,
   deleteKeyword,
+  mergeKeyword,
 };
 
 export default apis;

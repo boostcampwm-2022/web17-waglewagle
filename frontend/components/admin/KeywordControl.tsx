@@ -1,10 +1,12 @@
 import { KeywordData } from '#types/types';
 import KeywordDeleteModalContent from '@components/admin/KeywordDeleteModalContent';
+import KeywordMergeModalContent from '@components/admin/KeywordMergeModalContent';
 import { Modal } from '@components/common';
 import { REACT_QUERY_KEY } from '@constants/constants';
 import styles from '@sass/components/admin/keywordControl.module.scss';
 import { useQuery } from '@tanstack/react-query';
 import classnames from 'classnames/bind';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import apis from '../../apis/apis';
 const cx = classnames.bind(styles);
@@ -17,14 +19,17 @@ type Keyword = {
 };
 
 const KeywordControl = () => {
+  const router = useRouter();
+  const { id } = router.query;
   const [keywordList, setKeywordList] = useState<Keyword[]>([]);
+  const [isOpenMergeModal, setIsOpenMergeModal] = useState(false);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
 
   const _ = useQuery<KeywordData[]>(
-    [REACT_QUERY_KEY.KEYWORD, '1'],
-    () => apis.getKeywords('1'),
+    [REACT_QUERY_KEY.KEYWORD, id],
+    () => apis.getKeywords(id as string),
     {
-      enabled: !!'123',
+      enabled: !!id,
       onSuccess: (data) => {
         const newData = data.map((keyword) => ({
           ...keyword,
@@ -65,7 +70,25 @@ const KeywordControl = () => {
           </li>
         ))}
       </ul>
-      <button className={cx('merge-button')}>키워드 병합</button>
+      <button
+        className={cx('merge-button')}
+        onClick={() => {
+          setIsOpenMergeModal(true);
+        }}
+      >
+        키워드 병합
+      </button>
+      <Modal
+        isOpenModal={isOpenMergeModal}
+        closeModal={() => setIsOpenMergeModal(false)}
+      >
+        <KeywordMergeModalContent
+          selectedKeywordList={keywordList.filter(
+            (keyword) => keyword.isSelected,
+          )}
+          closeModal={() => setIsOpenMergeModal(false)}
+        />
+      </Modal>
       <button
         className={cx('delete-button')}
         onClick={() => {
