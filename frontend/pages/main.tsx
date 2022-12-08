@@ -1,3 +1,4 @@
+import { Loading } from '@components/common';
 import SeoHead from '@components/common/Head';
 import {
   CommunityList,
@@ -5,13 +6,24 @@ import {
   MainLayout,
   MainTitle,
 } from '@components/main';
+import useUserMe from '@hooks/useUserMe';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect } from 'react';
 import config from '../config';
 
 const Main = () => {
   const router = useRouter();
-  const [username] = useState('커넥트재단');
+  const userData = useUserMe();
+
+  useEffect(() => {
+    if (!userData) {
+      router.push('/');
+    }
+  }, [userData]);
+
+  if (!userData) {
+    return <Loading />;
+  }
 
   return (
     <MainLayout>
@@ -21,7 +33,7 @@ const Main = () => {
         url={`${config.HOST}${router.asPath}`}
       />
       <MainHeader />
-      <MainTitle username={username} />
+      <MainTitle username={userData.username} />
       <CommunityList />
     </MainLayout>
   );

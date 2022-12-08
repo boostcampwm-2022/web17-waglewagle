@@ -2,10 +2,11 @@ import { useState } from 'react';
 import CommunityItem from './CommunityItem';
 import classnames from 'classnames/bind';
 import styles from '@sass/components/main/CommunityList.module.scss';
+import { MVP_DEFAULT } from '@constants/constants';
 const cx = classnames.bind(styles);
 
 export type Community = {
-  id: number;
+  id: string;
   profileURL?: string;
   title: string;
   userCount: number;
@@ -13,11 +14,11 @@ export type Community = {
 
 const CommunityList = () => {
   const [communityList] = useState<Community[]>([
-    { id: 1, title: '부스트캠프 7기', userCount: 250 },
-    { id: 2, title: '부스트캠프 7기', userCount: 250 },
-    { id: 3, title: '부스트캠프 7기', userCount: 250 },
-    { id: 4, title: '부스트캠프 7기', userCount: 250 },
-    { id: 5, title: '부스트캠프 7기', userCount: 250 },
+    {
+      id: MVP_DEFAULT.COMMUNITY_ID,
+      title: '부스트캠프 웹·모바일 7기',
+      userCount: 360,
+    },
   ]);
 
   return (

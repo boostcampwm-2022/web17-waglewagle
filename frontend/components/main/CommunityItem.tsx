@@ -5,7 +5,7 @@ import { MVP_DEFAULT } from '@constants/constants';
 const cx = classnames.bind(styles);
 
 interface CommunityItemProps {
-  id: number;
+  id: string;
   profileURL?: string;
   title: string;
   userCount: number;
@@ -21,9 +21,9 @@ const CommunityItem = ({
       <a href={MVP_DEFAULT.MAIN_PROFILE_URL}>
         <div className={cx('profile-wrapper')}>
           <Image
-            src={profileURL ? profileURL : '/images/default-profile.png'}
-            alt='커뮤니티 이미지'
-            layout='fill'
+            src={profileURL ? profileURL : '/images/boostcamp.png'}
+            alt='부스트캠프 이미지'
+            fill
           />
         </div>
       </a>
