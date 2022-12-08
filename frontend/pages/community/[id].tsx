@@ -6,14 +6,20 @@ import {
 } from '@components/community';
 import KeywordAdder from '@components/community/KeywordAdder';
 import AddCircleIcon from '@public/images/add-circle.svg';
-import { KEYWORD_ADDER_THEME } from '@constants/constants';
-import { useState } from 'react';
+import {
+  KEYWORD_ADDER_THEME,
+  MVP_DEFAULT,
+  REACT_QUERY_KEY,
+} from '@constants/constants';
+import { useState, useEffect } from 'react';
 import useUserMe from '@hooks/useUserMe';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import SeoHead from '@components/common/Head';
 import config from '../../config';
 import { MyKeywordData } from '#types/types';
+import apis from '../../apis/apis';
+import { useQueryClient } from '@tanstack/react-query';
 
 const LoginModalContent = dynamic(
   () => import('../../components/common/LoginModalContent'),
@@ -42,12 +48,28 @@ const Community = () => {
     setPrevKeyword(newPrevKeyword);
   };
 
+  useEffect(() => {
+    if (userData) {
+      apis.joinCommunity(MVP_DEFAULT.COMMUNITY_ID);
+    }
+  }, [userData]);
+
+  useEffect(() => {
+    if (userData?.isFirstInCommunity) {
+      setIsOpenKeywordModal(true);
+    }
+  }, [userData?.isFirstInCommunity]);
+
   const handleClickEnter = () => {
     setIsOpenLoginModal(true);
   };
 
   const handleClickKeywordModal = () => {
     setIsOpenKeywordModal(true);
+  };
+
+  const closeKeywordModal = () => {
+    setIsOpenKeywordModal(false);
   };
 
   return (
@@ -83,6 +105,7 @@ const Community = () => {
         <KeywordAddModalContent
           prevKeyword={prevKeyword}
           handleChangePrevKeyword={handleChangePrevKeyword}
+          closeKeywordModal={closeKeywordModal}
         />
       </Modal>
     </CommunityLayout>

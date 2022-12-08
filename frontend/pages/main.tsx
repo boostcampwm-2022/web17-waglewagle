@@ -6,13 +6,22 @@ import {
   MainLayout,
   MainTitle,
 } from '@components/main';
+import { useEffect } from 'react';
 import useUserMe from '@hooks/useUserMe';
 import { useRouter } from 'next/router';
 import config from '../config';
+import apis from '../apis/apis';
+import { MVP_DEFAULT } from '@constants/constants';
 
 const Main = () => {
   const router = useRouter();
   const userData = useUserMe();
+
+  useEffect(() => {
+    if (userData) {
+      apis.joinCommunity(MVP_DEFAULT.COMMUNITY_ID);
+    }
+  }, [userData]);
 
   if (!userData) {
     return <Loading />;

@@ -13,6 +13,8 @@ import config from '../config';
 import { useState, useEffect } from 'react';
 import { LoginModalContent, Modal } from '@components/common';
 import useUserMe from '@hooks/useUserMe';
+import apis from '../apis/apis';
+import { MVP_DEFAULT } from '@constants/constants';
 
 const Home = () => {
   const router = useRouter();
@@ -25,6 +27,7 @@ const Home = () => {
 
   useEffect(() => {
     if (userData) {
+      apis.joinCommunity(MVP_DEFAULT.COMMUNITY_ID);
       router.push('/main');
     }
   }, [userData]);
