@@ -30,6 +30,9 @@ const KeywordDeleteModalContent = ({
         id as string,
         selectedKeywordList.map((selectedKeyword) => selectedKeyword.keywordId),
       ),
+    onSuccess: () => {
+      closeModal();
+    },
   });
 
   return (

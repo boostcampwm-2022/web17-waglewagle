@@ -37,6 +37,9 @@ function KeywordMergeModalContent({
           .filter((keywordId) => keywordId !== selectedKeywordId),
       );
     },
+    onSuccess: () => {
+      closeModal();
+    },
   });
 
   return (
@@ -58,7 +61,7 @@ function KeywordMergeModalContent({
         ))}
       </ul>
       <div className={cx('buttons')}>
-        <button>병합</button>
+        <button onClick={() => mutate()}>병합</button>
         <button onClick={() => closeModal()}>취소</button>
       </div>
     </div>
