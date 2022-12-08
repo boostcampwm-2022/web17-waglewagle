@@ -21,6 +21,7 @@ public class ThreadCustomRepositoryImpl implements ThreadCustomRepository {
                 .fetchJoin()
                 .where(QThread.thread.parentThread.isNull())
                 .where(QThread.thread.keyword.id.eq(keywordId))
+                .orderBy(QThread.thread.id.asc())
                 .fetch();
 
     }
@@ -33,6 +34,7 @@ public class ThreadCustomRepositoryImpl implements ThreadCustomRepository {
                 .leftJoin(QThread.thread.parentThread)
                 .fetchJoin()
                 .where(QThread.thread.parentThread.id.in(threadIds))
+                .orderBy(QThread.thread.id.asc())
                 .fetch();
     }
 }

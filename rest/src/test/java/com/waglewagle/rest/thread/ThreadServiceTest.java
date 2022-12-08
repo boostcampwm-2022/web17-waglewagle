@@ -1,12 +1,15 @@
 package com.waglewagle.rest.thread;
 
+import com.waglewagle.rest.common.PreResponseDTO;
 import com.waglewagle.rest.community.repository.CommunityRepository;
 import com.waglewagle.rest.community.service.CommunityService;
 import com.waglewagle.rest.keyword.service.KeywordService;
 import com.waglewagle.rest.thread.controller.ThreadController;
-import com.waglewagle.rest.thread.data_object.dto.ThreadDTO;
+import com.waglewagle.rest.thread.data_object.dto.request.ThreadRequest;
+import com.waglewagle.rest.thread.data_object.dto.response.ThreadResponse;
 import com.waglewagle.rest.thread.entity.Thread;
 import com.waglewagle.rest.thread.repository.ThreadRepository;
+import com.waglewagle.rest.thread.service.ThreadService;
 import com.waglewagle.rest.user.repository.UserRepository;
 import com.waglewagle.rest.user.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -45,7 +48,7 @@ class ThreadServiceTest {
         Long communityId = createCommunity(userId);
         Long keywordId = createKeyword(userId, communityId);
 
-        Thread thread = createThread(userId, keywordId, "sample thread");
+        Thread thread = createThread(userId, keywordId, "sample thread").getData();
 
         assertThat(thread).isNotNull();
         assertThat(thread.getParentThread()).isNull();
@@ -60,7 +63,7 @@ class ThreadServiceTest {
         Long communityId = createCommunity(userId);
         Long keywordId = createKeyword(userId, communityId);
 
-        Thread thread = createThread(userId, keywordId, "sample thread");
+        Thread thread = createThread(userId, keywordId, "sample thread").getData();
 
         threadService.deleteThread(userId, thread.getId());
 
@@ -78,7 +81,7 @@ class ThreadServiceTest {
         Long communityId = createCommunity(userId);
         Long keywordId = createKeyword(userId, communityId);
 
-        Thread thread = createThread(userId, keywordId, "sample thread1");
+        Thread thread = createThread(userId, keywordId, "sample thread1").getData();
         createThread(userId, keywordId, "sample thread2");
         createThread(userId, keywordId, "sample thread3");
         createThread(userId, keywordId, "sample thread4");
@@ -86,7 +89,7 @@ class ThreadServiceTest {
         createChildThread(userId, keywordId, thread.getId(), "sample child thread2");
         createChildThread(userId, keywordId, thread.getId(), "sample child thread3");
 
-        List<ThreadDTO.ThreadResponseDTO> threads = threadService.getThreadsInKeyword(keywordId);
+        List<ThreadResponse.ThreadDTO> threads = threadService.getThreadsInKeyword(keywordId);
 
         assertThat(threads.size()).isEqualTo(4);
         // TODO : 자꾸 자식 쓰레드가 안 읽힌다.
@@ -113,19 +116,14 @@ class ThreadServiceTest {
         return keywordService.createKeyword(userId, communityId, "keyword").getId();
     }
 
-    Thread createThread(Long userId, Long keywordId, String content) {
-        ThreadDTO.CreateThreadInputDTO createThreadInputDTO = new ThreadDTO.CreateThreadInputDTO();
-        createThreadInputDTO.setContent(content);
-        createThreadInputDTO.setKeywordId(keywordId.toString());
+    PreResponseDTO<Thread> createThread(Long userId, Long keywordId, String content) {
+        ThreadRequest.CreateThreadInputDTO createThreadInputDTO = ThreadRequest.CreateThreadInputDTO.from(keywordId, content);
 
         return threadService.creatThread(userId, createThreadInputDTO);
     }
 
-    Thread createChildThread(Long userId, Long keywordId, Long threadId, String content) {
-        ThreadDTO.CreateThreadInputDTO createThreadInputDTO = new ThreadDTO.CreateThreadInputDTO();
-        createThreadInputDTO.setContent(content);
-        createThreadInputDTO.setKeywordId(keywordId.toString());
-        createThreadInputDTO.setParentThreadId(threadId.toString());
+    PreResponseDTO<Thread> createChildThread(Long userId, Long keywordId, Long threadId, String content) {
+        ThreadRequest.CreateThreadInputDTO createThreadInputDTO = ThreadRequest.CreateThreadInputDTO.from(keywordId, threadId, content);
 
         return threadService.creatThread(userId, createThreadInputDTO);
     }
