@@ -1,5 +1,6 @@
 import {
   AddKeywordData,
+  CommunityData,
   JoinKeywordData,
   KeywordRelatedData,
   KeywordUser,
@@ -25,6 +26,12 @@ const fetchLogin = async (username: string) => {
 
 const getKeywords = async (id: string): Promise<KeywordData[]> => {
   const response = await apiInstance.get(`/v1/keyword/${id}`);
+
+  return response.data;
+};
+
+const getUserCommunityList = async (): Promise<CommunityData[]> => {
+  const response = await apiInstance.get('/v1/community');
 
   return response.data;
 };
@@ -136,6 +143,7 @@ const apis = {
   getKeywords,
   joinKeyword,
   disjoinKeyword,
+  getUserCommunityList,
   joinCommunity,
   addKeyword,
   getUserData,

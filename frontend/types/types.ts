@@ -40,6 +40,14 @@ export type UserData = {
   userId: string;
   username: string;
   profileImageUrl: string | null;
+  role: 'ADMIN' | 'USER' | 'MANAGER' | 'GUEST';
+  isFirstInCommunity: boolean | null;
+};
+
+export type CommunityData = {
+  communityId: string;
+  title: string;
+  description: string;
 };
 
 export type Author = {

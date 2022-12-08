@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CommunityItem from './CommunityItem';
 import classnames from 'classnames/bind';
 import styles from '@sass/components/main/CommunityList.module.scss';
-import { MVP_DEFAULT } from '@constants/constants';
+import useUserCommunityQuery from '@hooks/useUserCommunityQuery';
 const cx = classnames.bind(styles);
 
 export type Community = {
@@ -13,18 +13,17 @@ export type Community = {
 };
 
 const CommunityList = () => {
-  const [communityList] = useState<Community[]>([
-    {
-      id: MVP_DEFAULT.COMMUNITY_ID,
-      title: '부스트캠프 웹·모바일 7기',
-      userCount: 360,
-    },
-  ]);
+  const { data: communityList } = useUserCommunityQuery();
 
   return (
     <ul className={cx('community-list')}>
-      {communityList.map(({ id, title, userCount }) => (
-        <CommunityItem id={id} title={title} userCount={userCount} key={id} />
+      {communityList.map(({ communityId, title }) => (
+        <CommunityItem
+          id={communityId}
+          title={title}
+          userCount={360} // API에 반영되지 않아서 우선 부스트캠프 인원 수를 하드코딩함.
+          key={communityId}
+        />
       ))}
     </ul>
   );
