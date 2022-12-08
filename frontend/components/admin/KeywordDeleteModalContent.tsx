@@ -1,5 +1,6 @@
+import { REACT_QUERY_KEY } from '@constants/constants';
 import styles from '@sass/components/admin/keywordDeleteModalContent.module.scss';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import classnames from 'classnames/bind';
 import { useRouter } from 'next/router';
 import apis from '../../apis/apis';
@@ -24,6 +25,7 @@ const KeywordDeleteModalContent = ({
   const router = useRouter();
   const { id } = router.query;
 
+  const queryClient = useQueryClient();
   const { mutate } = useMutation({
     mutationFn: () =>
       apis.deleteKeyword(
@@ -31,6 +33,7 @@ const KeywordDeleteModalContent = ({
         selectedKeywordList.map((selectedKeyword) => selectedKeyword.keywordId),
       ),
     onSuccess: () => {
+      queryClient.invalidateQueries([REACT_QUERY_KEY.KEYWORD, id]);
       closeModal();
     },
   });
