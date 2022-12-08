@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -89,12 +90,20 @@ public class KeywordService {
 
     @Transactional
     public void joinKeyword(JoinKeywordInputDTO joinKeywordInputDTO, Long userId) throws IllegalArgumentException {
-        Keyword keyword = keywordRepository.findOne(joinKeywordInputDTO.getKeywordId());
 
+        Keyword keyword = keywordRepository.findOne(joinKeywordInputDTO.getKeywordId());
+        if (keyword == null) { //TODO: KeywordRepository Data JPA로 변경 및 Optional 처리
+            throw new IllegalArgumentException("존재하지 않는 키워드입니다.");
+        }
         Community community = communityRepository.findById(joinKeywordInputDTO.getCommunityId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 커뮤니티입니다."));
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+
+        Optional<KeywordUser> byUserAndCommunityAndKeyword = keywordUserRepository.findByUserAndCommunityAndKeyword(user, community, keyword);
+        if(byUserAndCommunityAndKeyword.isPresent()) {
+            throw new IllegalArgumentException("이미 가입된 키워드입니다."); //TODO: customException or customExceptionMessage로 변경
+        }
 
         JoinKeywordDTO joinKeywordDTO = JoinKeywordDTO.createJoinKeywordDTO(user, community, keyword);
 
