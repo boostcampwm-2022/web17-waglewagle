@@ -1,9 +1,9 @@
 import {
   AddKeywordData,
-  AddKeywordResponseData,
   JoinKeywordData,
   KeywordRelatedData,
   KeywordUser,
+  MyKeywordData,
   ThreadData,
   UserData,
 } from './../types/types';
@@ -35,13 +35,8 @@ const joinCommunity = async (communityId: string) => {
   });
 };
 
-const joinKeyword = async (joinKeywordData: JoinKeywordData) => {
-  await apiInstance.post('/v1/keyword/join', {
-    data: joinKeywordData,
-  });
-};
-
-const getUserData = async (communityId: string): Promise<UserData> => {
+// isFirstInCommunity가 없으면 isFirstLogin이 항상 null
+const getUserData = async (communityId?: string): Promise<UserData> => {
   const response = await apiInstance.get('/v1/user/me', {
     params: {
       'community-id': communityId,
@@ -65,12 +60,20 @@ const getKeywordAssociations = async (
 
 const addKeyword = async (
   addKeywordData: AddKeywordData,
-): Promise<AddKeywordResponseData> => {
-  const response = await apiInstance.post('/v1/keyword', {
-    data: addKeywordData,
-  });
+): Promise<MyKeywordData> => {
+  const response = await apiInstance.post('/v1/keyword', addKeywordData);
 
   return response.data;
+};
+
+const joinKeyword = async (joinKeywordData: JoinKeywordData) => {
+  await apiInstance.post('/v1/keyword/join', joinKeywordData);
+};
+
+const disjoinKeyword = async (disjoinKeywordData: JoinKeywordData) => {
+  await apiInstance.delete('/v1/keyword/disjoin', {
+    data: disjoinKeywordData,
+  });
 };
 
 const getKeywordThreads = async (keywordId: string): Promise<ThreadData[]> => {
@@ -120,10 +123,19 @@ const deleteThread = async (threadId: string) => {
   return response.data;
 };
 
+const getMyKeywordList = async (
+  communityId: string,
+): Promise<MyKeywordData[]> => {
+  const response = await apiInstance.get(`/v1/keyword/user/${communityId}`);
+
+  return response.data;
+};
+
 const apis = {
   fetchLogin,
   getKeywords,
   joinKeyword,
+  disjoinKeyword,
   joinCommunity,
   addKeyword,
   getUserData,
@@ -133,6 +145,7 @@ const apis = {
   addThread,
   addComments,
   deleteThread,
+  getMyKeywordList,
 };
 
 export default apis;

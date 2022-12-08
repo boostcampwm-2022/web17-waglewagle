@@ -9,11 +9,11 @@ import AddCircleIcon from '@public/images/add-circle.svg';
 import { KEYWORD_ADDER_THEME } from '@constants/constants';
 import { useState } from 'react';
 import useUserMe from '@hooks/useUserMe';
-import { KeywordRelatedData, MyKeywordData } from '../../types/types';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import SeoHead from '@components/common/Head';
 import config from '../../config';
+import { MyKeywordData } from '#types/types';
 
 const LoginModalContent = dynamic(
   () => import('../../components/common/LoginModalContent'),
@@ -22,8 +22,8 @@ const LoginModalContent = dynamic(
   },
 );
 
-const KeywordAddModal = dynamic(
-  () => import('../../components/community/KeywordAddModal'),
+const KeywordAddModalContent = dynamic(
+  () => import('../../components/community/KeywordAddModalContent'),
   {
     loading: () => <Loading />,
   },
@@ -31,30 +31,16 @@ const KeywordAddModal = dynamic(
 
 const Community = () => {
   const router = useRouter();
-  const { id } = router.query;
-  const userData = useUserMe(id as string);
+  const communityId = router.query.id as string;
+  const userData = useUserMe(communityId);
   const [isOpenLoginModal, setIsOpenLoginModal] = useState<boolean>(false);
   const [isOpenKeywordModal, setIsOpenKeywordModal] = useState<boolean>(false);
-  // ======== 이하는 서버 상태 관리르 분리되어야함. ========
-  const [prevAddedKeyword, setPrevAddedKeyword] = useState<string>('');
-  const [relatedKeywordList, setRelatedKeywordList] = useState<
-    KeywordRelatedData[]
-  >([]);
-  const [myKeywordList, setMyKeywordList] = useState<MyKeywordData[]>([]);
 
-  const handleChangePrevAddedKeyword = (newPrevKeyword: string) => {
-    setPrevAddedKeyword(newPrevKeyword);
+  const [prevKeyword, setPrevKeyword] = useState<MyKeywordData>();
+
+  const handleChangePrevKeyword = (newPrevKeyword: MyKeywordData) => {
+    setPrevKeyword(newPrevKeyword);
   };
-
-  const handleChangeMyKeywordList = (newList: MyKeywordData[]) => {
-    setMyKeywordList(newList);
-  };
-
-  const handleChangeRelatedKeywordList = (newList: KeywordRelatedData[]) => {
-    setRelatedKeywordList(newList);
-  };
-
-  // ======== 절취선 ========
 
   const handleClickEnter = () => {
     setIsOpenLoginModal(true);
@@ -62,10 +48,6 @@ const Community = () => {
 
   const handleClickKeywordModal = () => {
     setIsOpenKeywordModal(true);
-  };
-
-  const closeLoginModal = () => {
-    setIsOpenLoginModal(false);
   };
 
   return (
@@ -85,10 +67,7 @@ const Community = () => {
         <KeywordAdder
           theme={KEYWORD_ADDER_THEME.MAIN}
           addButtonValue={<AddCircleIcon />}
-          myKeywordList={myKeywordList}
-          handleChangeMyKeywordList={handleChangeMyKeywordList}
-          handleChangePrevAddedKeyword={handleChangePrevAddedKeyword}
-          handleChangeRelatedKeywordList={handleChangeRelatedKeywordList}
+          handleChangePrevKeyword={handleChangePrevKeyword}
         />
       )}
       <Modal
@@ -101,13 +80,9 @@ const Community = () => {
         isOpenModal={isOpenKeywordModal}
         closeModal={() => setIsOpenKeywordModal(false)}
       >
-        <KeywordAddModal
-          prevAddedKeyword={prevAddedKeyword}
-          myKeywordList={myKeywordList}
-          relatedKeywordList={relatedKeywordList}
-          handleChangeMyKeywordList={handleChangeMyKeywordList}
-          handleChangePrevAddedKeyword={handleChangePrevAddedKeyword}
-          handleChangeRelatedKeywordList={handleChangeRelatedKeywordList}
+        <KeywordAddModalContent
+          prevKeyword={prevKeyword}
+          handleChangePrevKeyword={handleChangePrevKeyword}
         />
       </Modal>
     </CommunityLayout>

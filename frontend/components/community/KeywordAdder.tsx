@@ -3,6 +3,7 @@ import {
   ChangeEventHandler,
   FormEventHandler,
   useState,
+  useEffect,
 } from 'react';
 import { useRouter } from 'next/router';
 import useAutoComplete from '@hooks/useAutoComplete';
@@ -13,70 +14,59 @@ import {
 import styles from '@sass/components/community/KeywordAdderLayout.module.scss';
 import classnames from 'classnames/bind';
 import useKeywordListQuery from '@hooks/useKeywordListQuery';
-import apis from '../../apis/apis';
-import getKeywordIdByKeyword from '@utils/getKeywordIdByKeywordName';
-import { KeywordRelatedData, MyKeywordData } from '../../types/types';
+import checkIsExistKeyword from '@utils/checkIsExistKeyword';
+import useAddKeywordMutation from '@hooks/useAddKeywordMutation';
+import { MyKeywordData } from '#types/types';
+import useJoinKeywordMutation from '@hooks/useJoinKeywordMutation';
 const cx = classnames.bind(styles);
 
 interface KeywordAdderProps {
   theme: string;
   addButtonValue: React.ReactNode | string;
-  myKeywordList: MyKeywordData[];
-  handleChangePrevAddedKeyword: (newPrevKeyword: string) => void;
-  handleChangeMyKeywordList: (newList: MyKeywordData[]) => void;
-  handleChangeRelatedKeywordList: (newList: KeywordRelatedData[]) => void;
+  handleChangePrevKeyword: (prevKeyword: MyKeywordData) => void;
 }
 
 const KeywordAdder = ({
   theme,
   addButtonValue,
-  myKeywordList,
-  handleChangeMyKeywordList,
-  handleChangePrevAddedKeyword,
-  handleChangeRelatedKeywordList,
+  handleChangePrevKeyword,
 }: KeywordAdderProps) => {
   const router = useRouter();
   const communityId: string = router.query.id as string;
+
   const { data: communityKeywordData } = useKeywordListQuery(communityId);
+  const { mutate: addKeywordMutate } = useAddKeywordMutation(
+    handleChangePrevKeyword,
+  );
+  const { mutate: joinKeywordMutate, isError: isJoinError } =
+    useJoinKeywordMutation(handleChangePrevKeyword);
+
   const { searchKeyword, searchResult, changeSearchKeyword } =
     useAutoComplete(communityKeywordData);
-
   const [isOpenDropdown, setIsOpenDropDown] = useState<boolean>(false);
-
-  const getKeywordAssociations = async (keywordId: string) => {
-    const keywordAssociationsData = await apis.getKeywordAssociations(
-      keywordId,
-    );
-    const slicedData = keywordAssociationsData.slice(0, 3);
-    return slicedData;
-  };
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
-    let keywordId = getKeywordIdByKeyword(searchKeyword, communityKeywordData);
+    // 키워드가 커뮤니티에 존재하는지 확인하여 id 혹은 false를 반환하는 함수
+    const keywordId = checkIsExistKeyword(searchKeyword, communityKeywordData);
 
-    handleChangePrevAddedKeyword(searchKeyword);
-
+    // 추상화 수준을 맞춰주기 위해서 join과 add 모두 mutation 내부에서 myKeywordList를 갱신함
     if (keywordId) {
-      // 내 키워드에 추가 => 이후에는 Mutation으로 수정 필요
-      // memberCount를 넣으려면 키워드 추가, 키워드 참여 api 수신 시 모두 memberCount를 포함해서 받거나 memberCount까지 가져와야하기 때문에 myKeywordList에서는 memberCount 제외
-      const newMyKeyword = { keywordId, keywordName: searchKeyword };
-      const updatedMyKeywordList = [...myKeywordList, newMyKeyword];
-      handleChangeMyKeywordList(updatedMyKeywordList);
+      const joinKeywordData = {
+        keywordId,
+        communityId,
+        keywordName: searchKeyword,
+      };
+      joinKeywordMutate(joinKeywordData);
     } else {
-      const body = {
+      const addKeywordData = {
         keywordName: searchKeyword,
         communityId,
       };
-      const result = await apis.addKeyword(body);
-      keywordId = result.keywordId;
-      const updatedMyKeywordList = [...myKeywordList, result];
-      handleChangeMyKeywordList(updatedMyKeywordList);
+      addKeywordMutate(addKeywordData);
     }
 
-    const slicedData = await getKeywordAssociations(keywordId);
-    handleChangeRelatedKeywordList(slicedData);
     setIsOpenDropDown(false);
     changeSearchKeyword('');
   };
@@ -88,11 +78,17 @@ const KeywordAdder = ({
     changeSearchKeyword(e.target.value);
   };
 
-  const handleMouseDownkResultItem: MouseEventHandler<HTMLLIElement> = (e) => {
+  const handleMouseDownResultItem: MouseEventHandler<HTMLLIElement> = (e) => {
     e.preventDefault();
     const target = e.target as HTMLLIElement;
     changeSearchKeyword(target.innerText);
   };
+
+  useEffect(() => {
+    if (isJoinError) {
+      alert('키워드 가입 중 문제가 발생했습니다.');
+    }
+  }, [isJoinError]);
 
   return (
     <div
@@ -103,7 +99,7 @@ const KeywordAdder = ({
       {isOpenDropdown && (
         <SearchResultListLayout layoutTheme={theme}>
           {searchResult.map((word, index) => (
-            <li onMouseDown={handleMouseDownkResultItem} key={index}>
+            <li onMouseDown={handleMouseDownResultItem} key={index}>
               {word}
             </li>
           ))}

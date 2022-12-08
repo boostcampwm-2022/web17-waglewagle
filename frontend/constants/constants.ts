@@ -11,9 +11,15 @@ export enum KEYWORD_ADDER_THEME {
 export enum REACT_QUERY_KEY {
   KEYWORD = 'keyword',
   USERME = 'userme',
+  MY_KEYWORD_LIST = 'myKeywordList',
+  RELATED_KEYWORD = 'relatedKeyword',
 }
 
 export enum MVP_DEFAULT {
   MAIN_PROFILE_URL = '/community/1',
   COMMUNITY_ID = '1',
+}
+
+export enum RELATED_KEYWORD_NUMBERS {
+  KEYWORD_ADD_MODAL = 3,
 }
