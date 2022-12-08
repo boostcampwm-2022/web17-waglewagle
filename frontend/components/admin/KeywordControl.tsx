@@ -72,9 +72,10 @@ const KeywordControl = () => {
       </ul>
       <button
         className={cx('merge-button')}
-        onClick={() => {
-          setIsOpenMergeModal(true);
-        }}
+        disabled={
+          keywordList.filter((keyword) => keyword.isSelected).length < 2
+        }
+        onClick={() => setIsOpenMergeModal(true)}
       >
         키워드 병합
       </button>
@@ -91,9 +92,10 @@ const KeywordControl = () => {
       </Modal>
       <button
         className={cx('delete-button')}
-        onClick={() => {
-          setIsOpenDeleteModal(true);
-        }}
+        disabled={
+          keywordList.filter((keyword) => keyword.isSelected).length < 1
+        }
+        onClick={() => setIsOpenDeleteModal(true)}
       >
         키워드 삭제
       </button>
