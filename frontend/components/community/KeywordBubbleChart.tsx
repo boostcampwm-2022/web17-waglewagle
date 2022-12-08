@@ -52,7 +52,10 @@ const KeywordBubbleChart = () => {
     if (!fetchedKeywordData) {
       return;
     }
-    const slicedData = fetchedKeywordData.slice(0, 30);
+
+    const slicedData = fetchedKeywordData
+      .filter((keywordData) => keywordData.memberCount !== 0)
+      .slice(0, 30);
     setSlicedCommunityKeywordData(slicedData);
   }, [fetchedKeywordData]);
 
