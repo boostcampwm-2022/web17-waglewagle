@@ -30,4 +30,9 @@ public class CommunityRepository {
                 .fetch();
 
     }
+
+    public Community save(Community community) {
+        em.persist(community);
+        return community;
+    }
 }

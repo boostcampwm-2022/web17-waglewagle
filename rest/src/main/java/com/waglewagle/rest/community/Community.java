@@ -3,6 +3,8 @@ package com.waglewagle.rest.community;
 
 import com.waglewagle.rest.user.User;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -11,6 +13,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class Community {
 
     @Id @GeneratedValue
@@ -31,4 +34,10 @@ public class Community {
     private LocalDateTime updatedAt;
 
     private LocalDateTime deletedAt;
+
+    public Community(String title, String summary, User user) {
+        this.title = title;
+        this.summary = summary;
+        admin = user;
+    }
 }

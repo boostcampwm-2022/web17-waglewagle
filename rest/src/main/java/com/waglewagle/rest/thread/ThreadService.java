@@ -86,7 +86,7 @@ public class ThreadService {
                                                         .values()
                                                         .stream()
                                                         .collect(Collectors.toList());;
-                                                        
+
         threadResponseDTOS.sort(Comparator.comparingLong(dto -> Long.parseLong(dto.getThreadId())));
 
         return  threadResponseDTOS;

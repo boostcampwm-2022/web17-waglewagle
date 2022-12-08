@@ -1,5 +1,6 @@
 package com.waglewagle.rest.community;
 
+import com.waglewagle.rest.common.PreResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,4 +30,19 @@ public class CommunityController {
         return new ResponseEntity<>(communityResponseDTOs, HttpStatus.OK);
     }
 
+
+    @PostMapping("")
+    public ResponseEntity createCommunity(@RequestBody CreateCommunityInputDTO createCommunityInputDTO,
+                                          @CookieValue("user_id") Long userId) {
+
+        PreResponseDTO<CommunityResponseDTO> preResponseDTO = communityService.createCommunity(userId,
+                                                                                               createCommunityInputDTO.getTitle(),
+                                                                                               createCommunityInputDTO.getDescription());
+
+        return new ResponseEntity(
+                preResponseDTO.getData(),
+                preResponseDTO.getHttpStatus()
+        );
+
+    }
 }
