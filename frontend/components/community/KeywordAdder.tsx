@@ -3,6 +3,7 @@ import {
   ChangeEventHandler,
   FormEventHandler,
   useState,
+  useEffect,
 } from 'react';
 import { useRouter } from 'next/router';
 import useAutoComplete from '@hooks/useAutoComplete';
@@ -37,9 +38,8 @@ const KeywordAdder = ({
   const { mutate: addKeywordMutate } = useAddKeywordMutation(
     handleChangePrevKeyword,
   );
-  const { mutate: joinKeywordMutate } = useJoinKeywordMutation(
-    handleChangePrevKeyword,
-  );
+  const { mutate: joinKeywordMutate, isError: isJoinError } =
+    useJoinKeywordMutation(handleChangePrevKeyword);
 
   const { searchKeyword, searchResult, changeSearchKeyword } =
     useAutoComplete(communityKeywordData);
@@ -51,6 +51,7 @@ const KeywordAdder = ({
     // 키워드가 커뮤니티에 존재하는지 확인하여 id 혹은 false를 반환하는 함수
     const keywordId = checkIsExistKeyword(searchKeyword, communityKeywordData);
 
+    // 추상화 수준을 맞춰주기 위해서 join과 add 모두 mutation 내부에서 myKeywordList를 갱신함
     if (keywordId) {
       const joinKeywordData = {
         keywordId,
@@ -82,6 +83,12 @@ const KeywordAdder = ({
     const target = e.target as HTMLLIElement;
     changeSearchKeyword(target.innerText);
   };
+
+  useEffect(() => {
+    if (isJoinError) {
+      alert('키워드 가입 중 문제가 발생했습니다.');
+    }
+  }, [isJoinError]);
 
   return (
     <div
