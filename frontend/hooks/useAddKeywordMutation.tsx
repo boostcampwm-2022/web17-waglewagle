@@ -12,14 +12,14 @@ const useAddKeywordMutation = (
   const communityId = router.query.id as string;
   const queryClient = useQueryClient();
 
-  const addMyKeyword = async (
+  const mutateAddKeyword = async (
     addKeywordData: AddKeywordData,
   ): Promise<MyKeywordData> => {
     const data = await apis.addKeyword(addKeywordData);
     return data;
   };
 
-  const { mutate, isError, error } = useMutation(addMyKeyword, {
+  const { mutate, isError, error } = useMutation(mutateAddKeyword, {
     onSuccess: (addKeywordResponse) => {
       queryClient.setQueryData(
         [REACT_QUERY_KEY.MY_KEYWORD_LIST, communityId],

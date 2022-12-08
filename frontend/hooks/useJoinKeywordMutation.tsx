@@ -13,7 +13,7 @@ const useJoinKeywordMutation = (
   const queryClient = useQueryClient();
 
   // mutationFn
-  const joinMyKeyword = async (joinKeywordFullData: {
+  const mutateJoinKeyword = async (joinKeywordFullData: {
     keywordId: string;
     communityId: string;
     keywordName: string;
@@ -25,7 +25,7 @@ const useJoinKeywordMutation = (
     await apis.joinKeyword(joinKeywordData);
   };
 
-  const { mutate, isError, error } = useMutation(joinMyKeyword, {
+  const { mutate, isError, error } = useMutation(mutateJoinKeyword, {
     onSuccess: (_, joinKeywordFullData) => {
       const prevKeywordData: MyKeywordData = {
         keywordId: joinKeywordFullData.keywordId,
