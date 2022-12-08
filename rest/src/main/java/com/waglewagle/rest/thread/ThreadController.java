@@ -1,7 +1,9 @@
 package com.waglewagle.rest.thread;
 
-import com.waglewagle.rest.keyword.KeywordService;
-import com.waglewagle.rest.thread.ThreadDTO.*;
+import com.waglewagle.rest.keyword.service.KeywordService;
+import com.waglewagle.rest.thread.ThreadDTO.CreateThreadInputDTO;
+import com.waglewagle.rest.thread.ThreadDTO.DeleteThreadDTO;
+import com.waglewagle.rest.thread.ThreadDTO.ThreadResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,16 +54,16 @@ public class ThreadController {
      * Community Thread 읽기
      * 유저 정보를 함께 줘야한다.
      * Thread {
-     *   threadId: string
-     *   content: string
-     *   user {
-     *     userId: string
-     *     username: string
-     *     profileImageUrl: string
-     *   }
-     *   childThreads: Thread[]
-     *   created_at: Date(?)
-     *   updated_at: Date(?)
+     * threadId: string
+     * content: string
+     * user {
+     * userId: string
+     * username: string
+     * profileImageUrl: string
+     * }
+     * childThreads: Thread[]
+     * created_at: Date(?)
+     * updated_at: Date(?)
      * }
      */
     @GetMapping("/keyword")

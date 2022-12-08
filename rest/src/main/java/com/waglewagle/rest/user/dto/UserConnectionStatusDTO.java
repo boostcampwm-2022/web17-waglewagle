@@ -1,6 +1,6 @@
 package com.waglewagle.rest.user.dto;
 
-import com.waglewagle.rest.user.User;
+import com.waglewagle.rest.user.entity.User;
 import lombok.Getter;
 
 import java.time.LocalDateTime;

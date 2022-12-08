@@ -1,10 +1,10 @@
 package com.waglewagle.rest.thread;
 
-import com.waglewagle.rest.community.CommunityService;
 import com.waglewagle.rest.community.repository.CommunityRepository;
-import com.waglewagle.rest.keyword.KeywordService;
-import com.waglewagle.rest.user.UserService;
+import com.waglewagle.rest.community.service.CommunityService;
+import com.waglewagle.rest.keyword.service.KeywordService;
 import com.waglewagle.rest.user.repository.UserRepository;
+import com.waglewagle.rest.user.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

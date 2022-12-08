@@ -1,6 +1,7 @@
 package com.waglewagle.rest.user.repository;
 
-import com.waglewagle.rest.user.User;
+import com.waglewagle.rest.user.entity.User;
+import com.waglewagle.rest.user.repository.custom.UserCustomRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

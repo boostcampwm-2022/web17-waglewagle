@@ -1,11 +1,11 @@
 package com.waglewagle.rest.thread;
 
-import com.waglewagle.rest.keyword.Keyword;
-import com.waglewagle.rest.keyword.KeywordRepository;
+import com.waglewagle.rest.keyword.entity.Keyword;
+import com.waglewagle.rest.keyword.repository.KeywordRepository;
 import com.waglewagle.rest.thread.ThreadDTO.CreateThreadDTO;
 import com.waglewagle.rest.thread.ThreadDTO.CreateThreadInputDTO;
 import com.waglewagle.rest.thread.ThreadDTO.ThreadResponseDTO;
-import com.waglewagle.rest.user.User;
+import com.waglewagle.rest.user.entity.User;
 import com.waglewagle.rest.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.waglewagle.rest.thread.ThreadDTO.CreateThreadDTO.createCreateThreadDTO;
+import static com.waglewagle.rest.thread.ThreadDTO.CreateThreadDTO.from;
 
 @Service
 @RequiredArgsConstructor
@@ -43,7 +43,7 @@ public class ThreadService {
         String content = createThreadInputDTO.getContent();
 
         //TODO: java Optional 문법!
-        CreateThreadDTO createThreadDTO = createCreateThreadDTO(author, parentThread, keyword, content);
+        CreateThreadDTO createThreadDTO = from(author, parentThread, keyword, content);
 
         return threadRepository.save(new Thread(createThreadDTO));
     }
@@ -68,27 +68,28 @@ public class ThreadService {
     @Transactional(readOnly = true)
     public List<ThreadResponseDTO> getThreadsInKeyword(Long keywordId) {
         List<Thread> parentThreads = threadRepository.findParentThreadsInKeyword(keywordId);
-        List<Thread> childThreads = threadRepository.findChildThreads(parentThreads
-                                                                        .stream()
-                                                                        .map(t -> t.getId())
-                                                                        .collect(Collectors.toList()));
+        List<Thread> childThreads = threadRepository
+                .findChildThreads(
+                        parentThreads
+                                .stream()
+                                .map(t -> t.getId())
+                                .collect(Collectors.toList()));
         HashMap<Long, ThreadResponseDTO> idToDTO = new HashMap<>();
         parentThreads.forEach(thread -> {
             idToDTO.put(thread.getId(), ThreadResponseDTO.of(thread));
         });
         childThreads.forEach(thread -> {
-            idToDTO.get(thread.getParentThread().getId())
-                        .getChildThreads()
-                        .add(ThreadResponseDTO.of(thread));
+            idToDTO
+                    .get(thread.getParentThread().getId())
+                    .getChildThreads()
+                    .add(ThreadResponseDTO.of(thread));
         });
 
-        List<ThreadResponseDTO> threadResponseDTOS = idToDTO
-                                                        .values()
-                                                        .stream()
-                                                        .collect(Collectors.toList());;
+        List<ThreadResponseDTO> threadResponseDTOS = idToDTO.values().stream().collect(Collectors.toList());
+        ;
 
         threadResponseDTOS.sort(Comparator.comparingLong(dto -> Long.parseLong(dto.getThreadId())));
 
-        return  threadResponseDTOS;
+        return threadResponseDTOS;
     }
 }

@@ -1,17 +1,15 @@
 package com.waglewagle.rest.thread;
 
-import com.waglewagle.rest.keyword.Keyword;
-import com.waglewagle.rest.user.User;
+import com.waglewagle.rest.keyword.entity.Keyword;
 import com.waglewagle.rest.user.dto.AuthorDTO;
+import com.waglewagle.rest.user.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ThreadDTO {
 
@@ -45,7 +43,7 @@ public class ThreadDTO {
         private Keyword keyword;
         private String content;
 
-        static CreateThreadDTO createCreateThreadDTO(User author, Thread parentThread, Keyword keyword, String content) {
+        static CreateThreadDTO from(User author, Thread parentThread, Keyword keyword, String content) {
             CreateThreadDTO createThreadDTO = new CreateThreadDTO();
             createThreadDTO.setAuthor(author);
             createThreadDTO.setParentThread(parentThread);

@@ -1,8 +1,8 @@
 package com.waglewagle.rest.user.dto;
 
-import com.waglewagle.rest.communityUser.CommunityUser;
-import com.waglewagle.rest.user.Role;
-import com.waglewagle.rest.user.User;
+import com.waglewagle.rest.community.entity.CommunityUser;
+import com.waglewagle.rest.user.entity.User;
+import com.waglewagle.rest.user.enums.Role;
 import lombok.Getter;
 
 public class UserInfoDTO {
@@ -15,7 +15,7 @@ public class UserInfoDTO {
         private Role role;
         private Boolean isFirstInCommunity;
 
-        public UserInfoResDTO (User user, CommunityUser communityUser) {
+        public UserInfoResDTO(User user, CommunityUser communityUser) {
             userId = String.valueOf(user.getId());
             username = user.getUsername();
             profileImageUrl = user.getProfileImageUrl();
@@ -23,7 +23,7 @@ public class UserInfoDTO {
             isFirstInCommunity = communityUser.getIsFirstVisit();
         }
 
-        public UserInfoResDTO (User user) {
+        public UserInfoResDTO(User user) {
             userId = String.valueOf(user.getId());
             username = user.getUsername();
             profileImageUrl = user.getProfileImageUrl();

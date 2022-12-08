@@ -1,7 +1,7 @@
 package com.waglewagle.rest.user.dto;
 
-import com.waglewagle.rest.communityUser.CommunityUser;
-import com.waglewagle.rest.user.User;
+import com.waglewagle.rest.community.entity.CommunityUser;
+import com.waglewagle.rest.user.entity.User;
 import lombok.Getter;
 
 @Getter
@@ -10,7 +10,8 @@ public class AuthorDTO {
     private String username;
     private String profileImageUrl;
 
-    protected AuthorDTO() {}
+    protected AuthorDTO() {
+    }
 
     public static AuthorDTO createAuthorDTO(User user) {
         AuthorDTO authorDTO = new AuthorDTO();

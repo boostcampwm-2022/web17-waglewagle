@@ -1,9 +1,11 @@
 package com.waglewagle.rest.thread;
 
-import com.waglewagle.rest.keyword.Keyword;
-import com.waglewagle.rest.thread.ThreadDTO.*;
-import com.waglewagle.rest.user.User;
-import lombok.*;
+import com.waglewagle.rest.keyword.entity.Keyword;
+import com.waglewagle.rest.thread.ThreadDTO.CreateThreadDTO;
+import com.waglewagle.rest.user.entity.User;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
