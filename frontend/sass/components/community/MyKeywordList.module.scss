@@ -8,7 +8,9 @@
 }
 
 .list-container {
+  width: 100%;
   display: flex;
   margin: 15px;
   gap: 15px;
+  flex-wrap: wrap;
 }
