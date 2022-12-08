@@ -1,6 +1,7 @@
 import { AddKeywordData, MyKeywordData } from '#types/types';
 import { REACT_QUERY_KEY } from '@constants/constants';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 import { useRouter } from 'next/router';
 import apis from '../apis/apis';
 
@@ -19,8 +20,10 @@ const useAddKeywordMutation = (
     return data;
   };
 
-  const { mutate, isError, error } = useMutation(mutateAddKeyword, {
-    onSuccess: (addKeywordResponse) => {
+  // TODO: 에러처리할 수 있도록 제네릭 타입 지정하기
+  const { mutate, isError, error } = useMutation({
+    mutationFn: mutateAddKeyword,
+    onSuccess: (addKeywordResponse: MyKeywordData) => {
       queryClient.setQueryData(
         [REACT_QUERY_KEY.MY_KEYWORD_LIST, communityId],
         (old: MyKeywordData[] | undefined) => {

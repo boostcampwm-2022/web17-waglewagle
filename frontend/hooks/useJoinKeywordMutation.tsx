@@ -25,7 +25,8 @@ const useJoinKeywordMutation = (
     await apis.joinKeyword(joinKeywordData);
   };
 
-  const { mutate, isError, error } = useMutation(mutateJoinKeyword, {
+  const { mutate, isError, error } = useMutation({
+    mutationFn: mutateJoinKeyword,
     onSuccess: (_, joinKeywordFullData) => {
       const prevKeywordData: MyKeywordData = {
         keywordId: joinKeywordFullData.keywordId,

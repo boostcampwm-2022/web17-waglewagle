@@ -26,7 +26,8 @@ const useDisjoinKeywordMutation = () => {
     );
   };
 
-  const { mutate, isError, error } = useMutation(mutateDisjoinKeyword, {
+  const { mutate, isError, error } = useMutation({
+    mutationFn: mutateDisjoinKeyword,
     onSuccess: (_, disjoinKeywordData) => {
       queryClient.setQueryData(
         [REACT_QUERY_KEY.MY_KEYWORD_LIST, communityId],
