@@ -1,49 +1,48 @@
-package com.waglewagle.rest.user;
+package com.waglewagle.rest.user.repository;
 
 import com.querydsl.jpa.JPQLQueryFactory;
+import com.waglewagle.rest.communityUser.QCommunityUser;
+import com.waglewagle.rest.user.OauthMethod;
+import com.waglewagle.rest.user.QUser;
+import com.waglewagle.rest.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
 import java.util.List;
-import java.util.Optional;
 
 import static com.waglewagle.rest.communityUser.QCommunityUser.communityUser;
 import static com.waglewagle.rest.keywordUser.QKeywordUser.keywordUser;
 import static com.waglewagle.rest.user.QUser.user;
 
-
-@Repository
 @RequiredArgsConstructor
-public class UserRepository {
+@Repository
+public class UserCustomRepositoryImpl implements UserCustomRepository{
 
     private final EntityManager em;
     private final JPQLQueryFactory jpqlQueryFactory;
 
-    @Transactional
-    public User save(User user) {
+//    @Transactional
+//    public User save(User user) {
+//
+//        //TODO: TEMP!!!
+//        List<User> emailList = em.createQuery("select u from User u Where u.email = :email", User.class)
+//                .setParameter("email", user.getEmail()).getResultList();
+//
+//        if (emailList.isEmpty()) {
+//            em.persist(user);
+//            return user;
+//        } else {
+//            return em.merge(user); //TODO: merge 쓰지말랬는데, 왜? 대안은?
+//        }
+//    }
 
-        //TODO: TEMP!!!
-        List<User> emailList = em.createQuery("select u from User u Where u.email = :email", User.class)
-                .setParameter("email", user.getEmail()).getResultList();
-
-        if (emailList.isEmpty()) {
-            em.persist(user);
-            return user;
-        } else {
-            return em.merge(user); //TODO: merge 쓰지말랬는데, 왜? 대안은?
-        }
-    }
-
-    @Transactional(readOnly = true)
-    public User findById (Long userId) {
-        User user = em.find(User.class, userId);
-        return user;
-    }
-
+//    @Transactional(readOnly = true)
+//    public User findById (Long userId) {
+//        User user = em.find(User.class, userId);
+//        return user;
+//    }
     @Transactional
     public Long findOrSaveUsername(String username) {
         User user = jpqlQueryFactory
@@ -63,13 +62,13 @@ public class UserRepository {
         return user.getId();
     }
 
-    public User findByUsername(String username) {
-        return jpqlQueryFactory
-                .select(user)
-                .from(user)
-                .where(user.username.eq(username))
-                .fetchOne();
-    }
+//    public User findByUsername(String username) {
+//        return jpqlQueryFactory
+//                .select(user)
+//                .from(user)
+//                .where(user.username.eq(username))
+//                .fetchOne();
+//    }
 
     public List<User> findByKeywordUserKeywordId(Long keywordId) {
         return jpqlQueryFactory

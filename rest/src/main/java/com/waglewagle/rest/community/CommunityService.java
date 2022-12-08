@@ -1,15 +1,16 @@
 package com.waglewagle.rest.community;
 
 import com.waglewagle.rest.common.PreResponseDTO;
+import com.waglewagle.rest.community.repository.CommunityRepository;
 import com.waglewagle.rest.user.User;
-import com.waglewagle.rest.user.UserRepository;
+import com.waglewagle.rest.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 
 import static com.waglewagle.rest.community.CommunityDTO.*;
@@ -22,9 +23,8 @@ public class CommunityService {
 
     @Transactional
     public boolean isExistCommunity(Long communityId) {
-        Community community = communityRepository.findOneById(communityId);
 
-        return community != null;
+        return communityRepository.findById(communityId).isPresent();
     }
 
     @Transactional
@@ -39,7 +39,12 @@ public class CommunityService {
                                                                 String title,
                                                                 String description) {
 
-        User user = userRepository.findById(userId);
+        Optional<User> optUser = userRepository.findById(userId);
+        if (optUser.isEmpty()) {
+            return new PreResponseDTO<>(null, HttpStatus.FORBIDDEN);
+        }
+        User user = optUser.get();
+
         Community community = new Community(title, description, user);
 
         communityRepository.save(community);

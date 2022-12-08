@@ -6,7 +6,7 @@ import com.waglewagle.rest.thread.ThreadDTO.CreateThreadDTO;
 import com.waglewagle.rest.thread.ThreadDTO.CreateThreadInputDTO;
 import com.waglewagle.rest.thread.ThreadDTO.ThreadResponseDTO;
 import com.waglewagle.rest.user.User;
-import com.waglewagle.rest.user.UserRepository;
+import com.waglewagle.rest.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +25,7 @@ public class ThreadService {
     private final KeywordRepository keywordRepository;
 
     @Transactional
-    public Thread creatThread(Long userId, CreateThreadInputDTO createThreadInputDTO) {
+    public Thread creatThread(Long userId, CreateThreadInputDTO createThreadInputDTO) throws IllegalArgumentException {
 
         Long parentThreadId = createThreadInputDTO.getParentThreadId();
         Thread parentThread = null;
@@ -38,7 +38,7 @@ public class ThreadService {
             parentThread = threadRepository.findById(parentThreadId).filter(pt -> pt.getParentThread() == null).get();
         }
 
-        User author = userRepository.findById(userId);
+        User author = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
         Keyword keyword = keywordRepository.findOne(createThreadInputDTO.getKeywordId());
         String content = createThreadInputDTO.getContent();
 

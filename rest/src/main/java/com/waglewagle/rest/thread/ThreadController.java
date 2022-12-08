@@ -24,12 +24,14 @@ public class ThreadController {
      */
     @PostMapping("")
     @ResponseBody
-    public ResponseEntity<Boolean> createThread(@CookieValue("user_id") Long userId,
-                                                @RequestBody CreateThreadInputDTO createThreadInputDTO) {
+    public ResponseEntity<String> createThread(@CookieValue("user_id") Long userId, @RequestBody CreateThreadInputDTO createThreadInputDTO) {
 
-        Thread thread = threadService.creatThread(userId, createThreadInputDTO);
-
-        return new ResponseEntity<>(true, HttpStatus.CREATED);
+        try {
+            threadService.creatThread(userId, createThreadInputDTO);
+            return new ResponseEntity<>(null, HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
     /**

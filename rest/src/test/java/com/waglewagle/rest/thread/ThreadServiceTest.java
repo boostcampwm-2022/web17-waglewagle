@@ -1,19 +1,16 @@
 package com.waglewagle.rest.thread;
 
-import com.waglewagle.rest.community.CommunityRepository;
 import com.waglewagle.rest.community.CommunityService;
+import com.waglewagle.rest.community.repository.CommunityRepository;
 import com.waglewagle.rest.keyword.KeywordService;
-import com.waglewagle.rest.user.UserRepository;
 import com.waglewagle.rest.user.UserService;
+import com.waglewagle.rest.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
