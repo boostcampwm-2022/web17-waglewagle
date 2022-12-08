@@ -13,59 +13,57 @@ import {
 import styles from '@sass/components/community/KeywordAdderLayout.module.scss';
 import classnames from 'classnames/bind';
 import useKeywordListQuery from '@hooks/useKeywordListQuery';
-import apis from '../../apis/apis';
-import getKeywordIdByKeyword from '@utils/getKeywordIdByKeywordName';
+import checkIsExistKeyword from '@utils/checkIsExistKeyword';
 import useAddKeywordMutation from '@hooks/useAddKeywordMutation';
+import { MyKeywordData } from '#types/types';
+import useJoinKeywordMutation from '@hooks/useJoinKeywordMutation';
 const cx = classnames.bind(styles);
 
 interface KeywordAdderProps {
   theme: string;
   addButtonValue: React.ReactNode | string;
-  isNeedRelated: boolean;
+  handleChangePrevKeyword: (prevKeyword: MyKeywordData) => void;
 }
 
 const KeywordAdder = ({
   theme,
   addButtonValue,
-  isNeedRelated,
+  handleChangePrevKeyword,
 }: KeywordAdderProps) => {
   const router = useRouter();
   const communityId: string = router.query.id as string;
+
   const { data: communityKeywordData } = useKeywordListQuery(communityId);
+  const { mutate: addKeywordMutate } = useAddKeywordMutation(
+    handleChangePrevKeyword,
+  );
+  const { mutate: joinKeywordMutate } = useJoinKeywordMutation(
+    handleChangePrevKeyword,
+  );
+
   const { searchKeyword, searchResult, changeSearchKeyword } =
     useAutoComplete(communityKeywordData);
-
   const [isOpenDropdown, setIsOpenDropDown] = useState<boolean>(false);
-
-  const getKeywordAssociations = async (keywordId: string) => {
-    const keywordAssociationsData = await apis.getKeywordAssociations(
-      keywordId,
-    );
-    const slicedData = keywordAssociationsData.slice(0, 3);
-    return slicedData;
-  };
-
-  const { addKeywordMutate } = useAddKeywordMutation();
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
-    let keywordId = getKeywordIdByKeyword(searchKeyword, communityKeywordData);
+    // 키워드가 커뮤니티에 존재하는지 확인하여 id 혹은 false를 반환하는 함수
+    const keywordId = checkIsExistKeyword(searchKeyword, communityKeywordData);
 
     if (keywordId) {
-      await apis.joinKeyword({ keywordId, communityId });
+      const joinKeywordData = {
+        keywordId,
+        communityId,
+        keywordName: searchKeyword,
+      };
+      joinKeywordMutate(joinKeywordData);
     } else {
-      const body = {
+      const addKeywordData = {
         keywordName: searchKeyword,
         communityId,
       };
-      const mutationResult = addKeywordMutate(body);
-      const result = await apis.addKeyword(body);
-      keywordId = result.keywordId;
-    }
-
-    if (isNeedRelated) {
-      await getKeywordAssociations(keywordId);
+      addKeywordMutate(addKeywordData);
     }
 
     setIsOpenDropDown(false);
