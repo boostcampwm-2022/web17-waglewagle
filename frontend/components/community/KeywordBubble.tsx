@@ -5,6 +5,8 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import styles from '@sass/components/community/KeywordBubble.module.scss';
 import classnames from 'classnames/bind';
+import { KeywordGroupData } from '#types/types';
+import KeywordGroupInfoModalContent from './KeywordGroupInfoModalContent';
 const cx = classnames.bind(styles);
 
 const KeywordModalContent = dynamic(
@@ -21,6 +23,7 @@ interface KeywordBubbleProps {
   posX: number;
   posY: number;
   radius: number;
+  handleChangeKeywordGroupData: (newKeywordGroupData: KeywordGroupData) => void;
 }
 
 // requestAnimationFrame으로 이동
@@ -31,6 +34,7 @@ const KeywordBubble = ({
   posX,
   posY,
   radius,
+  handleChangeKeywordGroupData,
 }: KeywordBubbleProps) => {
   const router = useRouter();
   const communityId: string = router.query.id as string;
@@ -38,7 +42,8 @@ const KeywordBubble = ({
   const [isOpenKeywordModal, setIsOpenKeywordModal] = useState<boolean>(false);
 
   const handleClick = () => {
-    userData && setIsOpenKeywordModal(true); // 유저 정보가 있을때만 모달창을 띄워줌
+    userData && handleChangeKeywordGroupData({ keywordId, keyword });
+    // userData && setIsOpenKeywordModal(true); // 유저 정보가 있을때만 모달창을 띄워줌
   };
 
   return (
@@ -59,7 +64,7 @@ const KeywordBubble = ({
         isOpenModal={isOpenKeywordModal}
         closeModal={() => setIsOpenKeywordModal(false)}
       >
-        <KeywordModalContent keywordId={keywordId} keyword={keyword} />
+        <KeywordGroupInfoModalContent />
       </Modal>
     </div>
   );

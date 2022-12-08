@@ -50,9 +50,10 @@ const Community = () => {
     setPrevKeyword(newPrevKeyword);
   };
 
-  const handleChangeKeywordGroupDate = (
+  const handleChangeKeywordGroupData = (
     newKeywordGroupData: KeywordGroupData,
   ) => {
+    setIsOpenKeywordGroupModal(true);
     setKeywordGroupData(newKeywordGroupData);
   };
 
@@ -96,7 +97,10 @@ const Community = () => {
         handleClickKeywordModal={handleClickKeywordModal}
         handleClickEnter={handleClickEnter}
       />
-      <KeywordBubbleChart isMyKeywordHighlight={isMyKeywordHighlight} />
+      <KeywordBubbleChart
+        isMyKeywordHighlight={isMyKeywordHighlight}
+        handleChangeKeywordGroupData={handleChangeKeywordGroupData}
+      />
       {userData && (
         <MainKeywordHandlerLayout>
           <KeywordAdder

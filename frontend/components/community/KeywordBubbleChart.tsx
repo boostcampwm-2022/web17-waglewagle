@@ -1,4 +1,4 @@
-import { BubbleData, KeywordData } from '#types/types';
+import { BubbleData, KeywordData, KeywordGroupData } from '#types/types';
 import { Loading } from '@components/common';
 import { KEYWORD_BUBBLE_MAX_NUMBER } from '@constants/constants';
 import useKeywordListQuery from '@hooks/useKeywordListQuery';
@@ -17,10 +17,12 @@ const cx = classnames.bind(styles);
 
 interface KeywordBubbleChartProps {
   isMyKeywordHighlight: boolean;
+  handleChangeKeywordGroupData: (newKeywordGroupDate: KeywordGroupData) => void;
 }
 
 const KeywordBubbleChart = ({
   isMyKeywordHighlight,
+  handleChangeKeywordGroupData,
 }: KeywordBubbleChartProps) => {
   const router = useRouter();
   const communityId: string = router.query.id as string;
@@ -128,6 +130,7 @@ const KeywordBubbleChart = ({
           posX={bubbleData.circle.x}
           posY={bubbleData.circle.y}
           radius={bubbleData.circle.radius}
+          handleChangeKeywordGroupData={handleChangeKeywordGroupData}
         />
       ))}
     </div>
