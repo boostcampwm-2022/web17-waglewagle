@@ -1,7 +1,6 @@
 import { AddKeywordData, MyKeywordData } from '#types/types';
 import { REACT_QUERY_KEY } from '@constants/constants';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
 import { useRouter } from 'next/router';
 import apis from '../apis/apis';
 
