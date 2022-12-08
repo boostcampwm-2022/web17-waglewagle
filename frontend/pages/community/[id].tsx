@@ -6,11 +6,7 @@ import {
 } from '@components/community';
 import KeywordAdder from '@components/community/KeywordAdder';
 import AddCircleIcon from '@public/images/add-circle.svg';
-import {
-  KEYWORD_ADDER_THEME,
-  MVP_DEFAULT,
-  REACT_QUERY_KEY,
-} from '@constants/constants';
+import { KEYWORD_ADDER_THEME, MVP_DEFAULT } from '@constants/constants';
 import { useState, useEffect } from 'react';
 import useUserMe from '@hooks/useUserMe';
 import { useRouter } from 'next/router';
@@ -19,7 +15,8 @@ import SeoHead from '@components/common/Head';
 import config from '../../config';
 import { MyKeywordData } from '#types/types';
 import apis from '../../apis/apis';
-import { useQueryClient } from '@tanstack/react-query';
+import MyKeywordHighlight from '@components/community/MyKeywordHighlight';
+import MainKeywordHandlerLayout from '@components/community/MainKeywordHandlerLayout';
 
 const LoginModalContent = dynamic(
   () => import('../../components/common/LoginModalContent'),
@@ -39,6 +36,8 @@ const Community = () => {
   const router = useRouter();
   const communityId = router.query.id as string;
   const userData = useUserMe(communityId);
+  const [isMyKeywordHighlight, setIsMyKeywordHighlight] =
+    useState<boolean>(false);
   const [isOpenLoginModal, setIsOpenLoginModal] = useState<boolean>(false);
   const [isOpenKeywordModal, setIsOpenKeywordModal] = useState<boolean>(false);
 
@@ -72,6 +71,10 @@ const Community = () => {
     setIsOpenKeywordModal(false);
   };
 
+  const toggleIsMyKeywordHighlight = () => {
+    setIsMyKeywordHighlight((prev) => !prev);
+  };
+
   return (
     <CommunityLayout>
       <SeoHead
@@ -84,13 +87,18 @@ const Community = () => {
         handleClickKeywordModal={handleClickKeywordModal}
         handleClickEnter={handleClickEnter}
       />
-      <KeywordBubbleChart />
+      <KeywordBubbleChart isMyKeywordHighlight={isMyKeywordHighlight} />
       {userData && (
-        <KeywordAdder
-          theme={KEYWORD_ADDER_THEME.MAIN}
-          addButtonValue={<AddCircleIcon />}
-          handleChangePrevKeyword={handleChangePrevKeyword}
-        />
+        <MainKeywordHandlerLayout>
+          <KeywordAdder
+            theme={KEYWORD_ADDER_THEME.MAIN}
+            addButtonValue={<AddCircleIcon />}
+            handleChangePrevKeyword={handleChangePrevKeyword}
+          />
+          <MyKeywordHighlight
+            toggleIsMyKeywordHighlight={toggleIsMyKeywordHighlight}
+          />
+        </MainKeywordHandlerLayout>
       )}
       <Modal
         isOpenModal={isOpenLoginModal}

@@ -122,7 +122,7 @@ const KeywordBubbleChart = ({
       {bubbleDataList.map((bubbleData, index) => (
         <KeywordBubble
           key={index}
-          isHighlight={bubbleData.isJoined && isMyKeywordHighlight}
+          isHighlight={bubbleData.isJoined && isMyKeywordHighlight} // isJoined만 변경되었을때는 리렌더링이 발생하지 않도록함.
           keywordId={bubbleData.keywordId}
           keyword={bubbleData.keyword}
           posX={bubbleData.circle.x}

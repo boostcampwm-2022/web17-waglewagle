@@ -1,10 +1,10 @@
 import { Loading, Modal } from '@components/common';
 import useUserMe from '@hooks/useUserMe';
-import styles from '@sass/components/community/KeywordBubble.module.scss';
-import classnames from 'classnames/bind';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import styles from '@sass/components/community/KeywordBubble.module.scss';
+import classnames from 'classnames/bind';
 const cx = classnames.bind(styles);
 
 const KeywordModalContent = dynamic(

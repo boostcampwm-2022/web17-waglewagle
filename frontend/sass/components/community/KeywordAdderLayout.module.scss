@@ -1,13 +1,5 @@
 @import '@sass/variables.scss';
 
-.main {
-  position: absolute;
-  bottom: 100px;
-  left: 50%;
-  width: 250px;
-  transform: translateX(-50%);
-}
-
 .modal {
   width: 300px;
   display: flex;
