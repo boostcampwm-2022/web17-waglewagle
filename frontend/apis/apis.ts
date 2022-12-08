@@ -2,14 +2,14 @@ import {
   AddKeywordData,
   AddKeywordResponseData,
   JoinKeywordData,
+  KeywordData,
   KeywordRelatedData,
   KeywordUser,
   ThreadData,
   UserData,
-} from './../types/types';
+} from '#types/types';
 import axios from 'axios';
 import config from '../config';
-import { KeywordData } from '../types/types';
 
 const apiInstance = axios.create({
   baseURL: `${config.API_HOST}`,
@@ -114,6 +114,17 @@ const deleteThread = async (threadId: string) => {
   return response.data;
 };
 
+const deleteKeyword = async (communityId: string, keywordIdList: string[]) => {
+  const response = await apiInstance.delete('/v1/thread', {
+    data: {
+      communityId,
+      keywordIdList,
+    },
+  });
+
+  return response.data;
+};
+
 const apis = {
   fetchLogin,
   getKeywords,
@@ -126,6 +137,7 @@ const apis = {
   addThread,
   addComments,
   deleteThread,
+  deleteKeyword,
 };
 
 export default apis;

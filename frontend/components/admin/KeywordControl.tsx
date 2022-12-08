@@ -1,4 +1,6 @@
 import { KeywordData } from '#types/types';
+import KeywordDeleteModalContent from '@components/admin/KeywordDeleteModalContent';
+import { Modal } from '@components/common';
 import { REACT_QUERY_KEY } from '@constants/constants';
 import styles from '@sass/components/admin/keywordControl.module.scss';
 import { useQuery } from '@tanstack/react-query';
@@ -16,10 +18,11 @@ type Keyword = {
 
 const KeywordControl = () => {
   const [keywordList, setKeywordList] = useState<Keyword[]>([]);
+  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
 
-  const query = useQuery<KeywordData[]>(
-    [REACT_QUERY_KEY.KEYWORD, '123'],
-    () => apis.getKeywords('123'),
+  const _ = useQuery<KeywordData[]>(
+    [REACT_QUERY_KEY.KEYWORD, '1'],
+    () => apis.getKeywords('1'),
     {
       enabled: !!'123',
       onSuccess: (data) => {
@@ -63,7 +66,25 @@ const KeywordControl = () => {
         ))}
       </ul>
       <button className={cx('merge-button')}>키워드 병합</button>
-      <button className={cx('delete-button')}>키워드 삭제</button>
+      <button
+        className={cx('delete-button')}
+        onClick={() => {
+          setIsOpenDeleteModal(true);
+        }}
+      >
+        키워드 삭제
+      </button>
+      <Modal
+        isOpenModal={isOpenDeleteModal}
+        closeModal={() => setIsOpenDeleteModal(false)}
+      >
+        <KeywordDeleteModalContent
+          selectedKeywordList={keywordList.filter(
+            (keyword) => keyword.isSelected,
+          )}
+          closeModal={() => setIsOpenDeleteModal(false)}
+        />
+      </Modal>
     </>
   );
 };
