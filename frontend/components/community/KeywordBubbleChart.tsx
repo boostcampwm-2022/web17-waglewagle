@@ -1,6 +1,8 @@
-import { BubbleData, KeywordData } from '#types/types';
+import { BubbleData, KeywordData, KeywordGroupData } from '#types/types';
 import { Loading } from '@components/common';
+import { KEYWORD_BUBBLE_MAX_NUMBER } from '@constants/constants';
 import useKeywordListQuery from '@hooks/useKeywordListQuery';
+import useMyKeywordQuery from '@hooks/useMyKeywordQuery';
 import styles from '@sass/components/community/KeywordBubbleChart.module.scss';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import debounce from '@utils/debounce';
@@ -13,13 +15,22 @@ import CircleContainer from '../../utils/circlepacker/CircleContainer';
 import KeywordBubble from './KeywordBubble';
 const cx = classnames.bind(styles);
 
-const KeywordBubbleChart = () => {
+interface KeywordBubbleChartProps {
+  isMyKeywordHighlight: boolean;
+  handleChangeKeywordGroupData: (newKeywordGroupDate: KeywordGroupData) => void;
+}
+
+const KeywordBubbleChart = ({
+  isMyKeywordHighlight,
+  handleChangeKeywordGroupData,
+}: KeywordBubbleChartProps) => {
   const router = useRouter();
   const communityId: string = router.query.id as string;
   const [bubbleDataList, setBubbleDataList] = useState<BubbleData[]>([]);
   const [_, setIsMove] = useState<boolean>(false);
   const requestAnimationId = useRef<NodeJS.Timer | null>(null);
   const circleContainerRef = useRef<CircleContainer | null>(null);
+  const { data: myKeywordList } = useMyKeywordQuery(communityId);
   const { data: fetchedKeywordData, isLoading } =
     useKeywordListQuery(communityId);
   // 여기에서는 slice된 keywordData를 가지고 있기 때문에 fetched와 별도의 상태로 관리됨.
@@ -28,11 +39,15 @@ const KeywordBubbleChart = () => {
   >([]);
 
   const getBubbleData = (keywordData: KeywordData, circleData: Circle) => {
+    const isJoined = myKeywordList.some(
+      (myKeyword) => myKeyword.keywordId === keywordData.keywordId,
+    );
     return {
       keywordId: keywordData.keywordId,
       keyword: keywordData.keywordName,
       count: keywordData.memberCount,
       circle: circleData,
+      isJoined,
     };
   };
 
@@ -56,7 +71,7 @@ const KeywordBubbleChart = () => {
 
     const slicedData = fetchedKeywordData
       .filter((keywordData) => keywordData.memberCount !== 0)
-      .slice(0, 30);
+      .slice(0, KEYWORD_BUBBLE_MAX_NUMBER);
     setSlicedCommunityKeywordData(slicedData);
   }, [fetchedKeywordData]);
 
@@ -69,7 +84,7 @@ const KeywordBubbleChart = () => {
     }
 
     const bubbleDataArray = slicedCommunityKeywordData.map((keywordData) => {
-      const radius = 20 + keywordData.memberCount * 2;
+      const radius = 30 + keywordData.memberCount * 2;
       const circleData = circleContainerRef.current!.addCircle(
         keywordData.keywordId,
         radius,
@@ -107,13 +122,18 @@ const KeywordBubbleChart = () => {
     <div className={cx('chart-container')}>
       {isLoading && <Loading />}
       {bubbleDataList.map((bubbleData, index) => (
+        // TODO:Lprops 깔끔하게 만들기
         <KeywordBubble
           key={index}
+          isHighlight={isMyKeywordHighlight}
+          isJoined={bubbleData.isJoined}
           keywordId={bubbleData.keywordId}
           keyword={bubbleData.keyword}
+          memberCount={bubbleData.count}
           posX={bubbleData.circle.x}
           posY={bubbleData.circle.y}
           radius={bubbleData.circle.radius}
+          handleChangeKeywordGroupData={handleChangeKeywordGroupData}
         />
       ))}
     </div>

@@ -24,3 +24,5 @@ export enum MVP_DEFAULT {
 export enum RELATED_KEYWORD_NUMBERS {
   KEYWORD_ADD_MODAL = 3,
 }
+
+export const KEYWORD_BUBBLE_MAX_NUMBER = 30;

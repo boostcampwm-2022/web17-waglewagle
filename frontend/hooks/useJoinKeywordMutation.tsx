@@ -6,7 +6,7 @@ import apis from '../apis/apis';
 
 // 반환값, 요청 URL이 모두 다르기 때문에 join과 add 쿼리를 분리함.
 const useJoinKeywordMutation = (
-  handlePrevKeyword: (prevKeyword: MyKeywordData) => void,
+  handlePrevKeyword?: (prevKeyword: MyKeywordData) => void,
 ) => {
   const router = useRouter();
   const communityId = router.query.id as string;
@@ -32,7 +32,7 @@ const useJoinKeywordMutation = (
         keywordId: joinKeywordFullData.keywordId,
         keywordName: joinKeywordFullData.keywordName,
       };
-      handlePrevKeyword(prevKeywordData);
+      handlePrevKeyword && handlePrevKeyword(prevKeywordData);
 
       // MykeywordList에 방금 추가한 단어를 추가함.
       queryClient.setQueryData(

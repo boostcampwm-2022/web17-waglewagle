@@ -42,3 +42,14 @@
     }
   }
 }
+
+.highlight {
+  div {
+    background-color: $off-white-color;
+    border: 2px solid $primary-color;
+
+    span {
+      color: $primary-color;
+    }
+  }
+}

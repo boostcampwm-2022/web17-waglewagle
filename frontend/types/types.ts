@@ -34,6 +34,7 @@ export type BubbleData = {
   keyword: string;
   count: number;
   circle: Circle;
+  isJoined: boolean;
 };
 
 export type UserData = {
@@ -56,6 +57,11 @@ export type Author = {
   profileImageUrl: string;
 };
 
+export type KeywordGroupData = {
+  keywordId: string;
+  keyword: string;
+};
+
 export type ThreadData = {
   threadId: string;
   content: string;
@@ -71,4 +77,9 @@ export type KeywordUser = {
   username: string;
   profileImageUrl: string;
   lastActivity: string;
+};
+
+export type ClickPosData = {
+  x: number;
+  y: number;
 };
