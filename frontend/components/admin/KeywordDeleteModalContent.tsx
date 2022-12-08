@@ -1,6 +1,7 @@
 import styles from '@sass/components/admin/keywordDeleteModalContent.module.scss';
 import { useMutation } from '@tanstack/react-query';
 import classnames from 'classnames/bind';
+import { useRouter } from 'next/router';
 import apis from '../../apis/apis';
 const cx = classnames.bind(styles);
 
@@ -20,10 +21,13 @@ const KeywordDeleteModalContent = ({
   selectedKeywordList,
   closeModal,
 }: KeywordDeleteModalContentProps) => {
+  const router = useRouter();
+  const { id } = router.query;
+
   const { mutate } = useMutation({
     mutationFn: () =>
       apis.deleteKeyword(
-        '1',
+        id as string,
         selectedKeywordList.map((selectedKeyword) => selectedKeyword.keywordId),
       ),
   });

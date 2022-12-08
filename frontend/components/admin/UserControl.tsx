@@ -1,10 +1,13 @@
 import useKeywordUserListQuery from '@hooks/useKeywordUserListQuery';
 import styles from '@sass/components/admin/UserControl.module.scss';
 import classnames from 'classnames/bind';
+import { useRouter } from 'next/router';
 const cx = classnames.bind(styles);
 
 const UserControl = () => {
-  const { data: userList } = useKeywordUserListQuery('123');
+  const router = useRouter();
+  const { id } = router.query;
+  const { data: userList } = useKeywordUserListQuery(id as string);
 
   return (
     <>
