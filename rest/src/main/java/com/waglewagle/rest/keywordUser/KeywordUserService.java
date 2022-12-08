@@ -2,12 +2,12 @@ package com.waglewagle.rest.keywordUser;
 
 
 import com.waglewagle.rest.community.Community;
-import com.waglewagle.rest.community.CommunityRepository;
+import com.waglewagle.rest.community.repository.CommunityRepository;
 import com.waglewagle.rest.keyword.Keyword;
 import com.waglewagle.rest.keyword.KeywordDTO.*;
 import com.waglewagle.rest.keyword.KeywordRepository;
 import com.waglewagle.rest.user.User;
-import com.waglewagle.rest.user.UserRepository;
+import com.waglewagle.rest.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +26,9 @@ public class KeywordUserService {
     public void disjoinKeyword(DisjoinKeywordDTO disjoinKeywordDTO, Long userId) {
 
         Keyword keyword = keywordRepository.findOne(disjoinKeywordDTO.getKeywordId());
-        Community community = communityRepository.findOneById(disjoinKeywordDTO.getCommunityId());
-        User user = userRepository.findById(userId);
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        Community community = communityRepository.findById(disjoinKeywordDTO.getCommunityId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 커뮤니티입니다."));
 
         keywordUserRepository.deleteByKeywordAndCommunityAndUser(keyword, community, user);
     }

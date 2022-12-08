@@ -1,7 +1,7 @@
 package com.waglewagle.rest.keyword;
 
 import com.waglewagle.rest.community.Community;
-import com.waglewagle.rest.community.CommunityRepository;
+import com.waglewagle.rest.community.repository.CommunityRepository;
 import com.waglewagle.rest.keyword.KeywordDTO.*;
 import com.waglewagle.rest.keyword.association.AssociationCalculator;
 import com.waglewagle.rest.keyword.association.AssociationDTO;
@@ -9,7 +9,7 @@ import com.waglewagle.rest.keywordUser.KeywordUser;
 import com.waglewagle.rest.keywordUser.KeywordUserRepository;
 import com.waglewagle.rest.thread.ThreadRepository;
 import com.waglewagle.rest.user.User;
-import com.waglewagle.rest.user.UserRepository;
+import com.waglewagle.rest.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,7 +57,6 @@ public class KeywordService {
                                         keyword.getKeyword(),
                                         keyword.getKeywordUsers().size()))
                 .collect(Collectors.toList());
-
     }
 
     @Transactional
@@ -67,8 +66,9 @@ public class KeywordService {
 
     @Transactional
     public Keyword createKeyword(Long userId, Long communityId, String keywordName) {
-        User user = userRepository.findById(userId);
-        Community community = communityRepository.findOneById(communityId);
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        Community community = communityRepository.findById(communityId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 커뮤니티입니다."));
 
         CreateKeywordDTO createKeywordDTO = CreateKeywordDTO.createCreateKeywordDTO(user, community, keywordName);
         Keyword keyword = new Keyword(createKeywordDTO);
@@ -84,14 +84,14 @@ public class KeywordService {
         return keyword;
     }
 
-    //TODO: jpa 더티체킹
     @Transactional
-    public void joinKeyword(JoinKeywordInputDTO joinKeywordInputDTO, Long userId) {
-        // private Long keywordId;
-        // private Long communityId;
+    public void joinKeyword(JoinKeywordInputDTO joinKeywordInputDTO, Long userId) throws IllegalArgumentException {
         Keyword keyword = keywordRepository.findOne(joinKeywordInputDTO.getKeywordId());
-        Community community = communityRepository.findOneById(joinKeywordInputDTO.getCommunityId());
-        User user = userRepository.findById(userId);
+
+        Community community = communityRepository.findById(joinKeywordInputDTO.getCommunityId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 커뮤니티입니다."));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
         JoinKeywordDTO joinKeywordDTO = JoinKeywordDTO.createJoinKeywordDTO(user, community, keyword);
 
