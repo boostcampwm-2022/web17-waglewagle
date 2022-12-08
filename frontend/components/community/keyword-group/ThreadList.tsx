@@ -1,4 +1,3 @@
-import { ThreadData } from '#types/types';
 import Thread from '@components/community/keyword-group/Thread';
 import useThreadListQuery from '@hooks/useThreadListQuery';
 import styles from '@sass/components/community/keyword/ThreadList.module.scss';
@@ -7,7 +6,7 @@ const cx = classnames.bind(styles);
 
 interface ThreadListProps {
   keywordId: string;
-  openSidebar(thread: ThreadData): void;
+  openSidebar(threadId: string): void;
 }
 
 const ThreadList = ({ keywordId, openSidebar }: ThreadListProps) => {

@@ -1,4 +1,3 @@
-import { ThreadData } from '#types/types';
 import KeywordGroupSidebar from '@components/community/keyword-group/KeywordGroupSidebar';
 import useKeywordUserListQuery from '@hooks/useKeywordUserListQuery';
 import styles from '@sass/components/community/keyword/KeywordMain.module.scss';
@@ -8,7 +7,7 @@ import PostThread from './ThreadForm';
 import ThreadList from './ThreadList';
 const cx = classnames.bind(styles);
 
-type Sidebar = { isOpen: false } | (ThreadData & { isOpen: true });
+type Sidebar = { isOpen: boolean; threadId: string };
 
 interface KeywordGroupMainProps {
   keywordId: string;
@@ -18,14 +17,15 @@ interface KeywordGroupMainProps {
 const KeywordGroupMain = ({ keywordId, keyword }: KeywordGroupMainProps) => {
   const [threadSidebar, setThreadSidebar] = useState<Sidebar>({
     isOpen: false,
+    threadId: '0',
   });
   const { data: userList } = useKeywordUserListQuery(keywordId);
-  const openSidebar = (thread: ThreadData) => {
-    setThreadSidebar({ isOpen: true, ...thread });
+  const openSidebar = (threadId: string) => {
+    setThreadSidebar({ isOpen: true, threadId });
   };
 
   const closeSidebar = () => {
-    setThreadSidebar({ isOpen: false });
+    setThreadSidebar({ isOpen: false, threadId: '0' });
   };
 
   return (
@@ -39,13 +39,11 @@ const KeywordGroupMain = ({ keywordId, keyword }: KeywordGroupMainProps) => {
           <ThreadList keywordId={keywordId} openSidebar={openSidebar} />
           <PostThread keywordId={keywordId} />
         </div>
-        {threadSidebar.isOpen && (
-          <KeywordGroupSidebar
-            {...threadSidebar}
-            keywordId={keywordId}
-            closeSidebar={closeSidebar}
-          />
-        )}
+        <KeywordGroupSidebar
+          {...threadSidebar}
+          keywordId={keywordId}
+          closeSidebar={closeSidebar}
+        />
       </div>
     </main>
   );
