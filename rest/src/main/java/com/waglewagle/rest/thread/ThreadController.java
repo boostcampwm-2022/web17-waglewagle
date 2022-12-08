@@ -24,7 +24,8 @@ public class ThreadController {
      */
     @PostMapping("")
     @ResponseBody
-    public ResponseEntity<Boolean> createThread(@CookieValue("user_id") Long userId, @RequestBody CreateThreadInputDTO createThreadInputDTO) {
+    public ResponseEntity<Boolean> createThread(@CookieValue("user_id") Long userId,
+                                                @RequestBody CreateThreadInputDTO createThreadInputDTO) {
 
         Thread thread = threadService.creatThread(userId, createThreadInputDTO);
 
@@ -37,7 +38,8 @@ public class ThreadController {
      */
     @DeleteMapping("")
     @ResponseBody
-    public ResponseEntity<Boolean> deleteThread(@CookieValue("user_id") Long userId, @RequestBody DeleteThreadDTO deleteThreadDTO) {
+    public ResponseEntity<Boolean> deleteThread(@CookieValue("user_id") Long userId,
+                                                @RequestBody DeleteThreadDTO deleteThreadDTO) {
 
         threadService.deleteThread(userId, deleteThreadDTO.getThreadId());
 

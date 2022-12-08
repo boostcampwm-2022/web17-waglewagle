@@ -6,8 +6,10 @@ import com.waglewagle.rest.user.dto.AuthorDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -64,8 +66,8 @@ public class ThreadDTO {
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
         private AuthorDTO author;
-        private List<ThreadResponseDTO> childThreads;
-        private Integer childThreadCount;
+        private List<ThreadResponseDTO> childThreads = new ArrayList<>();
+        private Integer childThreadCount = 0;
 
         public static ThreadResponseDTO of(Thread thread) {
             ThreadResponseDTO threadResponseDTO = new ThreadResponseDTO();
@@ -74,7 +76,7 @@ public class ThreadDTO {
             threadResponseDTO.createdAt = thread.getCreatedAt();
             threadResponseDTO.updatedAt = thread.getUpdatedAt();
             threadResponseDTO.author = AuthorDTO.createAuthorDTO(thread.getAuthor());
-            if (thread.getParentThread() == null) {
+            if (!thread.getChildren().isEmpty()) {
                 threadResponseDTO.childThreads = thread
                         .getChildren()
                         .stream()
@@ -85,7 +87,6 @@ public class ThreadDTO {
             return threadResponseDTO;
         }
     }
-
 
 
     @Getter

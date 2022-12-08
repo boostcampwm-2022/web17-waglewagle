@@ -1,9 +1,6 @@
 package com.waglewagle.rest.thread;
 
 
-import com.waglewagle.rest.thread.ThreadDTO.*;
-import lombok.RequiredArgsConstructor;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -26,11 +23,12 @@ public interface ThreadRepository extends JpaRepository<Thread, Long> {
     @Query("DELETE FROM Thread th WHERE th.keyword.id IN ?1 AND th.parentThread IS NULL")
     int deleteAllParentThreadByKeywordIdInBulk(List<Long> keywordIdList);
 
+    @Query("SELECT DISTINCT t FROM Thread t LEFT JOIN FETCH t.children c LEFT JOIN FETCH t.author LEFT JOIN FETCH c.author WHERE t.keyword.id = ?1 AND t.parentThread IS NULL")
     List<Thread> findThreadsByParentThreadIsNullAndKeywordId(Long keywordId);
 
     @Modifying(clearAutomatically = true)
     @Query("DELETE FROM Thread th WHERE th.keyword.id IN ?1 AND th.parentThread IS NOT NULL")
     int deleteAllChildThreadByKeywordIdInBulk(List<Long> keywordIdList);
 
-
+    Thread findThreadById(Long threadId);
 }

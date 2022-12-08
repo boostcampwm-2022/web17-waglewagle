@@ -3,9 +3,7 @@ package com.waglewagle.rest.thread;
 import com.waglewagle.rest.keyword.Keyword;
 import com.waglewagle.rest.thread.ThreadDTO.*;
 import com.waglewagle.rest.user.User;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
