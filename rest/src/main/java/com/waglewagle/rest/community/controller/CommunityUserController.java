@@ -27,7 +27,8 @@ public class CommunityUserController {
         Long communityId = Long.parseLong(joinCommunityInputDTO.getCommunityId());
 
         if (communityUserService.isJoined(userId, communityId)) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(null, HttpStatus.OK); //TODO: TEMP FOR DEMO
+//             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
 
         try {
