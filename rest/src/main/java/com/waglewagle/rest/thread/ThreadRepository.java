@@ -1,23 +1,17 @@
 package com.waglewagle.rest.thread;
 
 
-import com.waglewagle.rest.thread.ThreadDTO.*;
-import lombok.RequiredArgsConstructor;
-import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 
-import static com.waglewagle.rest.keyword.QKeyword.keyword1;
-import static com.waglewagle.rest.thread.QThread.thread;
-import static  com.waglewagle.rest.communityUser.QCommunityUser.communityUser;
 
 @Repository
-public interface ThreadRepository extends JpaRepository<Thread, Long> {
+public interface ThreadRepository extends JpaRepository<Thread, Long>, CustomThreadRepository {
 
     void deleteAllByParentThreadId(Long parentThreadId);
 
@@ -30,11 +24,18 @@ public interface ThreadRepository extends JpaRepository<Thread, Long> {
     @Query("DELETE FROM Thread th WHERE th.keyword.id IN ?1 AND th.parentThread IS NULL")
     int deleteAllParentThreadByKeywordIdInBulk(List<Long> keywordIdList);
 
+    @Query("SELECT DISTINCT t FROM Thread t " +
+                    "LEFT JOIN FETCH t.children tc " +
+                    "LEFT JOIN FETCH t.author ta " +
+                    "LEFT JOIN FETCH tc.author tca " +
+            "WHERE t.keyword.id = ?1 " +
+                "AND t.parentThread IS NULL")
+    @EntityGraph(type = EntityGraph.EntityGraphType.LOAD)
     List<Thread> findThreadsByParentThreadIsNullAndKeywordId(Long keywordId);
 
     @Modifying(clearAutomatically = true)
     @Query("DELETE FROM Thread th WHERE th.keyword.id IN ?1 AND th.parentThread IS NOT NULL")
     int deleteAllChildThreadByKeywordIdInBulk(List<Long> keywordIdList);
 
-
+    Thread findThreadById(Long threadId);
 }

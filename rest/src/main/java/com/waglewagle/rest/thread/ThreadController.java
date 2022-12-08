@@ -40,7 +40,8 @@ public class ThreadController {
      */
     @DeleteMapping("")
     @ResponseBody
-    public ResponseEntity<Boolean> deleteThread(@CookieValue("user_id") Long userId, @RequestBody DeleteThreadDTO deleteThreadDTO) {
+    public ResponseEntity<Boolean> deleteThread(@CookieValue("user_id") Long userId,
+                                                @RequestBody DeleteThreadDTO deleteThreadDTO) {
 
         threadService.deleteThread(userId, deleteThreadDTO.getThreadId());
 
@@ -64,7 +65,7 @@ public class ThreadController {
      * }
      */
     @GetMapping("/keyword")
-    public ResponseEntity 함수_이름_뭐로_짓는_게_좋을까(@RequestParam("keyword-id") Long keywordId) {
+    public ResponseEntity getThreadsInKeyword(@RequestParam("keyword-id") Long keywordId) {
 
         if (!keywordService.isKeywordExist(keywordId)) {
             // TODO : Error code
@@ -74,9 +75,9 @@ public class ThreadController {
         List<ThreadResponseDTO> threadResponseDTOS = threadService.getThreadsInKeyword(keywordId);
 
         if (threadResponseDTOS.isEmpty()) {
-            return new ResponseEntity(threadResponseDTOS, HttpStatus.NO_CONTENT);
+            return new ResponseEntity(null, HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity(threadResponseDTOS, HttpStatus.OK);
 
+        return new ResponseEntity(threadResponseDTOS, HttpStatus.OK);
     }
 }

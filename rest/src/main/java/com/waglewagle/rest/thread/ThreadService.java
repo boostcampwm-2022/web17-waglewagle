@@ -2,17 +2,19 @@ package com.waglewagle.rest.thread;
 
 import com.waglewagle.rest.keyword.Keyword;
 import com.waglewagle.rest.keyword.KeywordRepository;
-import com.waglewagle.rest.thread.ThreadDTO.*;
+import com.waglewagle.rest.thread.ThreadDTO.CreateThreadDTO;
+import com.waglewagle.rest.thread.ThreadDTO.CreateThreadInputDTO;
+import com.waglewagle.rest.thread.ThreadDTO.ThreadResponseDTO;
 import com.waglewagle.rest.user.User;
 import com.waglewagle.rest.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.waglewagle.rest.thread.ThreadDTO.CreateThreadDTO.createCreateThreadDTO;
 
 @Service
 @RequiredArgsConstructor
@@ -25,17 +27,15 @@ public class ThreadService {
     @Transactional
     public Thread creatThread(Long userId, CreateThreadInputDTO createThreadInputDTO) throws IllegalArgumentException {
 
-        Optional<Thread> parentThread = Optional.empty();
-
-        if (createThreadInputDTO.getParentThreadId() != null) {
-
-            parentThread = threadRepository.findById(createThreadInputDTO.getParentThreadId());
-
-            if (parentThread.isPresent()) {
-                if (parentThread.get().getParentThread() != null) {
-                    return null; //TODO: return null이 아닌 예외 등의 다른 처리
-                }
-            }
+        Long parentThreadId = createThreadInputDTO.getParentThreadId();
+        Thread parentThread = null;
+        if (parentThreadId != null && threadRepository.findById(parentThreadId).filter(pt -> pt.getParentThread() != null).isPresent()) {
+            // 자식의 자식임.
+            // 안 만들어 줘야 한다.
+            return null;
+        }
+        if (parentThreadId != null && threadRepository.findById(parentThreadId).filter(pt -> pt.getParentThread() == null).isPresent()) {
+            parentThread = threadRepository.findById(parentThreadId).filter(pt -> pt.getParentThread() == null).get();
         }
 
         User author = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
@@ -43,10 +43,7 @@ public class ThreadService {
         String content = createThreadInputDTO.getContent();
 
         //TODO: java Optional 문법!
-        CreateThreadDTO createThreadDTO = parentThread.map(
-                thread -> CreateThreadDTO.createCreateThreadDTO(author, thread, keyword, content))
-                .orElseGet(() -> CreateThreadDTO.createCreateThreadDTO(author, null, keyword, content)
-                );
+        CreateThreadDTO createThreadDTO = createCreateThreadDTO(author, parentThread, keyword, content);
 
         return threadRepository.save(new Thread(createThreadDTO));
     }
@@ -68,12 +65,30 @@ public class ThreadService {
         threadRepository.deleteById(threadId);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<ThreadResponseDTO> getThreadsInKeyword(Long keywordId) {
-        List<Thread> threads = threadRepository.findThreadsByParentThreadIsNullAndKeywordId(keywordId);
-        return threads
-                .stream()
-                .map(ThreadResponseDTO::of)
-                .collect(Collectors.toList());
+        List<Thread> parentThreads = threadRepository.findParentThreadsInKeyword(keywordId);
+        List<Thread> childThreads = threadRepository.findChildThreads(parentThreads
+                                                                        .stream()
+                                                                        .map(t -> t.getId())
+                                                                        .collect(Collectors.toList()));
+        HashMap<Long, ThreadResponseDTO> idToDTO = new HashMap<>();
+        parentThreads.forEach(thread -> {
+            idToDTO.put(thread.getId(), ThreadResponseDTO.of(thread));
+        });
+        childThreads.forEach(thread -> {
+            idToDTO.get(thread.getParentThread().getId())
+                        .getChildThreads()
+                        .add(ThreadResponseDTO.of(thread));
+        });
+
+        List<ThreadResponseDTO> threadResponseDTOS = idToDTO
+                                                        .values()
+                                                        .stream()
+                                                        .collect(Collectors.toList());;
+
+        threadResponseDTOS.sort(Comparator.comparingLong(dto -> Long.parseLong(dto.getThreadId())));
+
+        return  threadResponseDTOS;
     }
 }
