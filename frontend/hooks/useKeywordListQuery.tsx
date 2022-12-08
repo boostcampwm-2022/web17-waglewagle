@@ -13,7 +13,7 @@ const useKeywordListQuery = (communityId: string) => {
     },
     {
       enabled: !!communityId,
-      refetchInterval: 1000,
+      refetchInterval: 5000,
     },
   );
 
