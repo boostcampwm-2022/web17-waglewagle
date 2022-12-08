@@ -12,21 +12,10 @@ const MyKeywordList = () => {
   const communityId = router.query.id as string;
   const { data: myKeywordList } = useMyKeywordQuery(communityId);
 
-  const [slicedMyKeyword, setSlicedMyKeyword] = useState<MyKeywordData[]>([]);
-
-  useEffect(() => {
-    // TODO: 개발을 위해서 최신순으로 정렬해둠. 이후에 삭제하기
-    setSlicedMyKeyword(
-      myKeywordList
-        .sort((a, b) => parseInt(b.keywordId) - parseInt(a.keywordId))
-        .slice(0, 3),
-    );
-  }, [myKeywordList]);
-
   return (
     <ol className={cx('list-container')}>
-      {slicedMyKeyword &&
-        slicedMyKeyword.map((keywordData) => (
+      {myKeywordList &&
+        myKeywordList.map((keywordData) => (
           <MyKeyword key={keywordData.keywordId} keywordData={keywordData} />
         ))}
     </ol>
