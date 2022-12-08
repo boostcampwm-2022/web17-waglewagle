@@ -4,7 +4,7 @@ import com.waglewagle.rest.community.repository.CommunityRepository;
 import com.waglewagle.rest.community.service.CommunityService;
 import com.waglewagle.rest.keyword.service.KeywordService;
 import com.waglewagle.rest.thread.controller.ThreadController;
-import com.waglewagle.rest.thread.dto.ThreadDTO;
+import com.waglewagle.rest.thread.data_object.dto.ThreadDTO;
 import com.waglewagle.rest.thread.entity.Thread;
 import com.waglewagle.rest.thread.repository.ThreadRepository;
 import com.waglewagle.rest.user.repository.UserRepository;

@@ -1,7 +1,8 @@
 package com.waglewagle.rest.user.controller;
 
 import com.waglewagle.rest.common.PreResponseDTO;
-import com.waglewagle.rest.user.data_object.dto.*;
+import com.waglewagle.rest.user.data_object.dto.request.UserRequest;
+import com.waglewagle.rest.user.data_object.dto.response.UserResponse;
 import com.waglewagle.rest.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,7 +14,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-import static com.waglewagle.rest.user.data_object.dto.UserInfoDTO.UserInfoResDTO;
 
 @Controller
 @RequestMapping("/api/v1/user")
@@ -24,8 +24,8 @@ public class UserController {
 
     @PostMapping("/login")
     @ResponseBody
-    public ResponseEntity<LoginResponseDTO> authenticateWithUsername(@RequestBody UsernameLoginDTO usernameLoginDTO,
-                                                                     HttpServletResponse response) {
+    public ResponseEntity<UserResponse.LoginDTO> authenticateWithUsername(@RequestBody UserRequest.UsernameLoginDTO usernameLoginDTO,
+                                                                          HttpServletResponse response) {
 
         String username = usernameLoginDTO.getUsername();
         Long userId = userService.authenticateWithUsername(username);
@@ -33,29 +33,30 @@ public class UserController {
         Cookie userIdCookie = userService.createUserIdCookie(userId);
         response.addCookie(userIdCookie);
 
-        LoginResponseDTO loginResponseDTO = new LoginResponseDTO(true, userId);
-        return ResponseEntity.ok(loginResponseDTO);
+        UserResponse.LoginDTO loginDTO = UserResponse.LoginDTO.from(true, userId);
+        return ResponseEntity.ok(loginDTO);
     }
 
     @PutMapping("/profile")
     @ResponseBody
-    public ResponseEntity<UpdateProfileResponseDTO> updateProfile(@RequestBody UpdateProfileDTO updateProfileDTO, @CookieValue(name = "user_id") Long userId) {
+    public ResponseEntity<UserResponse.UpdateProfileDTO> updateProfile(@RequestBody UserRequest.UpdateProfileDTO updateProfileDTO,
+                                                                       @CookieValue(name = "user_id") Long userId) {
 
         if (updateProfileDTO.isEmpty()) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
 
-        PreResponseDTO<UpdateProfileResponseDTO> preResponseDTO = userService.updateUserProfile(userId, updateProfileDTO);
+        PreResponseDTO<UserResponse.UpdateProfileDTO> preResponseDTO = userService.updateUserProfile(userId, updateProfileDTO);
 
         return new ResponseEntity<>(preResponseDTO.getData(), preResponseDTO.getHttpStatus());
     }
 
     @GetMapping("/me")
     @ResponseBody
-    public ResponseEntity<UserInfoResDTO> getUserInfo(@CookieValue(name = "user_id") Long userId,
-                                                      @RequestParam(name = "community-id", required = false) Long communityId) {
+    public ResponseEntity<UserResponse.UserInfoDTO> getUserInfo(@CookieValue(name = "user_id") Long userId,
+                                                                @RequestParam(name = "community-id", required = false) Long communityId) {
 
-        PreResponseDTO<UserInfoResDTO> preResponseDTO = userService.getUserInfo(userId, communityId);
+        PreResponseDTO<UserResponse.UserInfoDTO> preResponseDTO = userService.getUserInfo(userId, communityId);
 
         return new ResponseEntity(preResponseDTO.getData(), preResponseDTO.getHttpStatus());
     }
@@ -75,16 +76,16 @@ public class UserController {
     @GetMapping("keyword")
     public ResponseEntity getUserInfoInKeyword(@RequestParam("keyword-id") Long keywordId) {
 
-        List<UserConnectionStatusDTO> userConnectionStatusDTOS = userService.getUserInfoInKeyword(keywordId);
+        List<UserResponse.LastActivityDTO> lastActivityDTOS = userService.getUserInfoInKeyword(keywordId);
 
-        return new ResponseEntity(userConnectionStatusDTOS, HttpStatus.OK);
+        return new ResponseEntity(lastActivityDTOS, HttpStatus.OK);
     }
 
     @GetMapping("community")
     public ResponseEntity getUserInfoInCommunity(@RequestParam("community-id") Long communityId) {
 
-        List<UserConnectionStatusDTO> userConnectionStatusDTOS = userService.getUserInfoInCommunity(communityId);
+        List<UserResponse.LastActivityDTO> lastActivityDTOS = userService.getUserInfoInCommunity(communityId);
 
-        return new ResponseEntity(userConnectionStatusDTOS, HttpStatus.OK);
+        return new ResponseEntity(lastActivityDTOS, HttpStatus.OK);
     }
 }

@@ -1,8 +1,8 @@
-package com.waglewagle.rest.thread.dto;
+package com.waglewagle.rest.thread.data_object.dto;
 
 import com.waglewagle.rest.keyword.entity.Keyword;
 import com.waglewagle.rest.thread.entity.Thread;
-import com.waglewagle.rest.user.data_object.dto.AuthorDTO;
+import com.waglewagle.rest.user.data_object.dto.response.UserResponse;
 import com.waglewagle.rest.user.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -64,7 +64,7 @@ public class ThreadDTO {
         private String content;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
-        private AuthorDTO author;
+        private UserResponse.AuthorDTO author;
         private List<ThreadResponseDTO> childThreads = new ArrayList<>();
         private Integer childThreadCount = 0;
 
@@ -74,7 +74,7 @@ public class ThreadDTO {
             threadResponseDTO.content = thread.getContent();
             threadResponseDTO.createdAt = thread.getCreatedAt();
             threadResponseDTO.updatedAt = thread.getUpdatedAt();
-            threadResponseDTO.author = AuthorDTO.createAuthorDTO(thread.getAuthor());
+            threadResponseDTO.author = UserResponse.AuthorDTO.of(thread.getAuthor());
             return threadResponseDTO;
         }
     }
