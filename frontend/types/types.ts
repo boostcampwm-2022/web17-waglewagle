@@ -78,3 +78,8 @@ export type KeywordUser = {
   profileImageUrl: string;
   lastActivity: string;
 };
+
+export type ClickPosData = {
+  x: number;
+  y: number;
+};

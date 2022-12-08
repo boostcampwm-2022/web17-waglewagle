@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import CommunityItem from './CommunityItem';
 import classnames from 'classnames/bind';
 import styles from '@sass/components/main/CommunityList.module.scss';
