@@ -7,14 +7,15 @@ const cx = classnames.bind(styles);
 
 interface CommentFormProps {
   threadId: string;
+  keywordId: string;
 }
 
-const CommentForm = ({ threadId }: CommentFormProps) => {
+const CommentForm = ({ threadId, keywordId }: CommentFormProps) => {
   const [contentInputData, setContentInputData] = useState('');
 
   // setQueryData 통해서 데이터 수정 추가
   const { mutate } = useMutation({
-    mutationFn: () => apis.addComments('123', contentInputData, threadId),
+    mutationFn: () => apis.addComments(keywordId, contentInputData, threadId),
   });
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -24,6 +25,7 @@ const CommentForm = ({ threadId }: CommentFormProps) => {
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     mutate();
+    setContentInputData('');
   };
 
   return (

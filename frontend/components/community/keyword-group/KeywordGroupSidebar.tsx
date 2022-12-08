@@ -1,13 +1,18 @@
 import { Author, ThreadData } from '#types/types';
+import useUserMe from '@hooks/useUserMe';
 import CloseIcon from '@public/images/close.svg';
+import DeleteIcon from '@public/images/delete.svg';
 import styles from '@sass/components/community/keyword/Sidebar.module.scss';
+import { useMutation } from '@tanstack/react-query';
 import calculateTimeGap from '@utils/calculateTimeGap';
 import classnames from 'classnames/bind';
 import Image from 'next/image';
+import apis from '../../../apis/apis';
 import CommentForm from './CommentForm';
 const cx = classnames.bind(styles);
 
 interface SidebarProps {
+  keywordId: string;
   threadId: string;
   content: string;
   childThreadCount: number;
@@ -19,6 +24,7 @@ interface SidebarProps {
 }
 
 const KeywordGroupSidebar = ({
+  keywordId,
   threadId,
   content,
   childThreadCount,
@@ -27,6 +33,11 @@ const KeywordGroupSidebar = ({
   author: { username, profileImageUrl },
   closeSidebar,
 }: SidebarProps) => {
+  const userData = useUserMe();
+  const { mutate } = useMutation({
+    mutationFn: (commentId: string) => apis.deleteThread(commentId),
+  });
+
   return (
     <div className={cx('sidebar')}>
       <h4>스레드</h4>
@@ -55,7 +66,11 @@ const KeywordGroupSidebar = ({
             <li key={childThread.threadId} className={cx('comment')}>
               <Image
                 className={cx('profile-image')}
-                src={'/images/default-profile.png'}
+                src={
+                  childThread.author.profileImageUrl === null
+                    ? '/images/default-profile.png'
+                    : childThread.author.profileImageUrl
+                }
                 alt='프로필 이미지'
                 width={30}
                 height={30}
@@ -67,13 +82,23 @@ const KeywordGroupSidebar = ({
                     {calculateTimeGap(childThread.createdAt)}
                   </p>
                 </div>
-                <p>{childThread.content}</p>
+                <p className={cx('content')}>{childThread.content}</p>
               </div>
+              {userData?.userId === childThread.author.userId && (
+                <button
+                  className={cx('delete-button')}
+                  onClick={() => {
+                    mutate(childThread.threadId);
+                  }}
+                >
+                  <DeleteIcon />
+                </button>
+              )}
             </li>
           ))}
         </ul>
       </div>
-      <CommentForm threadId={threadId} />
+      <CommentForm keywordId={keywordId} threadId={threadId} />
       <button className={cx('close-button')} onClick={closeSidebar}>
         <CloseIcon />
       </button>

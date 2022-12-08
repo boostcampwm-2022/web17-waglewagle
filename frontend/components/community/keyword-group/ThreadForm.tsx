@@ -5,11 +5,15 @@ import { ChangeEventHandler, FormEventHandler, useState } from 'react';
 import apis from '../../../apis/apis';
 const cx = classnames.bind(styles);
 
-const ThreadForm = () => {
+interface ThreadFormProps {
+  keywordId: string;
+}
+
+const ThreadForm = ({ keywordId }: ThreadFormProps) => {
   const [contentInputData, setContentInputData] = useState('');
   // setQueryData 통해서 데이터 수정 추가
   const { mutate } = useMutation({
-    mutationFn: () => apis.addThread('123', contentInputData),
+    mutationFn: () => apis.addThread(keywordId, contentInputData),
   });
 
   const handleChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
@@ -19,6 +23,7 @@ const ThreadForm = () => {
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     mutate();
+    setContentInputData('');
   };
 
   return (

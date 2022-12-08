@@ -35,6 +35,7 @@ export type KeywordRelatedData = {
 };
 
 export type BubbleData = {
+  keywordId: string;
   keyword: string;
   count: number;
   circle: Circle;
