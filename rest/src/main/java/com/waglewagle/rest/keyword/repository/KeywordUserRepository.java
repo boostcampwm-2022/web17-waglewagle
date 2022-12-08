@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface KeywordUserRepository extends JpaRepository<KeywordUser, Long> {
@@ -26,4 +27,6 @@ public interface KeywordUserRepository extends JpaRepository<KeywordUser, Long> 
     @Modifying(clearAutomatically = true)
     @Query("DELETE FROM KeywordUser ku WHERE ku.keyword.id IN ?1")
     int deleteAllByKeywordIdInBulk(List<Long> keywordIdList);
+
+    Optional<KeywordUser> findByUserAndCommunityAndKeyword(User user, Community community, Keyword keyword);
 }

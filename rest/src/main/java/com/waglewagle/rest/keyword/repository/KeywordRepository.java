@@ -15,8 +15,6 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import java.util.List;
 
-//import static이 뭐더라;;;
-
 @Repository
 @RequiredArgsConstructor
 public class KeywordRepository {
