@@ -1,5 +1,6 @@
 package com.waglewagle.rest.user;
 
+import com.waglewagle.rest.user.entity.User;
 import com.waglewagle.rest.user.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,8 @@ import java.util.Optional;
 @SpringBootTest
 class UserRepositoryTest {
 
-    @Autowired private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Test
     @Transactional
@@ -36,7 +38,7 @@ class UserRepositoryTest {
     @Transactional
     void findById() {
         // given
-        Long userId =userRepository.findOrSaveUsername("asdf");
+        Long userId = userRepository.findOrSaveUsername("asdf");
         Long wrongUserId = 1000000L;
 
         // when

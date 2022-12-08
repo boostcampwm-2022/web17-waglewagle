@@ -1,17 +1,17 @@
 package com.waglewagle.rest.user;
 
-import com.waglewagle.rest.community.Community;
+import com.waglewagle.rest.community.entity.Community;
 import com.waglewagle.rest.community.repository.CommunityRepository;
+import com.waglewagle.rest.user.entity.User;
 import com.waglewagle.rest.user.repository.UserRepository;
+import com.waglewagle.rest.user.service.UserService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -25,12 +25,16 @@ import javax.servlet.http.Cookie;
 @Transactional
 class UserControllerTest {
 
-    @Autowired private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-    @Autowired private UserService userService;
+    @Autowired
+    private UserService userService;
 
-    @Autowired private UserRepository userRepository;
-    @Autowired private CommunityRepository communityRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private CommunityRepository communityRepository;
 
     @Test
     @DisplayName("GET user/me - FAIL : 유저가(cookie) 해당 커뮤니티에 가입하지 않은 경우")
