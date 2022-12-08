@@ -1,6 +1,6 @@
 package com.waglewagle.rest.user.entity;
 
-import com.waglewagle.rest.user.dto.UpdateProfileDTO;
+import com.waglewagle.rest.user.data_object.dto.UpdateProfileDTO;
 import com.waglewagle.rest.user.enums.OauthMethod;
 import com.waglewagle.rest.user.enums.Role;
 import lombok.Builder;

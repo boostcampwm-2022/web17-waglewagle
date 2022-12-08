@@ -1,4 +1,4 @@
-package com.waglewagle.rest.user.dto;
+package com.waglewagle.rest.user.data_object.dto;
 
 import com.waglewagle.rest.community.entity.CommunityUser;
 import com.waglewagle.rest.user.entity.User;

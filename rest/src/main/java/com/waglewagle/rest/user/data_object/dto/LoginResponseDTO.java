@@ -1,4 +1,4 @@
-package com.waglewagle.rest.user.dto;
+package com.waglewagle.rest.user.data_object.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

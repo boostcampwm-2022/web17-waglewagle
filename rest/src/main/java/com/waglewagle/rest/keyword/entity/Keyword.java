@@ -2,7 +2,7 @@ package com.waglewagle.rest.keyword.entity;
 
 import com.waglewagle.rest.community.entity.Community;
 import com.waglewagle.rest.keyword.data_object.dto.KeywordDTO.CreateKeywordDTO;
-import com.waglewagle.rest.thread.Thread;
+import com.waglewagle.rest.thread.entity.Thread;
 import com.waglewagle.rest.user.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

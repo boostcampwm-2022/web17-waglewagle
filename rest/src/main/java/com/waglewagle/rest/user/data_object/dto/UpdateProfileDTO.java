@@ -1,11 +1,11 @@
-package com.waglewagle.rest.user.dto;
+package com.waglewagle.rest.user.data_object.dto;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class UpdateProfileDTO{
+public class UpdateProfileDTO {
 
     private String profileImageUrl;
 

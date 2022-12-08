@@ -1,7 +1,8 @@
-package com.waglewagle.rest.thread;
+package com.waglewagle.rest.thread.dto;
 
 import com.waglewagle.rest.keyword.entity.Keyword;
-import com.waglewagle.rest.user.dto.AuthorDTO;
+import com.waglewagle.rest.thread.entity.Thread;
+import com.waglewagle.rest.user.data_object.dto.AuthorDTO;
 import com.waglewagle.rest.user.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,7 +44,7 @@ public class ThreadDTO {
         private Keyword keyword;
         private String content;
 
-        static CreateThreadDTO from(User author, Thread parentThread, Keyword keyword, String content) {
+        public static CreateThreadDTO from(User author, Thread parentThread, Keyword keyword, String content) {
             CreateThreadDTO createThreadDTO = new CreateThreadDTO();
             createThreadDTO.setAuthor(author);
             createThreadDTO.setParentThread(parentThread);

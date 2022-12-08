@@ -1,16 +1,16 @@
-package com.waglewagle.rest.thread;
+package com.waglewagle.rest.thread.repository.custom;
 
 import com.querydsl.jpa.JPQLQueryFactory;
+import com.waglewagle.rest.thread.entity.QThread;
+import com.waglewagle.rest.thread.entity.Thread;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
-public class CustomThreadRepositoryImpl implements CustomThreadRepository{
+public class ThreadCustomRepositoryImpl implements ThreadCustomRepository {
 
     private final JPQLQueryFactory jpqlQueryFactory;
 

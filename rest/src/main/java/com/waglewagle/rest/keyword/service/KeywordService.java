@@ -10,7 +10,7 @@ import com.waglewagle.rest.keyword.entity.KeywordUser;
 import com.waglewagle.rest.keyword.repository.KeywordRepository;
 import com.waglewagle.rest.keyword.repository.KeywordUserRepository;
 import com.waglewagle.rest.keyword.service.association.AssociationCalculator;
-import com.waglewagle.rest.thread.ThreadRepository;
+import com.waglewagle.rest.thread.repository.ThreadRepository;
 import com.waglewagle.rest.user.entity.User;
 import com.waglewagle.rest.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

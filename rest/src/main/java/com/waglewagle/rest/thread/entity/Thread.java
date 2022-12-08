@@ -1,7 +1,7 @@
-package com.waglewagle.rest.thread;
+package com.waglewagle.rest.thread.entity;
 
 import com.waglewagle.rest.keyword.entity.Keyword;
-import com.waglewagle.rest.thread.ThreadDTO.CreateThreadDTO;
+import com.waglewagle.rest.thread.dto.ThreadDTO.CreateThreadDTO;
 import com.waglewagle.rest.user.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

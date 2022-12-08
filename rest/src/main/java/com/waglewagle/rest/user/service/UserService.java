@@ -3,9 +3,9 @@ package com.waglewagle.rest.user.service;
 import com.waglewagle.rest.common.PreResponseDTO;
 import com.waglewagle.rest.community.entity.CommunityUser;
 import com.waglewagle.rest.community.repository.CommunityUserRepository;
-import com.waglewagle.rest.user.dto.UpdateProfileDTO;
-import com.waglewagle.rest.user.dto.UpdateProfileResponseDTO;
-import com.waglewagle.rest.user.dto.UserConnectionStatusDTO;
+import com.waglewagle.rest.user.data_object.dto.UpdateProfileDTO;
+import com.waglewagle.rest.user.data_object.dto.UpdateProfileResponseDTO;
+import com.waglewagle.rest.user.data_object.dto.UserConnectionStatusDTO;
 import com.waglewagle.rest.user.entity.User;
 import com.waglewagle.rest.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.waglewagle.rest.user.dto.UserInfoDTO.UserInfoResDTO;
+import static com.waglewagle.rest.user.data_object.dto.UserInfoDTO.UserInfoResDTO;
 
 @Service
 @RequiredArgsConstructor

@@ -1,7 +1,7 @@
 package com.waglewagle.rest.user.controller;
 
 import com.waglewagle.rest.common.PreResponseDTO;
-import com.waglewagle.rest.user.dto.*;
+import com.waglewagle.rest.user.data_object.dto.*;
 import com.waglewagle.rest.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,7 +13,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-import static com.waglewagle.rest.user.dto.UserInfoDTO.UserInfoResDTO;
+import static com.waglewagle.rest.user.data_object.dto.UserInfoDTO.UserInfoResDTO;
 
 @Controller
 @RequestMapping("/api/v1/user")
