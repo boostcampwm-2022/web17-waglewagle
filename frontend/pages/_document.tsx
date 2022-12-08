@@ -2,10 +2,8 @@ import { Head, Html, Main, NextScript } from 'next/document';
 
 const Document = () => {
   return (
-    <Html>
-      <Head>
-        <title>와글와글</title>
-      </Head>
+    <Html lang='ko'>
+      <Head />
       <body>
         <Main />
         <NextScript />

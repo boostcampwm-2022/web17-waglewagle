@@ -1,4 +1,4 @@
-import Circle from '../circlepacker/Circle';
+import Circle from '../utils/circlepacker/Circle';
 
 export type MyKeywordData = {
   keywordId: string;
@@ -16,11 +16,6 @@ export type AddKeywordData = {
   communityId: string;
 };
 
-export type AddKeywordResponseData = {
-  keywordId: string;
-  keywordName: string;
-};
-
 export type JoinKeywordData = {
   keywordId: string;
   communityId: string;
@@ -35,30 +30,56 @@ export type KeywordRelatedData = {
 };
 
 export type BubbleData = {
+  keywordId: string;
   keyword: string;
   count: number;
   circle: Circle;
+  isJoined: boolean;
 };
 
 export type UserData = {
   userId: string;
   username: string;
   profileImageUrl: string | null;
+  role: 'ADMIN' | 'USER' | 'MANAGER' | 'GUEST';
+  isFirstInCommunity: boolean | null;
 };
 
-export type CommentData = {
-  id: string;
-  content: string;
+export type CommunityData = {
+  communityId: string;
+  title: string;
+  description: string;
+};
+
+export type Author = {
+  userId: string;
   username: string;
-  createAt: string;
-  profileURL?: string;
+  profileImageUrl: string;
+};
+
+export type KeywordGroupData = {
+  keywordId: string;
+  keyword: string;
 };
 
 export type ThreadData = {
-  id: string;
-  profileURL?: string;
+  threadId: string;
+  content: string;
+  childThreadCount: number;
+  childThreads: ThreadData[];
+  createdAt: string;
+  updatedAt: string;
+  author: Author;
+};
+
+export type KeywordUser = {
+  userId: string;
   username: string;
-  createAt: string;
-  contents: string;
-  comments: CommentData[];
+  profileImageUrl: string;
+  lastActivity: string;
+};
+
+export type ClickPosData = {
+  x: number;
+  y: number;
 };

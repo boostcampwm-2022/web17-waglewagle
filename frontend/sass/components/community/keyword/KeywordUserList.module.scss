@@ -1,14 +1,17 @@
 .layout {
+  overflow-y: scroll;
+  height: 100%;
   padding: 15px 20px;
   border: 1px solid black;
   border-radius: 10px;
 }
 
 .header {
+  font-family: 'NanumBugGeugSeong', serif;
   display: flex;
   align-items: baseline;
+  flex-wrap: wrap;
   margin-bottom: 30px;
-  font-family: 'Nanum BugGeugSeong';
   gap: 12px;
 }
 
@@ -23,6 +26,7 @@
 .user-list {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   margin-bottom: 5px;
   gap: 14px;
 }
@@ -35,7 +39,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: #54a523;
+  background-color: #54A523;
 }
 
 @media (max-width: 1320px) {

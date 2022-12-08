@@ -8,12 +8,13 @@ import {
   UserControl,
 } from '@components/admin';
 import { ADMIN_PAGE_TAB } from '@constants/constants';
+import SeoHead from '@components/common/Head';
+import config from '../../config';
 
 const Admin = () => {
   const router = useRouter();
-  const { id } = router.query;
   const [tab, setTab] = useState(0);
-  const [title, setTitle] = useState('부스트캠프 7기 커뮤니티');
+  const title = '부스트캠프 7기 커뮤니티';
 
   const handleClickTab = (tabData: number) => {
     setTab(tabData);
@@ -21,6 +22,11 @@ const Admin = () => {
 
   return (
     <AdminLayout>
+      <SeoHead
+        title='와글와글 | 관리자 페이지'
+        description='데이터 시각화를 통한 중규모 커뮤니티 소모임 관리 서비스'
+        url={`${config.HOST}${router.asPath}`}
+      />
       <AdminSideBar title={title} handleClickTab={handleClickTab} tab={tab} />
       <AdminMain title={title} tab={tab}>
         {tab === ADMIN_PAGE_TAB.USER_CONTROL ? (

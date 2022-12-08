@@ -1,55 +1,20 @@
 import classnames from 'classnames/bind';
 import styles from '@sass/components/common/LoginModalContent.module.scss';
-import { ChangeEvent, useState } from 'react';
-import apis from '../../apis/apis';
-import { useRouter } from 'next/router';
+import { AiFillGithub } from 'react-icons/ai';
+import config from '../../config';
 const cx = classnames.bind(styles);
 
-interface LoginModalContentProps {
-  closeLoginModal: () => void;
-}
-
-const LoginModalContent = ({ closeLoginModal }: LoginModalContentProps) => {
-  const router = useRouter();
-  const [username, setUsername] = useState<string>('');
-
-  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setUsername(e.target.value);
-  };
-
-  const handleSubmitUsernameLogin = async (
-    e: React.FormEvent<HTMLFormElement>,
-  ) => {
-    e.preventDefault();
-    // localStorage.setItem('waglewagle-username', username); // 임시 유저데이터
-    await apis.fetchLogin(username);
-    setUsername('');
-    closeLoginModal();
-    router.reload();
-  };
-
+const LoginModalContent = () => {
   return (
     <div className={cx('container')}>
       <h2 className={cx('title')}>로그인</h2>
-      <form
-        className={cx('username-login-form')}
-        onSubmit={handleSubmitUsernameLogin}
+      <a
+        href={`${config.HOST}/oauth2/login/github`}
+        className={cx('github-login-button')}
       >
-        <input
-          value={username}
-          onChange={onChange}
-          className={cx('username-input')}
-          placeholder='유저이름'
-        />
-        <button type='submit' className={cx('login-button')}>
-          로그인
-        </button>
-      </form>
-      {/* <hr /> */}
-      {/* <button className={cx('github-login-button')}>
         <AiFillGithub />
         깃허브로 로그인하기
-      </button> */}
+      </a>
     </div>
   );
 };

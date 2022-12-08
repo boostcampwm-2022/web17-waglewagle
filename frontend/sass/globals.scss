@@ -1,8 +1,10 @@
 @import '@sass/normalize';
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
 
 @font-face {
-  font-family: 'Nanum BugGeugSeong';
-  src: url('../public/fonts/nanum buggeugseong.ttf');
+  font-family: 'NanumBugGeugSeong';
+  src: url('../public/fonts/NanumBugGeugSeong.woff2') format('woff2');
+  font-display: swap;
 }
 
 html {
@@ -10,6 +12,14 @@ html {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+
+    &::-webkit-scrollbar {
+      width: 10px;
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      background-color: rgba(0, 0, 0.5);
+    }
   }
 }
 
@@ -30,14 +40,4 @@ a {
 
 li {
   list-style: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-  body {
-    background: #112a4a;
-    color: #fcfcfc;
-  }
 }
