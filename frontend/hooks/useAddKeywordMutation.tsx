@@ -1,10 +1,16 @@
 import { AddKeywordData, MyKeywordData } from '#types/types';
 import { REACT_QUERY_KEY } from '@constants/constants';
-import { QueryClient, useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/router';
 import apis from '../apis/apis';
 
-const useAddKeywordMutation = () => {
-  const queryClient = new QueryClient();
+// 반환값, 요청 URL이 모두 다르기 때문에 join과 add 쿼리를 분리함.
+const useAddKeywordMutation = (
+  handlePrevKeyword: (prevKeyword: MyKeywordData) => void,
+) => {
+  const router = useRouter();
+  const communityId = router.query.id as string;
+  const queryClient = useQueryClient();
 
   const addMyKeyword = async (
     addKeywordData: AddKeywordData,
@@ -16,21 +22,27 @@ const useAddKeywordMutation = () => {
   const { mutate, isError, error } = useMutation(addMyKeyword, {
     onSuccess: (addKeywordResponse) => {
       queryClient.setQueryData(
-        [REACT_QUERY_KEY.MY_KEYWORD_LIST],
+        [REACT_QUERY_KEY.MY_KEYWORD_LIST, communityId],
         (old: MyKeywordData[] | undefined) => {
           if (!old) {
             return [addKeywordResponse];
           }
 
-          [...old, addKeywordResponse];
+          return [...old, addKeywordResponse];
         },
       );
+
+      const prevAddedKeyword: MyKeywordData = {
+        keywordId: addKeywordResponse.keywordId,
+        keywordName: addKeywordResponse.keywordName,
+      };
+      handlePrevKeyword(prevAddedKeyword);
     },
   });
 
   // 후에 예외처리가 쉽도록 isError와 error를 내보내준다.
   return {
-    addKeywordMutate: mutate,
+    mutate,
     isError,
     error,
   };
