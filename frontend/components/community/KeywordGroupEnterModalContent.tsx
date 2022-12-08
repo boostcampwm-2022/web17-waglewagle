@@ -67,7 +67,7 @@ const KeywordGroupEnterModalContent = ({
         <span>추천 키워드</span>
         <ul>
           {slicedRelatedKeyword.map((relatedKeyword) => (
-            <li>{relatedKeyword.keywordName}</li>
+            <li key={relatedKeyword.keywordId}>{relatedKeyword.keywordName}</li>
           ))}
         </ul>
       </div>
