@@ -1,26 +1,27 @@
-import { ThreadData } from '#types/types';
+import Thread from '@components/community/keyword-group/Thread';
 import useThreadListQuery from '@hooks/useThreadListQuery';
 import styles from '@sass/components/community/keyword/ThreadList.module.scss';
 import classnames from 'classnames/bind';
-import Thread from './Thread';
 const cx = classnames.bind(styles);
 
 interface ThreadListProps {
-  openSidebar(thread: ThreadData): void;
+  keywordId: string;
+  openSidebar(threadId: string): void;
 }
 
-const ThreadList = ({ openSidebar }: ThreadListProps) => {
-  const { data: threadDataList } = useThreadListQuery('123');
+const ThreadList = ({ keywordId, openSidebar }: ThreadListProps) => {
+  const { data: threadDataList } = useThreadListQuery(keywordId);
 
   return (
     <ul className={cx('thread-list')}>
-      {threadDataList?.map((threadData) => (
-        <Thread
-          key={threadData.threadId}
-          {...threadData}
-          openSidebar={openSidebar}
-        />
-      ))}
+      {threadDataList &&
+        threadDataList?.map((threadData) => (
+          <Thread
+            key={threadData.threadId}
+            {...threadData}
+            openSidebar={openSidebar}
+          />
+        ))}
     </ul>
   );
 };

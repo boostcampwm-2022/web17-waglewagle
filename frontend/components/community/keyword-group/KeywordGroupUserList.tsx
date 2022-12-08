@@ -5,8 +5,12 @@ import classnames from 'classnames/bind';
 import { useMemo } from 'react';
 const cx = classnames.bind(styles);
 
-const KeywordGroupUserList = () => {
-  const { data: userList } = useKeywordUserListQuery('123');
+interface KeywordGroupUserListProps {
+  keywordId: string;
+}
+
+const KeywordGroupUserList = ({ keywordId }: KeywordGroupUserListProps) => {
+  const { data: userList } = useKeywordUserListQuery(keywordId);
 
   const onlineUserCount = useMemo(
     () =>

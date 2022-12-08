@@ -1,4 +1,5 @@
 import { Author, ThreadData } from '#types/types';
+import useUserMe from '@hooks/useUserMe';
 import CommentIcon from '@public/images/comment.svg';
 import DeleteIcon from '@public/images/delete.svg';
 import styles from '@sass/components/community/keyword/Thread.module.scss';
@@ -17,16 +18,13 @@ interface ThreadProps {
   createdAt: string;
   updatedAt: string;
   author: Author;
-  openSidebar(thread: ThreadData): void;
+  openSidebar(threadId: string): void;
 }
 
 const Thread = ({
   threadId,
   content,
-  childThreadCount,
-  childThreads,
   createdAt,
-  updatedAt,
   author: { userId, username, profileImageUrl },
   openSidebar,
 }: ThreadProps) => {
@@ -35,12 +33,14 @@ const Thread = ({
     mutationFn: () => apis.deleteThread(threadId),
   });
 
+  const userData = useUserMe();
+
   return (
     <li className={cx('thread')}>
       <Image
         className={cx('profile-image')}
         src={
-          profileImageUrl === undefined
+          profileImageUrl === null
             ? '/images/default-profile.png'
             : profileImageUrl
         }
@@ -48,7 +48,6 @@ const Thread = ({
         width={30}
         height={30}
       />
-
       <div>
         <div className={cx('name-time')}>
           <p>{username}</p>
@@ -59,28 +58,20 @@ const Thread = ({
       <div className={cx('buttons')}>
         <button
           className={cx('comment-button')}
-          onClick={() =>
-            openSidebar({
-              threadId,
-              content,
-              childThreadCount,
-              childThreads,
-              createdAt,
-              updatedAt,
-              author: { userId, username, profileImageUrl },
-            })
-          }
+          onClick={() => openSidebar(threadId)}
         >
           <CommentIcon />
         </button>
-        <button
-          className={cx('delete-button')}
-          onClick={() => {
-            mutate();
-          }}
-        >
-          <DeleteIcon />
-        </button>
+        {userId === userData?.userId && (
+          <button
+            className={cx('delete-button')}
+            onClick={() => {
+              mutate();
+            }}
+          >
+            <DeleteIcon />
+          </button>
+        )}
       </div>
     </li>
   );

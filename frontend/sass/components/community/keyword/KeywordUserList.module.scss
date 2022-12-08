@@ -1,16 +1,17 @@
 .layout {
+  overflow-y: scroll;
+  height: 100%;
   padding: 15px 20px;
   border: 1px solid black;
   border-radius: 10px;
-  height: 100%;
-  overflow-y: scroll;
 }
 
 .header {
+  font-family: 'NanumBugGeugSeong', serif;
   display: flex;
   align-items: baseline;
+  flex-wrap: wrap;
   margin-bottom: 30px;
-  font-family: 'NanumBugGeugSeong';
   gap: 12px;
 }
 
@@ -38,7 +39,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: #54a523;
+  background-color: #54A523;
 }
 
 @media (max-width: 1320px) {

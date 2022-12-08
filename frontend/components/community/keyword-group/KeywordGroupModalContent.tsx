@@ -2,11 +2,19 @@ import KeywordGroupLayout from './KeywordGroupLayout';
 import KeywordGroupMain from './KeywordGroupMain';
 import KeywordGroupUserList from './KeywordGroupUserList';
 
-const KeywordGroupModalContent = () => {
+interface KeywordGroupModalContentProps {
+  keywordId: string;
+  keyword: string;
+}
+
+const KeywordGroupModalContent = ({
+  keywordId,
+  keyword,
+}: KeywordGroupModalContentProps) => {
   return (
     <KeywordGroupLayout>
-      <KeywordGroupMain />
-      <KeywordGroupUserList />
+      <KeywordGroupMain keywordId={keywordId} keyword={keyword} />
+      <KeywordGroupUserList keywordId={keywordId} />
     </KeywordGroupLayout>
   );
 };
