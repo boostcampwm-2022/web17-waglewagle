@@ -10,28 +10,27 @@ import HomeDescription from '@components/home/HomeDescription';
 import SeoHead from '@components/common/Head';
 import { useRouter } from 'next/router';
 import config from '../config';
-import useMockUserMe from '@hooks/useMockUserMe';
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
+import { LoginModalContent, Modal } from '@components/common';
+import useUserMe from '@hooks/useUserMe';
 import apis from '../apis/apis';
 import { MVP_DEFAULT } from '@constants/constants';
-import { LoginModalContent, Modal } from '@components/common';
 
 const Home = () => {
-  const [isOpenLoginModal, setIsOpenLoginModal] = useState<boolean>(false);
   const router = useRouter();
-  // TODO: 나중에 /user/me 수정되면 삭제하기
-  const mockUserData = useMockUserMe();
+  const [isOpenLoginModal, setIsOpenLoginModal] = useState<boolean>(false);
+  const userData = useUserMe();
 
   const openLoginModal = () => {
     setIsOpenLoginModal(true);
   };
 
   useEffect(() => {
-    if (mockUserData) {
+    if (userData) {
       apis.joinCommunity(MVP_DEFAULT.COMMUNITY_ID);
       router.push('/main');
     }
-  }, [mockUserData]);
+  }, [userData]);
 
   return (
     <HomeLayout>

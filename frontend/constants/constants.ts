@@ -11,6 +11,7 @@ export enum KEYWORD_ADDER_THEME {
 export enum REACT_QUERY_KEY {
   KEYWORD = 'keyword',
   USERME = 'userme',
+  USER_COMMUNITY = 'userCommunity',
   MY_KEYWORD_LIST = 'myKeywordList',
   RELATED_KEYWORD = 'relatedKeyword',
 }

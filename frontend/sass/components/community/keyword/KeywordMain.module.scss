@@ -9,6 +9,7 @@
 .content {
   display: flex;
   height: calc(100% - 80px);
+  gap: 10px;
 
   div:first-child {
     flex: 1;

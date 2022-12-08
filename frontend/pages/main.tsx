@@ -1,3 +1,4 @@
+import { Loading } from '@components/common';
 import SeoHead from '@components/common/Head';
 import {
   CommunityList,
@@ -5,13 +6,26 @@ import {
   MainLayout,
   MainTitle,
 } from '@components/main';
+import { useEffect } from 'react';
+import useUserMe from '@hooks/useUserMe';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
 import config from '../config';
+import apis from '../apis/apis';
+import { MVP_DEFAULT } from '@constants/constants';
 
 const Main = () => {
   const router = useRouter();
-  const [username] = useState('커넥트재단');
+  const userData = useUserMe();
+
+  useEffect(() => {
+    if (userData) {
+      apis.joinCommunity(MVP_DEFAULT.COMMUNITY_ID);
+    }
+  }, [userData]);
+
+  if (!userData) {
+    return <Loading />;
+  }
 
   return (
     <MainLayout>
@@ -21,7 +35,7 @@ const Main = () => {
         url={`${config.HOST}${router.asPath}`}
       />
       <MainHeader />
-      <MainTitle username={username} />
+      <MainTitle username={userData.username} />
       <CommunityList />
     </MainLayout>
   );

@@ -1,5 +1,6 @@
 import {
   AddKeywordData,
+  CommunityData,
   JoinKeywordData,
   KeywordData,
   KeywordRelatedData,
@@ -29,10 +30,20 @@ const getKeywords = async (id: string): Promise<KeywordData[]> => {
   return response.data;
 };
 
+const getUserCommunityList = async (): Promise<CommunityData[]> => {
+  const response = await apiInstance.get('/v1/community');
+
+  return response.data;
+};
+
 const joinCommunity = async (communityId: string) => {
   await apiInstance.post('/v1/community-user', {
     communityId,
   });
+};
+
+const updateFirstVisitInCommunity = async (communityId: string) => {
+  await apiInstance.put(`/v1/community-user/${communityId}/first-visit`);
 };
 
 // isFirstInCommunity가 없으면 isFirstLogin이 항상 null
@@ -158,7 +169,9 @@ const apis = {
   getKeywords,
   joinKeyword,
   disjoinKeyword,
+  getUserCommunityList,
   joinCommunity,
+  updateFirstVisitInCommunity,
   addKeyword,
   getUserData,
   getKeywordAssociations,

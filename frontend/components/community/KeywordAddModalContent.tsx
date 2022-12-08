@@ -7,22 +7,36 @@ import KeywordAdder from './KeywordAdder';
 import { KEYWORD_ADDER_THEME } from '@constants/constants';
 const cx = classnames.bind(styles);
 import { MyKeywordData } from '../../types/types';
+import useUserMe from '@hooks/useUserMe';
+import { useRouter } from 'next/router';
+import apis from '../../apis/apis';
+import useMyKeywordQuery from '@hooks/useMyKeywordQuery';
 
 interface KeywordAddModalContent {
   prevKeyword?: MyKeywordData;
   handleChangePrevKeyword: (prevKeyword: MyKeywordData) => void;
+  closeKeywordModal: () => void;
 }
 
 const KeywordAddModalContent = ({
   prevKeyword,
   handleChangePrevKeyword,
+  closeKeywordModal,
 }: KeywordAddModalContent) => {
+  const router = useRouter();
+  const communityId = router.query.id as string;
+  const userData = useUserMe(communityId);
+  const { data: myKeywordList } = useMyKeywordQuery(communityId);
+
+  const handleClickEnter = async () => {
+    await apis.updateFirstVisitInCommunity(communityId);
+    closeKeywordModal();
+  };
+
   return (
     <div className={cx('container')}>
       <header className={cx('header')}>
-        <h3 className={cx('title')}>
-          세 개 이상 추가해보세요 (키워드를 추가해보세요?)
-        </h3>
+        <h3 className={cx('title')}>관심있는 키워드를 추가해보세요!</h3>
         {/* 지금은 필요 없어서 리셋버튼 삭제 */}
       </header>
       <main className={cx('main')}>
@@ -41,7 +55,19 @@ const KeywordAddModalContent = ({
           <hr />
           <h4 className={cx('my-keyword-title')}>내 키워드</h4>
           <MyKeywordList />
-          <button className={cx('enter-button')}>입장하기</button>
+          {userData?.isFirstInCommunity ? (
+            <button
+              disabled={myKeywordList.length > 0 ? false : true}
+              onClick={handleClickEnter}
+              className={cx('enter-button')}
+            >
+              입장하기
+            </button>
+          ) : (
+            <button onClick={closeKeywordModal} className={cx('enter-button')}>
+              닫기
+            </button>
+          )}
         </section>
       </main>
     </div>
