@@ -115,7 +115,7 @@ const deleteThread = async (threadId: string) => {
 };
 
 const deleteKeyword = async (communityId: string, keywordIdList: string[]) => {
-  const response = await apiInstance.delete('/v1/thread', {
+  const response = await apiInstance.delete('/v1/keyword', {
     data: {
       communityId,
       keywordIdList,
@@ -130,7 +130,7 @@ const mergeKeyword = async (
   destinationKeywordId: string,
   sourceKeywordIdList: string[],
 ) => {
-  const response = await apiInstance.post('/v1/keyword/merge', {
+  const response = await apiInstance.put('/v1/keyword/merge', {
     communityId,
     destinationKeywordId,
     sourceKeywordIdList,
