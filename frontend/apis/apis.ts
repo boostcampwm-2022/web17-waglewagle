@@ -1,15 +1,15 @@
 import {
   AddKeywordData,
   JoinKeywordData,
+  KeywordData,
   KeywordRelatedData,
   KeywordUser,
   MyKeywordData,
   ThreadData,
   UserData,
-} from './../types/types';
+} from '#types/types';
 import axios from 'axios';
 import config from '../config';
-import { KeywordData } from '../types/types';
 
 const apiInstance = axios.create({
   baseURL: `${config.API_HOST}`,
@@ -123,6 +123,28 @@ const deleteThread = async (threadId: string) => {
   return response.data;
 };
 
+const deleteKeyword = async (communityId: string, keywordIdList: string[]) => {
+  const response = await apiInstance.delete('/v1/keyword', {
+    data: {
+      communityId,
+      keywordIdList,
+    },
+  });
+
+  return response.data;
+};
+
+const mergeKeyword = async (
+  communityId: string,
+  destinationKeywordId: string,
+  sourceKeywordIdList: string[],
+) => {
+  const response = await apiInstance.put('/v1/keyword/merge', {
+    communityId,
+    destinationKeywordId,
+    sourceKeywordIdList,
+  });
+  
 const getMyKeywordList = async (
   communityId: string,
 ): Promise<MyKeywordData[]> => {
@@ -145,6 +167,8 @@ const apis = {
   addThread,
   addComments,
   deleteThread,
+  deleteKeyword,
+  mergeKeyword,
   getMyKeywordList,
 };
 
