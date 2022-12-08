@@ -30,8 +30,8 @@ public class KeywordRepository {
         return jpaQueryFactory
                 .selectFrom(QKeyword.keyword1)
                 .distinct()
-                .innerJoin(QKeyword.keyword1.community, QCommunity.community)
-                .innerJoin(QKeyword.keyword1.keywordUsers, QKeywordUser.keywordUser)
+                .leftJoin(QKeyword.keyword1.community, QCommunity.community)
+                .leftJoin(QKeyword.keyword1.keywordUsers, QKeywordUser.keywordUser)
                 .fetchJoin()
                 .where(QCommunity.community.id.eq(communityId))
                 .fetch();
