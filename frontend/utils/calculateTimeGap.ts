@@ -1,4 +1,8 @@
-const calculateTimeGap = (timeData: string) => {
+const calculateTimeGap = (timeData: string | undefined) => {
+  if (timeData === undefined) {
+    return '';
+  }
+
   const now = new Date();
   const splitedTimeData = timeData.split('T');
   const [year, month, date] = splitedTimeData[0].split('-');

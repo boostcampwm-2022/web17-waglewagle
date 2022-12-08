@@ -1,5 +1,5 @@
+import { KeywordRelatedData, MyKeywordData } from '#types/types';
 import { useState } from 'react';
-import { KeywordRelatedData, MyKeywordData } from '../types/types';
 
 // 이렇게 관리해두면 React Query 연결할 때 편하지 않을까?
 // 어차피 React Query도 Hooks로 관리할테니 이 부분만 수정해주면 되어서 편할 것 같다.

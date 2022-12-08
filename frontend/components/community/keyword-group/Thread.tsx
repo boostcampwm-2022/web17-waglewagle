@@ -18,16 +18,13 @@ interface ThreadProps {
   createdAt: string;
   updatedAt: string;
   author: Author;
-  openSidebar(thread: ThreadData): void;
+  openSidebar(threadId: string): void;
 }
 
 const Thread = ({
   threadId,
   content,
-  childThreadCount,
-  childThreads,
   createdAt,
-  updatedAt,
   author: { userId, username, profileImageUrl },
   openSidebar,
 }: ThreadProps) => {
@@ -61,17 +58,7 @@ const Thread = ({
       <div className={cx('buttons')}>
         <button
           className={cx('comment-button')}
-          onClick={() =>
-            openSidebar({
-              threadId,
-              content,
-              childThreadCount,
-              childThreads,
-              createdAt,
-              updatedAt,
-              author: { userId, username, profileImageUrl },
-            })
-          }
+          onClick={() => openSidebar(threadId)}
         >
           <CommentIcon />
         </button>

@@ -1,16 +1,13 @@
+import { ThreadData } from '#types/types';
 import { useQuery } from '@tanstack/react-query';
 import apis from '../apis/apis';
-import { ThreadData } from '../types/types';
 
-const useThreadListQuery = (communityId: string) => {
+const useThreadListQuery = (keywordId: string) => {
   const { data, isLoading, isFetching } = useQuery<ThreadData[]>(
-    ['keywordThreadList', communityId],
-    () => {
-      const data = apis.getKeywordThreads(communityId);
-      return data;
-    },
+    ['keywordThreadList', keywordId],
+    () => apis.getKeywordThreads(keywordId),
     {
-      enabled: !!communityId,
+      enabled: !!keywordId,
       refetchInterval: 1000,
     },
   );
