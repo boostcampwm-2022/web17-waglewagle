@@ -37,7 +37,9 @@ const KeywordGroupSidebar = ({
   });
 
   useEffect(() => {
-    setThreadData(threadList?.find((thread) => thread.threadId === threadId));
+    if (threadList) {
+      setThreadData(threadList?.find((thread) => thread.threadId === threadId));
+    }
   }, [threadList, threadId, isOpen]);
 
   if (!isOpen || !threadList) {
