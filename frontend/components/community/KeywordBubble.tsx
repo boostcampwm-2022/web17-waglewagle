@@ -15,6 +15,7 @@ const KeywordModalContent = dynamic(
 );
 
 interface KeywordBubbleProps {
+  isHighlight: boolean;
   keywordId: string;
   keyword: string;
   posX: number;
@@ -24,6 +25,7 @@ interface KeywordBubbleProps {
 
 // requestAnimationFrame으로 이동
 const KeywordBubble = ({
+  isHighlight,
   keywordId,
   keyword,
   posX,
@@ -42,7 +44,7 @@ const KeywordBubble = ({
   return (
     <div
       onClick={handleClick}
-      className={cx('bubble')}
+      className={cx('bubble', { highlight: isHighlight })}
       style={{
         transform: `translate(${posX - radius}px, ${posY - radius}px)`,
         width: `${radius * 2}px`,

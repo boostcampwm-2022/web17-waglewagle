@@ -155,7 +155,10 @@ const mergeKeyword = async (
     destinationKeywordId,
     sourceKeywordIdList,
   });
-  
+
+  return response.data;
+};
+
 const getMyKeywordList = async (
   communityId: string,
 ): Promise<MyKeywordData[]> => {

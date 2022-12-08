@@ -34,6 +34,7 @@ export type BubbleData = {
   keyword: string;
   count: number;
   circle: Circle;
+  isJoined: boolean;
 };
 
 export type UserData = {
