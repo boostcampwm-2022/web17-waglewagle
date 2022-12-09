@@ -1,4 +1,5 @@
 import { Author, ThreadData } from '#types/types';
+import { apis } from '@apis/index';
 import useUserMe from '@hooks/useUserMe';
 import CommentIcon from '@public/images/comment.svg';
 import DeleteIcon from '@public/images/delete.svg';
@@ -7,7 +8,6 @@ import { useMutation } from '@tanstack/react-query';
 import calculateTimeGap from '@utils/calculateTimeGap';
 import classnames from 'classnames/bind';
 import Image from 'next/image';
-import apis from '../../../apis/apis';
 const cx = classnames.bind(styles);
 
 interface ThreadProps {
@@ -30,7 +30,7 @@ const Thread = ({
 }: ThreadProps) => {
   // setQueryData 통해서 데이터 수정 추가
   const { mutate } = useMutation({
-    mutationFn: () => apis.deleteThread(threadId),
+    mutationFn: () => apis.thread.deleteThread({ threadId }),
   });
 
   const userData = useUserMe();

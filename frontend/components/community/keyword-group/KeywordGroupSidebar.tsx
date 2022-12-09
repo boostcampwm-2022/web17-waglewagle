@@ -1,4 +1,5 @@
 import { ThreadData } from '#types/types';
+import { apis } from '@apis/index';
 import useThreadListQuery from '@hooks/useThreadListQuery';
 import useUserMe from '@hooks/useUserMe';
 import CloseIcon from '@public/images/close.svg';
@@ -9,7 +10,6 @@ import calculateTimeGap from '@utils/calculateTimeGap';
 import classnames from 'classnames/bind';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import apis from '../../../apis/apis';
 import CommentForm from './CommentForm';
 const cx = classnames.bind(styles);
 
@@ -30,7 +30,8 @@ const KeywordGroupSidebar = ({
   const userData = useUserMe();
   const { data: threadList } = useThreadListQuery(keywordId);
   const { mutate } = useMutation({
-    mutationFn: (commentId: string) => apis.deleteThread(commentId),
+    mutationFn: (commentId: string) =>
+      apis.thread.deleteThread({ threadId: commentId }),
     onSuccess: () => {
       setThreadData(threadList?.find((thread) => thread.threadId === threadId));
     },

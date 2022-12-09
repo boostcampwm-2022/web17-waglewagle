@@ -1,8 +1,8 @@
+import { apis } from '@apis/index';
 import styles from '@sass/components/community/keyword/CommentForm.module.scss';
 import { QueryClient, useMutation } from '@tanstack/react-query';
 import classnames from 'classnames/bind';
 import { ChangeEventHandler, FormEventHandler, useState } from 'react';
-import apis from '../../../apis/apis';
 const cx = classnames.bind(styles);
 
 interface CommentFormProps {
@@ -17,7 +17,12 @@ const CommentForm = ({ threadId, keywordId }: CommentFormProps) => {
 
   // setQueryData 통해서 데이터 수정 추가
   const { mutate } = useMutation({
-    mutationFn: () => apis.addComments(keywordId, contentInputData, threadId),
+    mutationFn: () =>
+      apis.thread.addComments({
+        keywordId,
+        content: contentInputData,
+        parentThreadId: threadId,
+      }),
     onSuccess: () => {
       return queryClient.resetQueries({
         queryKey: ['keywordThreadList', keywordId],
