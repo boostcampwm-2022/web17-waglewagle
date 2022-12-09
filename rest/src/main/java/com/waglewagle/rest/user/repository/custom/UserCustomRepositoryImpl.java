@@ -19,7 +19,7 @@ import static com.waglewagle.rest.keyword.entity.QKeywordUser.keywordUser;
 @Repository
 public class UserCustomRepositoryImpl implements UserCustomRepository {
 
-    private final EntityManager em;
+    private final EntityManager entityManager;
     private final JPQLQueryFactory jpqlQueryFactory;
 
 
@@ -36,7 +36,8 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
             user.setUsername(username);
             user.setOauthKey(username);
             user.setOauthMethod(OauthMethod.USERNAME);
-            em.persist(user);
+            
+            entityManager.persist(user);
         }
 
         return user.getId();

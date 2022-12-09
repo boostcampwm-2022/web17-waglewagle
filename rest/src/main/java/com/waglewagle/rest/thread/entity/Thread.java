@@ -1,7 +1,7 @@
 package com.waglewagle.rest.thread.entity;
 
 import com.waglewagle.rest.keyword.entity.Keyword;
-import com.waglewagle.rest.thread.data_object.dto.ThreadDTO.CreateThreadDTO;
+import com.waglewagle.rest.thread.data_object.dto.ThreadDTO.CreateDTO;
 import com.waglewagle.rest.user.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -49,10 +49,12 @@ public class Thread {
 
     private LocalDateTime deletedAt;
 
-    public Thread(CreateThreadDTO createThreadDTO) {
-        author = createThreadDTO.getAuthor();
-        parentThread = createThreadDTO.getParentThread();
-        content = createThreadDTO.getContent();
-        keyword = createThreadDTO.getKeyword();
+    public static Thread of(CreateDTO createDTO) {
+        Thread thread = new Thread();
+        thread.author = createDTO.getAuthor();
+        thread.parentThread = createDTO.getParentThread();
+        thread.content = createDTO.getContent();
+        thread.keyword = createDTO.getKeyword();
+        return thread;
     }
 }

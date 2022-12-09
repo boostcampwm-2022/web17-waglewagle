@@ -1,10 +1,9 @@
 package com.waglewagle.rest.thread.controller;
 
 import com.waglewagle.rest.keyword.service.KeywordService;
-import com.waglewagle.rest.thread.ThreadService;
-import com.waglewagle.rest.thread.data_object.dto.ThreadDTO.CreateThreadInputDTO;
-import com.waglewagle.rest.thread.data_object.dto.ThreadDTO.DeleteThreadDTO;
-import com.waglewagle.rest.thread.data_object.dto.ThreadDTO.ThreadResponseDTO;
+import com.waglewagle.rest.thread.data_object.dto.request.ThreadRequest;
+import com.waglewagle.rest.thread.data_object.dto.response.ThreadResponse;
+import com.waglewagle.rest.thread.service.ThreadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +26,11 @@ public class ThreadController {
      */
     @PostMapping("")
     @ResponseBody
-    public ResponseEntity<String> createThread(@CookieValue("user_id") Long userId, @RequestBody CreateThreadInputDTO createThreadInputDTO) {
-
+    public ResponseEntity<String> createThread(@CookieValue("user_id") Long userId,
+                                               @RequestBody ThreadRequest.CreateThreadInputDTO createThreadInputDTO) {
+        if (!createThreadInputDTO.isValid())
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        
         try {
             threadService.creatThread(userId, createThreadInputDTO);
             return new ResponseEntity<>(null, HttpStatus.CREATED);
@@ -44,9 +46,9 @@ public class ThreadController {
     @DeleteMapping("")
     @ResponseBody
     public ResponseEntity<Boolean> deleteThread(@CookieValue("user_id") Long userId,
-                                                @RequestBody DeleteThreadDTO deleteThreadDTO) {
+                                                @RequestBody ThreadRequest.DeleteDTO deleteDTO) {
 
-        threadService.deleteThread(userId, deleteThreadDTO.getThreadId());
+        threadService.deleteThread(userId, deleteDTO.getThreadId());
 
         return new ResponseEntity<>(true, HttpStatus.ACCEPTED);
     }
@@ -75,7 +77,7 @@ public class ThreadController {
             return new ResponseEntity(null, HttpStatus.NOT_FOUND);
         }
 
-        List<ThreadResponseDTO> threadResponseDTOS = threadService.getThreadsInKeyword(keywordId);
+        List<ThreadResponse.ThreadDTO> threadResponseDTOS = threadService.getThreadsInKeyword(keywordId);
 
         if (threadResponseDTOS.isEmpty()) {
             return new ResponseEntity(null, HttpStatus.NO_CONTENT);
