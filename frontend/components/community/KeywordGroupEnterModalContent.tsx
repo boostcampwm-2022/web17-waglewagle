@@ -5,8 +5,8 @@ import useRelatedKeywordList from '@hooks/useRelatedKeywordList';
 import styles from '@sass/components/community/KeywordGroupEnterModalContent.module.scss';
 import classnames from 'classnames/bind';
 import { useRouter } from 'next/router';
-const cx = classnames.bind(styles);
 import { useEffect, useState } from 'react';
+const cx = classnames.bind(styles);
 
 interface KeywordGroupEnterModalContentProps {
   keywordId: string;
@@ -67,7 +67,7 @@ const KeywordGroupEnterModalContent = ({
         <span>추천 키워드</span>
         <ul>
           {slicedRelatedKeyword.map((relatedKeyword) => (
-            <li>{relatedKeyword.keywordName}</li>
+            <li key={relatedKeyword.keywordId}>{relatedKeyword.keywordName}</li>
           ))}
         </ul>
       </div>
