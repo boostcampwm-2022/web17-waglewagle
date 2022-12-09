@@ -2,8 +2,8 @@ package com.waglewagle.rest.keyword.service;
 
 import com.waglewagle.rest.community.entity.Community;
 import com.waglewagle.rest.community.repository.CommunityRepository;
+import com.waglewagle.rest.keyword.data_object.KeywordVO;
 import com.waglewagle.rest.keyword.data_object.dto.AssociationDTO;
-import com.waglewagle.rest.keyword.data_object.dto.KeywordVO;
 import com.waglewagle.rest.keyword.data_object.dto.request.KeywordRequest;
 import com.waglewagle.rest.keyword.data_object.dto.response.KeywordResponse;
 import com.waglewagle.rest.keyword.entity.Keyword;

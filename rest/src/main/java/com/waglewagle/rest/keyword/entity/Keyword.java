@@ -1,7 +1,7 @@
 package com.waglewagle.rest.keyword.entity;
 
 import com.waglewagle.rest.community.entity.Community;
-import com.waglewagle.rest.keyword.data_object.dto.KeywordVO.CreateVO;
+import com.waglewagle.rest.keyword.data_object.KeywordVO.CreateVO;
 import com.waglewagle.rest.thread.entity.Thread;
 import com.waglewagle.rest.user.entity.User;
 import lombok.AccessLevel;

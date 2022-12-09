@@ -1,4 +1,4 @@
-package com.waglewagle.rest.keyword.data_object.dto;
+package com.waglewagle.rest.keyword.data_object;
 
 import com.waglewagle.rest.community.entity.Community;
 import com.waglewagle.rest.keyword.entity.Keyword;
