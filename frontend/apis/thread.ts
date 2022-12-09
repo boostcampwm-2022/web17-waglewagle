@@ -6,7 +6,9 @@ import type { AxiosResponse } from 'axios';
 const getKeywordThreads = (
   keywordId: string,
 ): Promise<AxiosResponse<ThreadData[]>> =>
-  apiInstance.get(`/v1/thread/keyword?keyword-id=${keywordId}`);
+  apiInstance.get('/v1/thread/keyword', {
+    params: { 'keyword-id': keywordId },
+  });
 
 type AddThreadRequestBody = {
   keywordId: string;
