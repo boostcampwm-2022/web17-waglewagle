@@ -3,8 +3,7 @@ package com.waglewagle.rest.keyword.service;
 import com.waglewagle.rest.community.entity.Community;
 import com.waglewagle.rest.community.repository.CommunityRepository;
 import com.waglewagle.rest.keyword.data_object.dto.AssociationDTO;
-import com.waglewagle.rest.keyword.data_object.dto.KeywordVO.CreateVO;
-import com.waglewagle.rest.keyword.data_object.dto.KeywordVO.JoinVO;
+import com.waglewagle.rest.keyword.data_object.dto.KeywordVO;
 import com.waglewagle.rest.keyword.data_object.dto.request.KeywordRequest;
 import com.waglewagle.rest.keyword.data_object.dto.response.KeywordResponse;
 import com.waglewagle.rest.keyword.entity.Keyword;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -75,14 +73,18 @@ public class KeywordService {
                   final Long communityId,
                   final String keywordName) {
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-        Community community = communityRepository.findById(communityId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 커뮤니티입니다."));
+        User user = userRepository
+                .findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        Community community = communityRepository
+                .findById(communityId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 커뮤니티입니다."));
 
-        CreateVO createVO = CreateVO.from(user, community, keywordName);
+        KeywordVO.CreateVO createVO = KeywordVO.CreateVO.from(user, community, keywordName);
         Keyword keyword = Keyword.of(createVO);
 
         // TODO: 이렇게 암시적으로 비즈니스 로직이 실행되어도 되는 지 모르겠다.
-        JoinVO joinVO = JoinVO.from(user, community, keyword);
+        KeywordVO.JoinVO joinVO = KeywordVO.JoinVO.from(user, community, keyword);
         KeywordUser keywordUser = KeywordUser.of(joinVO);
 
         keyword.addKeywordUser(keywordUser);
@@ -101,17 +103,19 @@ public class KeywordService {
         if (keyword == null) { //TODO: KeywordRepository Data JPA로 변경 및 Optional 처리
             throw new IllegalArgumentException("존재하지 않는 키워드입니다.");
         }
-        Community community = communityRepository.findById(joinDTO.getCommunityId())
+        Community community = communityRepository
+                .findById(joinDTO.getCommunityId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 커뮤니티입니다."));
-        User user = userRepository.findById(userId)
+        User user = userRepository
+                .findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        keywordUserRepository
+                .findByUserAndCommunityAndKeyword(user, community, keyword)
+                .ifPresent((__) -> {
+                    throw new IllegalArgumentException("이미 가입된 키워드입니다.");
+                });
 
-        Optional<KeywordUser> byUserAndCommunityAndKeyword = keywordUserRepository.findByUserAndCommunityAndKeyword(user, community, keyword);
-        if (byUserAndCommunityAndKeyword.isPresent()) {
-            throw new IllegalArgumentException("이미 가입된 키워드입니다."); //TODO: customException or customExceptionMessage로 변경
-        }
-
-        JoinVO joinVO = JoinVO.from(user, community, keyword);
+        KeywordVO.JoinVO joinVO = KeywordVO.JoinVO.from(user, community, keyword);
 
         keyword.addKeywordUser(KeywordUser.of(joinVO));
     }

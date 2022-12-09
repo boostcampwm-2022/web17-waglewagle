@@ -4,12 +4,10 @@ import com.waglewagle.rest.community.entity.Community;
 import com.waglewagle.rest.keyword.entity.Keyword;
 import com.waglewagle.rest.user.entity.User;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
-@AllArgsConstructor
+
 public class KeywordVO {
 
     @Getter

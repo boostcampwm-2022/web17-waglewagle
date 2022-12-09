@@ -1,7 +1,7 @@
 package com.waglewagle.rest.keyword.entity;
 
 import com.waglewagle.rest.community.entity.Community;
-import com.waglewagle.rest.keyword.data_object.dto.KeywordVO.JoinVO;
+import com.waglewagle.rest.keyword.data_object.dto.KeywordVO;
 import com.waglewagle.rest.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -41,7 +41,7 @@ public class KeywordUser {
 
     private LocalDateTime deletedAt;
 
-    public static KeywordUser of(final JoinVO joinVO) {
+    public static KeywordUser of(final KeywordVO.JoinVO joinVO) {
         KeywordUser keywordUser = new KeywordUser();
         keywordUser.community = joinVO.getCommunity();
         keywordUser.keyword = joinVO.getKeyword();
