@@ -1,8 +1,9 @@
 package com.waglewagle.rest.keyword.entity;
 
 import com.waglewagle.rest.community.entity.Community;
-import com.waglewagle.rest.keyword.data_object.dto.KeywordDTO.JoinKeywordDTO;
+import com.waglewagle.rest.keyword.data_object.dto.KeywordVO.JoinVO;
 import com.waglewagle.rest.user.entity.User;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class KeywordUser {
 
     @Id
@@ -40,9 +41,11 @@ public class KeywordUser {
 
     private LocalDateTime deletedAt;
 
-    public KeywordUser(JoinKeywordDTO joinKeywordDTO) {
-        community = joinKeywordDTO.getCommunity();
-        keyword = joinKeywordDTO.getKeyword();
-        user = joinKeywordDTO.getUser();
+    public static KeywordUser of(final JoinVO joinVO) {
+        KeywordUser keywordUser = new KeywordUser();
+        keywordUser.community = joinVO.getCommunity();
+        keywordUser.keyword = joinVO.getKeyword();
+        keywordUser.user = joinVO.getUser();
+        return keywordUser;
     }
 }

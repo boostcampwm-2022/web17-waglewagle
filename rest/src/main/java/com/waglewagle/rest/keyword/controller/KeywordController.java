@@ -3,8 +3,8 @@ package com.waglewagle.rest.keyword.controller;
 import com.waglewagle.rest.community.service.CommunityService;
 import com.waglewagle.rest.community.service.CommunityUserService;
 import com.waglewagle.rest.keyword.data_object.dto.AssociationDTO;
-import com.waglewagle.rest.keyword.data_object.dto.KeywordDTO;
-import com.waglewagle.rest.keyword.data_object.dto.KeywordDTO.*;
+import com.waglewagle.rest.keyword.data_object.dto.request.KeywordRequest;
+import com.waglewagle.rest.keyword.data_object.dto.response.KeywordResponse;
 import com.waglewagle.rest.keyword.entity.Keyword;
 import com.waglewagle.rest.keyword.service.KeywordService;
 import com.waglewagle.rest.keyword.service.KeywordUserService;
@@ -39,18 +39,20 @@ public class KeywordController {
      */
     @ResponseBody
     @PostMapping("")
-    public ResponseEntity<Object> createKeyword(@RequestBody CreateKeywordInputDTO createKeywordInputDTO, @CookieValue("user_id") Long userId) {
+    public ResponseEntity<Object>
+    createKeyword(@RequestBody final KeywordRequest.CreateDTO createDTO,
+                  @CookieValue("user_id") final Long userId) {
 
-        if (keywordService.isDuplicated(createKeywordInputDTO)) {
+        if (keywordService.isDuplicated(createDTO)) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
 
-        String keywordName = createKeywordInputDTO.getKeywordName();
-        Long communityId = createKeywordInputDTO.getCommunityId();
+        String keywordName = createDTO.getKeywordName();
+        Long communityId = createDTO.getCommunityId();
 
         try {
             Keyword keyword = keywordService.createKeyword(userId, communityId, keywordName);
-            return new ResponseEntity<>(new KeywordResponseDTO(keyword), HttpStatus.CREATED);
+            return new ResponseEntity<>(KeywordResponse.KeywordDTO.of(keyword), HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
@@ -62,7 +64,8 @@ public class KeywordController {
     //https://velog.io/@alstn_dev/Spring-Boot%EB%A1%9C-REST-API-%EC%84%9C%EB%B2%84-%EB%A7%8C%EB%93%A4%EA%B8%B0
     @ResponseBody
     @GetMapping("/associations")
-    public ResponseEntity<List<AssociationDTO>> getAssociatedKeywords(@RequestParam("keyword-id") Long keywordId) {
+    public ResponseEntity<List<AssociationDTO>>
+    getAssociatedKeywords(@RequestParam("keyword-id") final Long keywordId) {
 
         List<AssociationDTO> sortedList = keywordService.calcAssociatedKeywordsByKeyword(keywordId);
 
@@ -72,7 +75,8 @@ public class KeywordController {
 
     @ResponseBody
     @GetMapping("/{community_id}")
-    public ResponseEntity<List<KeywordDTO>> getAllKeywordInCommunity(@PathVariable("community_id") Long communityId) {
+    public ResponseEntity<List<KeywordResponse.KeywordMemberCountDTO>>
+    getAllKeywordInCommunity(@PathVariable("community_id") final Long communityId) {
 
         // TODO: Exception Handler
         // return type이 정해져 있어 가에러 메시지를 string이나 객체로 만들 수 없음.
@@ -80,7 +84,8 @@ public class KeywordController {
             return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
         }
 
-        List<KeywordDTO> keywordListInCommunity = keywordService.getKeywordListInCommunity(communityId);
+        List<KeywordResponse.KeywordMemberCountDTO>
+                keywordListInCommunity = keywordService.getKeywordListInCommunity(communityId);
 
         if (keywordListInCommunity.isEmpty()) {
             return new ResponseEntity(new ArrayList<>(), HttpStatus.NO_CONTENT);
@@ -95,14 +100,16 @@ public class KeywordController {
      */
     @ResponseBody
     @PostMapping("/join")
-    public ResponseEntity<String> joinKeyword(@RequestBody JoinKeywordInputDTO joinKeywordInputDTO, @CookieValue("user_id") Long userId) {
+    public ResponseEntity<String>
+    joinKeyword(@RequestBody final KeywordRequest.JoinDTO joinDTO,
+                @CookieValue("user_id") final Long userId) {
 
-        if (!joinKeywordInputDTO.isValid() || userId == null) {
+        if (!joinDTO.isValid() || userId == null) {
             return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
         }
 
         try {
-            keywordService.joinKeyword(joinKeywordInputDTO, userId);
+            keywordService.joinKeyword(joinDTO, userId);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
@@ -116,12 +123,12 @@ public class KeywordController {
      */
     @ResponseBody
     @DeleteMapping("/disjoin")
-    public ResponseEntity<String> disjoinKeyword(
-            @RequestBody DisjoinKeywordDTO disjoinKeywordDTO,
-            @CookieValue("user_id") Long userId) {
+    public ResponseEntity<String>
+    disjoinKeyword(@RequestBody final KeywordRequest.DisjoinDTO disjoinDTO,
+                   @CookieValue("user_id") Long userId) {
 
         try {
-            keywordUserService.disjoinKeyword(disjoinKeywordDTO, userId);
+            keywordUserService.disjoinKeyword(disjoinDTO, userId);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
@@ -130,8 +137,9 @@ public class KeywordController {
     }
 
     @GetMapping("/user/{community_id}")
-    public ResponseEntity getJoinedKeywords(@PathVariable("community_id") Long communityId,
-                                            @CookieValue("user_id") Long userId) {
+    public ResponseEntity
+    getJoinedKeywords(@PathVariable("community_id") final Long communityId,
+                      @CookieValue("user_id") final Long userId) {
         if (!communityUserService.isJoined(userId, communityId)) {
             // 참여하지 않은 커뮤니티의 키워드를 요청했다.
             // not found?
@@ -140,16 +148,17 @@ public class KeywordController {
             return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
         }
 
-        List<KeywordResponseDTO> keywordResponseDTODTOS = keywordService.getJoinedKeywords(userId, communityId);
+        List<KeywordResponse.KeywordDTO> keywordDTODTOS = keywordService.getJoinedKeywords(userId, communityId);
 
 
-        return new ResponseEntity(keywordResponseDTODTOS, HttpStatus.OK);
+        return new ResponseEntity(keywordDTODTOS, HttpStatus.OK);
 
     }
 
     @PutMapping("/merge")
-    public ResponseEntity<String> mergeKeywords(@CookieValue("user_id") Long userId,
-                                                @RequestBody KeywordMergeReq keywordMergeReq) {
+    public ResponseEntity<String>
+    mergeKeywords(@CookieValue("user_id") final Long userId,
+                  @RequestBody final KeywordRequest.MergeDTO mergeDTO) {
 
         Optional<User> optUser = userRepository.findById(userId);
 
@@ -158,14 +167,15 @@ public class KeywordController {
         if (optUser.map(User::getRole).filter(role -> role.equals(Role.ADMIN)).isEmpty())
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
 
-        keywordService.keywordMerge(keywordMergeReq);
+        keywordService.keywordMerge(mergeDTO);
 
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     @DeleteMapping("")
-    public ResponseEntity deleteKeywords(@CookieValue("user_id") Long userId,
-                                         @RequestBody DeleteReq deleteReq) {
+    public ResponseEntity
+    deleteKeywords(@CookieValue("user_id") final Long userId,
+                   @RequestBody final KeywordRequest.DeleteDTO deleteDTO) {
 
         Optional<User> optUser = userRepository.findById(userId);
 
@@ -174,7 +184,7 @@ public class KeywordController {
         if (optUser.map(User::getRole).filter(role -> role.equals(Role.ADMIN)).isEmpty())
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
 
-        keywordService.keywordDelete(deleteReq);
+        keywordService.keywordDelete(deleteDTO);
 
         return new ResponseEntity(HttpStatus.OK);
     }
