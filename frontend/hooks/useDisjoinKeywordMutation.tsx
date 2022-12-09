@@ -1,8 +1,8 @@
 import { JoinKeywordData, MyKeywordData } from '#types/types';
+import { apis } from '@apis/index';
 import { REACT_QUERY_KEY } from '@constants/constants';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
-import apis from '../apis/apis';
 
 const useDisjoinKeywordMutation = () => {
   const router = useRouter();
@@ -10,7 +10,7 @@ const useDisjoinKeywordMutation = () => {
   const queryClient = useQueryClient();
 
   const mutateDisjoinKeyword = async (disjoinKeywordData: JoinKeywordData) => {
-    await apis.disjoinKeyword(disjoinKeywordData);
+    await apis.keyword.disjoinKeyword(disjoinKeywordData);
   };
 
   const updateMyKeywodList = (
