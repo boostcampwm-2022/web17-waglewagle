@@ -1,6 +1,7 @@
 package com.waglewagle.rest.community.service;
 
-import com.waglewagle.rest.community.data_object.dto.CommunityUserDTO.UpdateCommunityProfileInputDTO;
+
+import com.waglewagle.rest.community.data_object.dto.request.CommunityUserRequest;
 import com.waglewagle.rest.community.entity.Community;
 import com.waglewagle.rest.community.entity.CommunityUser;
 import com.waglewagle.rest.community.repository.CommunityRepository;
@@ -21,35 +22,59 @@ public class CommunityUserService {
 
 
     @Transactional
-    public boolean isJoined(Long userId, Long communityId) {
+    public boolean
+    isJoined(final Long userId,
+             final Long communityId) {
         return communityUserRepository.findByUserIdAndCommunityId(userId, communityId) != null;
     }
 
 
     @Transactional
-    public void joinCommunity(Long userId, Long communityId) throws IllegalArgumentException {
+    public void
+    joinCommunity(final Long userId,
+                  final Long communityId) throws IllegalArgumentException {
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-        Community community = communityRepository.findById(communityId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 커뮤니티입니다."));
-        CommunityUser communityUser = new CommunityUser(user, community);
+        User user = userRepository
+                .findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        Community community = communityRepository
+                .findById(communityId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 커뮤니티입니다."));
 
-        communityUserRepository.save(communityUser);
+        communityUserRepository.save(CommunityUser.from(user, community));
+    }
+
+
+    @Transactional
+    public void
+    updateCommunityUserProfile(
+            final CommunityUserRequest.UpdateProfileDTO updateProfileDTO,
+            final Long communityId,
+            final Long userId) {
+
+        communityUserRepository
+                .findByUserIdAndCommunityId(userId, communityId)
+                .updateProfile(updateProfileDTO);
     }
 
     @Transactional
-    public void updateCommunityUserProfile(UpdateCommunityProfileInputDTO updateCommunityProfileInputDTO, Long communityId, Long userId) {
-        CommunityUser communityUser = communityUserRepository.findByUserIdAndCommunityId(userId, communityId);
-        communityUser.updateProfile(updateCommunityProfileInputDTO);
+    public boolean
+    isFirstVisit(final Long userId,
+                 final Long communityId) {
+
+        return communityUserRepository
+                .findByUserIdAndCommunityId(userId, communityId)
+                .getIsFirstVisit();
     }
 
     @Transactional
-    public boolean isFirstVisit(Long userId, Long communityId) {
-        return communityUserRepository.findByUserIdAndCommunityId(userId, communityId).getIsFirstVisit();
-    }
+    public void
+    updateIsFirstVisit(final Long userId,
+                       final Long communityId) {
 
-    @Transactional
-    public void updateIsFirstVisit(Long userId, Long communityId) {
-        CommunityUser communityUser = communityUserRepository.findByUserIdAndCommunityId(userId, communityId);
-        communityUser.updateIsFirstVisit();
+        communityUserRepository
+                .findByUserIdAndCommunityId(userId, communityId)
+                .updateIsFirstVisit();
+
     }
 }

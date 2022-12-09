@@ -1,6 +1,7 @@
 package com.waglewagle.rest.community.service;
 
 import com.waglewagle.rest.common.PreResponseDTO;
+import com.waglewagle.rest.community.data_object.dto.response.CommunityResponse;
 import com.waglewagle.rest.community.entity.Community;
 import com.waglewagle.rest.community.repository.CommunityRepository;
 import com.waglewagle.rest.user.entity.User;
@@ -11,9 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
-import static com.waglewagle.rest.community.data_object.dto.CommunityDTO.CommunityResponseDTO;
 
 @Service
 @RequiredArgsConstructor
@@ -23,34 +23,40 @@ public class CommunityService {
     private final UserRepository userRepository;
 
     @Transactional
-    public boolean isExistCommunity(Long communityId) {
+    public boolean
+    isExistCommunity(final Long communityId) {
 
         return communityRepository.findById(communityId).isPresent();
     }
 
     @Transactional
-    public List<Community> getJoinedCommunities(Long userId) {
-        List<Community> communities = communityRepository.getJoinedCommunities(userId);
+    public PreResponseDTO<List<CommunityResponse.CommunityDTO>>
+    getJoinedCommunities(final Long userId) {
+        return new PreResponseDTO<>(communityRepository
+                .getJoinedCommunities(userId)
+                .stream()
+                .map(CommunityResponse.CommunityDTO::of)
+                .collect(Collectors.toList()),
+                HttpStatus.OK);
 
-        return communities;
     }
 
     @Transactional
-    public PreResponseDTO<CommunityResponseDTO> createCommunity(Long userId,
-                                                                String title,
-                                                                String description) {
+    public PreResponseDTO<CommunityResponse.CommunityDTO>
+    createCommunity(final Long userId,
+                    final String title,
+                    final String description) {
 
-        Optional<User> optUser = userRepository.findById(userId);
-        if (optUser.isEmpty()) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
             return new PreResponseDTO<>(null, HttpStatus.FORBIDDEN);
         }
-        User user = optUser.get();
 
-        Community community = new Community(title, description, user);
-
+        Community community = Community.from(title, description, user);
         communityRepository.save(community);
+
         return new PreResponseDTO<>(
-                new CommunityResponseDTO(community),
+                CommunityResponse.CommunityDTO.of(community),
                 HttpStatus.CREATED
         );
     }
