@@ -1,6 +1,7 @@
 import type {
   KeywordData,
   KeywordRelatedData,
+  KeywordUser,
   MyKeywordData,
 } from '#types/types';
 import { apiInstance } from '@apis/apis';
@@ -25,6 +26,13 @@ const getMyKeywordList = (
   communityId: string,
 ): Promise<AxiosResponse<MyKeywordData[]>> =>
   instance.get(`/v1/keyword/user/${communityId}`);
+
+const getKeywordUsers = (
+  keywordId: string,
+): Promise<AxiosResponse<KeywordUser[]>> =>
+  apiInstance.get('/v1/user/keyword', {
+    params: { 'keyword-id': keywordId },
+  });
 
 export type AddKeywordRequestBody = {
   keywordName: string;
@@ -77,6 +85,7 @@ export const keyword = {
   getKeywords,
   getKeywordAssociations,
   getMyKeywordList,
+  getKeywordUsers,
   addKeyword,
   joinKeyword,
   disjoinKeyword,

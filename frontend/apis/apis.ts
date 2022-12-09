@@ -1,4 +1,4 @@
-import type { CommunityData, KeywordUser, UserData } from '#types/types';
+import type { CommunityData, UserData } from '#types/types';
 import axios from 'axios';
 import config from '../config';
 
@@ -41,21 +41,12 @@ const getUserData = async (communityId?: string): Promise<UserData> => {
   return response.data;
 };
 
-const getKeywordUsers = async (keywordId: string): Promise<KeywordUser[]> => {
-  const response = await apiInstance.get(
-    `/v1/user/keyword?keyword-id=${keywordId}`,
-  );
-
-  return response.data;
-};
-
 const apis = {
   fetchLogin,
   getUserCommunityList,
   joinCommunity,
   updateFirstVisitInCommunity,
   getUserData,
-  getKeywordUsers,
 };
 
 export default apis;
