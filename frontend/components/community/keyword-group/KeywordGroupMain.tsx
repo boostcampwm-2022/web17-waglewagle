@@ -19,7 +19,9 @@ const KeywordGroupMain = ({ keywordId, keyword }: KeywordGroupMainProps) => {
     isOpen: false,
     threadId: '0',
   });
+
   const { data: userList } = useKeywordUserListQuery(keywordId);
+
   const openSidebar = (threadId: string) => {
     setThreadSidebar({ isOpen: true, threadId });
   };
