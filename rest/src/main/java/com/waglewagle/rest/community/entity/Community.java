@@ -33,11 +33,16 @@ public class Community {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    private LocalDateTime deletedAt;
+    private LocalDateTime deletedAst;
 
-    public Community(String title, String summary, User user) {
-        this.title = title;
-        this.summary = summary;
-        admin = user;
+    public static Community from(final String title,
+                                 final String summary,
+                                 final User user) {
+
+        Community community = new Community();
+        community.title = title;
+        community.summary = summary;
+        community.admin = user;
+        return community;
     }
 }

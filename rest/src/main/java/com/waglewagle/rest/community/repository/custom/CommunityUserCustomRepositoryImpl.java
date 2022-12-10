@@ -14,7 +14,9 @@ public class CommunityUserCustomRepositoryImpl implements CommunityUserCustomRep
     private final JPQLQueryFactory jpqlQueryFactory;
 
     @Override
-    public CommunityUser findByUserIdAndCommunityId(Long userId, Long communityId) {
+    public CommunityUser
+    findByUserIdAndCommunityId(final Long userId,
+                               final Long communityId) {
 
         return jpqlQueryFactory
                 .select(QCommunityUser.communityUser)
