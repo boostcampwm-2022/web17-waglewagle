@@ -1,6 +1,5 @@
-import { apis } from '@apis/index';
+import useAddThreadMutation from '@hooks/thread/useAddThreadMutation';
 import styles from '@sass/components/community/keyword/ThreadForm.module.scss';
-import { useMutation } from '@tanstack/react-query';
 import classnames from 'classnames/bind';
 import { ChangeEventHandler, FormEventHandler, useState } from 'react';
 const cx = classnames.bind(styles);
@@ -11,14 +10,11 @@ interface ThreadFormProps {
 
 const ThreadForm = ({ keywordId }: ThreadFormProps) => {
   const [contentInputData, setContentInputData] = useState('');
-  // setQueryData 통해서 데이터 수정 추가
-  const { mutate } = useMutation({
-    mutationFn: () =>
-      apis.thread.addThread({
-        keywordId,
-        content: contentInputData,
-      }),
-  });
+
+  const { mutate: addThread } = useAddThreadMutation(
+    keywordId,
+    contentInputData,
+  );
 
   const handleChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     setContentInputData(e.target.value);
@@ -26,7 +22,7 @@ const ThreadForm = ({ keywordId }: ThreadFormProps) => {
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    mutate();
+    addThread();
     setContentInputData('');
   };
 
