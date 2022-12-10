@@ -3,7 +3,7 @@ package com.waglewagle.rest.keyword.repository;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.waglewagle.rest.community.entity.QCommunity;
-import com.waglewagle.rest.keyword.data_object.dto.KeywordDTO.CreateKeywordInputDTO;
+import com.waglewagle.rest.keyword.data_object.dto.request.KeywordRequest;
 import com.waglewagle.rest.keyword.entity.Keyword;
 import com.waglewagle.rest.keyword.entity.QKeyword;
 import com.waglewagle.rest.keyword.entity.QKeywordUser;
@@ -22,11 +22,13 @@ public class KeywordRepository {
     private final EntityManager em;
     private final JPAQueryFactory jpaQueryFactory;
 
-    public Keyword findOne(Long keywordId) {
+    public Keyword
+    findOne(final Long keywordId) {
         return em.find(Keyword.class, keywordId);
     }
 
-    public List<Keyword> findAllByCommunityId(Long communityId) {
+    public List<Keyword>
+    findAllByCommunityId(final Long communityId) {
         return jpaQueryFactory
                 .selectFrom(QKeyword.keyword1)
                 .distinct()
@@ -37,7 +39,8 @@ public class KeywordRepository {
                 .fetch();
     }
 
-    public List<Keyword> findAssociatedKeywords(Keyword keyword) {
+    public List<Keyword>
+    findAssociatedKeywords(final Keyword keyword) {
 
         return jpaQueryFactory
                 .select(QKeywordUser.keywordUser.keyword)
@@ -52,20 +55,24 @@ public class KeywordRepository {
                 .fetch(); //TODO: fetch? fetchJoin?
     }
 
-    public boolean isKeywordDuplicated(CreateKeywordInputDTO createKeywordInputDTO) {
+    public boolean
+    isKeywordDuplicated(final KeywordRequest.CreateDTO createDTO) {
         return em.createQuery("SELECT k FROM Keyword k WHERE k.keyword = :keywordName AND k.community.id = :communityId", Keyword.class)
-                .setParameter("keywordName", createKeywordInputDTO.getKeywordName())
-                .setParameter("communityId", createKeywordInputDTO.getCommunityId())
+                .setParameter("keywordName", createDTO.getKeywordName())
+                .setParameter("communityId", createDTO.getCommunityId())
                 .getResultList()
                 .size() == 1;
     }
 
-    public void saveKeyword(Keyword keyword) {
+    public void
+    saveKeyword(final Keyword keyword) {
         em.persist(keyword);
 //        return keyword;
     }
 
-    public List<Keyword> getJoinedKeywords(Long userId, Long communityId) {
+    public List<Keyword>
+    getJoinedKeywords(final Long userId,
+                      final Long communityId) {
         return jpaQueryFactory
                 .select(QKeywordUser.keywordUser.keyword)
                 .from(QKeywordUser.keywordUser)
@@ -74,7 +81,8 @@ public class KeywordRepository {
                 .fetch();
     }
 
-    public List<Keyword> findAllByIdList(List<Long> idList) {
+    public List<Keyword>
+    findAllByIdList(final List<Long> idList) {
         return em.createQuery("select distinct k from Keyword k join fetch k.keywordUsers where k.id in :idList ", Keyword.class)
                 .setParameter("idList", idList)
                 .getResultList();
@@ -82,7 +90,8 @@ public class KeywordRepository {
 
     @Modifying(clearAutomatically = true)
     //TODO: 이거 안먹혔다. & jpa (1차?) 캐시는 트랜잭션 단위다? (트랜잭션 끼리 캐시를 공유하지 않는다? / 트랜잭션 마다 캐시를 가진다.)
-    public int deleteAllByIdInBulk(List<Long> targetIdList) {
+    public int
+    deleteAllByIdInBulk(final List<Long> targetIdList) {
         return (int) jpaQueryFactory.delete(QKeyword.keyword1).where(QKeyword.keyword1.id.in(targetIdList)).execute();
 //        return em.createQuery("DELETE FROM Keyword WHERE Keyword.id IN :targetIdList", Keyword.class)
 //                .setParameter("targetIdList", targetIdList)
