@@ -1,10 +1,9 @@
 import { Author, ThreadData } from '#types/types';
-import { apis } from '@apis/index';
+import useDeleteThreadMutation from '@hooks/thread/useDeleteThreadMutation';
 import useUserMe from '@hooks/useUserMe';
 import CommentIcon from '@public/images/comment.svg';
 import DeleteIcon from '@public/images/delete.svg';
 import styles from '@sass/components/community/keyword/Thread.module.scss';
-import { useMutation } from '@tanstack/react-query';
 import calculateTimeGap from '@utils/calculateTimeGap';
 import classnames from 'classnames/bind';
 import Image from 'next/image';
@@ -28,12 +27,8 @@ const Thread = ({
   author: { userId, username, profileImageUrl },
   openSidebar,
 }: ThreadProps) => {
-  // setQueryData 통해서 데이터 수정 추가
-  const { mutate } = useMutation({
-    mutationFn: () => apis.thread.deleteThread({ threadId }),
-  });
-
   const userData = useUserMe();
+  const { mutate: deleteThread } = useDeleteThreadMutation();
 
   return (
     <li className={cx('thread')}>
@@ -65,9 +60,7 @@ const Thread = ({
         {userId === userData?.userId && (
           <button
             className={cx('delete-button')}
-            onClick={() => {
-              mutate();
-            }}
+            onClick={() => deleteThread(threadId)}
           >
             <DeleteIcon />
           </button>
