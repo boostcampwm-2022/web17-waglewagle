@@ -44,7 +44,9 @@ public class KeywordService {
     public List<AssociationDTO>
     calcAssociatedKeywordsByKeyword(final Long baseKeywordId) {
 
-        Keyword baseKeyword = keywordRepository.findOne(baseKeywordId);
+        Keyword baseKeyword = keywordRepository
+                .findById(baseKeywordId)
+                .orElseThrow(NoSuchElementException::new);
         List<Keyword> associatedKeywords = keywordRepository.findAssociatedKeywords(baseKeyword);
 
         return associationCalculator.getSortedKeywordList(baseKeyword, associatedKeywords);
@@ -60,8 +62,9 @@ public class KeywordService {
     @Transactional(readOnly = true)
     public List<KeywordResponse.KeywordMemberCountDTO>
     getKeywordListInCommunity(final Long communityId) {
+
         return keywordRepository
-                .findAllByCommunityId(communityId)
+                .findAllByCommunityIdJoinKeywordUser(communityId)
                 .stream()
                 .map(KeywordResponse.KeywordMemberCountDTO::of)
                 .collect(Collectors.toList());
@@ -70,7 +73,10 @@ public class KeywordService {
     @Transactional(readOnly = true)
     public boolean
     isDuplicated(final KeywordRequest.CreateDTO createDTO) {
-        return keywordRepository.isKeywordDuplicated(createDTO);
+
+        return keywordRepository
+                .findByKeywordNameAndCommunityId(createDTO.getKeywordName(), createDTO.getCommunityId())
+                .isPresent();
     }
 
     @Transactional
@@ -89,15 +95,12 @@ public class KeywordService {
         KeywordVO.CreateVO createVO = KeywordVO.CreateVO.from(user, community, keywordName);
         Keyword keyword = Keyword.of(createVO);
 
-        // TODO: 이렇게 암시적으로 비즈니스 로직이 실행되어도 되는 지 모르겠다.
         KeywordVO.JoinVO joinVO = KeywordVO.JoinVO.from(user, community, keyword);
         KeywordUser keywordUser = KeywordUser.of(joinVO);
 
         keyword.addKeywordUser(keywordUser);
-        keywordRepository.saveKeyword(keyword);
-//        keywordUserRepository.joinKeyword(joinKeywordDTO);
 
-        return keyword;
+        return keywordRepository.save(keyword);
     }
 
     @Transactional
@@ -130,6 +133,7 @@ public class KeywordService {
     public PreResponseDTO<List<KeywordResponse.KeywordDTO>>
     getJoinedKeywords(final Long userId,
                       final Long communityId) {
+
         communityUserRepository
                 .findOptionalByUserIdAndCommunityId(userId, communityId)
                 .ifPresent(__ -> {
@@ -138,7 +142,7 @@ public class KeywordService {
 
         List<KeywordResponse.KeywordDTO>
                 keywordDTOS = keywordRepository
-                .getJoinedKeywords(userId, communityId)
+                .findAllFromKeywordUserByUserIdAndCommunityId(userId, communityId)
                 .stream()
                 .map(KeywordResponse.KeywordDTO::of)
                 .collect(Collectors.toList());
@@ -147,7 +151,6 @@ public class KeywordService {
                 keywordDTOS,
                 keywordDTOS.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK
         );
-
     }
 
     @Transactional
@@ -209,12 +212,12 @@ public class KeywordService {
         keywordRepository
                 .deleteAllByIdInBulk(
                         deleteDTO.getKeywordIdList());
-
     }
 
     @Transactional(readOnly = true)
     public boolean
     isKeywordExist(final Long keywordId) {
+
         return keywordRepository
                 .findById(keywordId)
                 .isPresent();

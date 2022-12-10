@@ -5,6 +5,7 @@ import com.waglewagle.rest.community.entity.Community;
 import com.waglewagle.rest.community.repository.CommunityRepository;
 import com.waglewagle.rest.keyword.data_object.dto.request.KeywordRequest;
 import com.waglewagle.rest.keyword.entity.Keyword;
+import com.waglewagle.rest.keyword.exception.NoSuchKeywordException;
 import com.waglewagle.rest.keyword.repository.KeywordRepository;
 import com.waglewagle.rest.keyword.repository.KeywordUserRepository;
 import com.waglewagle.rest.user.entity.User;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,8 +30,9 @@ public class KeywordUserService {
     disjoinKeyword(final KeywordRequest.DisjoinDTO disjoinDTO,
                    final Long userId) {
 
-        Keyword keyword = keywordRepository.findOne(disjoinDTO.getKeywordId());
-
+        Keyword keyword = keywordRepository
+                .findById(disjoinDTO.getKeywordId())
+                .orElseThrow(NoSuchKeywordException::new);
         User user = userRepository
                 .findById(userId)
                 .orElseThrow(IllegalArgumentException::new);
