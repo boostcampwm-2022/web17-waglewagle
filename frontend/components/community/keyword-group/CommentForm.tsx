@@ -1,6 +1,5 @@
-import { apis } from '@apis/index';
+import useAddCommentMutation from '@hooks/thread/useAddCommentMutation';
 import styles from '@sass/components/community/keyword/CommentForm.module.scss';
-import { QueryClient, useMutation } from '@tanstack/react-query';
 import classnames from 'classnames/bind';
 import { ChangeEventHandler, FormEventHandler, useState } from 'react';
 const cx = classnames.bind(styles);
@@ -10,26 +9,14 @@ interface CommentFormProps {
   keywordId: string;
 }
 
-const queryClient = new QueryClient();
-
 const CommentForm = ({ threadId, keywordId }: CommentFormProps) => {
   const [contentInputData, setContentInputData] = useState('');
 
-  // setQueryData 통해서 데이터 수정 추가
-  const { mutate } = useMutation({
-    mutationFn: () =>
-      apis.thread.addComments({
-        keywordId,
-        content: contentInputData,
-        parentThreadId: threadId,
-      }),
-    onSuccess: () => {
-      return queryClient.resetQueries({
-        queryKey: ['keywordThreadList', keywordId],
-        exact: true,
-      });
-    },
-  });
+  const { mutate: addComment } = useAddCommentMutation(
+    keywordId,
+    contentInputData,
+    threadId,
+  );
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     setContentInputData(e.target.value);
@@ -37,7 +24,7 @@ const CommentForm = ({ threadId, keywordId }: CommentFormProps) => {
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    mutate();
+    addComment();
     setContentInputData('');
   };
 
