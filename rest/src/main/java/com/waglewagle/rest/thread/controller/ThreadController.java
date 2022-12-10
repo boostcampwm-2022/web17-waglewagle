@@ -33,17 +33,12 @@ public class ThreadController {
         if (!createDTO.isValid())
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 
-        try {
-            PreResponseDTO preResponseDTO = threadService.creatThread(userId, createDTO);
-            return new ResponseEntity<>(
-                    preResponseDTO.getData(),
-                    preResponseDTO.getHttpStatus());
+        PreResponseDTO<ThreadResponse.ThreadDTO>
+                preResponseDTO = threadService.creatThread(userId, createDTO);
+        return new ResponseEntity<>(
+                preResponseDTO.getData(),
+                preResponseDTO.getHttpStatus());
 
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(
-                    null,
-                    HttpStatus.NOT_FOUND);
-        }
     }
 
     /**
