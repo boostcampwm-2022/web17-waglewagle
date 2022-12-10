@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -25,6 +26,16 @@ public class KeywordRepository {
     public Keyword
     findOne(final Long keywordId) {
         return em.find(Keyword.class, keywordId);
+    }
+
+
+    public Optional<Keyword>
+    findById(final Long keywordId) {
+        return Optional
+                .ofNullable(
+                        em
+                                .find(Keyword.class, keywordId)
+                );
     }
 
     public List<Keyword>

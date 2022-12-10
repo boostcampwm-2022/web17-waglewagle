@@ -47,10 +47,9 @@ public class CommunityUserService {
 
     @Transactional
     public void
-    updateCommunityUserProfile(
-            final CommunityUserRequest.UpdateProfileDTO updateProfileDTO,
-            final Long communityId,
-            final Long userId) {
+    updateCommunityUserProfile(final CommunityUserRequest.UpdateProfileDTO updateProfileDTO,
+                               final Long communityId,
+                               final Long userId) {
 
         communityUserRepository
                 .findByUserIdAndCommunityId(userId, communityId)

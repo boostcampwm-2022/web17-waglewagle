@@ -1,7 +1,9 @@
 package com.waglewagle.rest.keyword.service;
 
+import com.waglewagle.rest.common.PreResponseDTO;
 import com.waglewagle.rest.community.entity.Community;
 import com.waglewagle.rest.community.repository.CommunityRepository;
+import com.waglewagle.rest.community.repository.CommunityUserRepository;
 import com.waglewagle.rest.keyword.data_object.KeywordVO;
 import com.waglewagle.rest.keyword.data_object.dto.AssociationDTO;
 import com.waglewagle.rest.keyword.data_object.dto.request.KeywordRequest;
@@ -13,12 +15,15 @@ import com.waglewagle.rest.keyword.repository.KeywordUserRepository;
 import com.waglewagle.rest.keyword.service.association.AssociationCalculator;
 import com.waglewagle.rest.thread.repository.ThreadRepository;
 import com.waglewagle.rest.user.entity.User;
+import com.waglewagle.rest.user.enums.Role;
 import com.waglewagle.rest.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,6 +34,7 @@ public class KeywordService {
     private final KeywordUserRepository keywordUserRepository;
     private final UserRepository userRepository;
     private final CommunityRepository communityRepository;
+    private final CommunityUserRepository communityUserRepository;
     private final ThreadRepository threadRepository;
 
     private final AssociationCalculator associationCalculator;
@@ -99,16 +105,16 @@ public class KeywordService {
     joinKeyword(final KeywordRequest.JoinDTO joinDTO,
                 final Long userId) throws IllegalArgumentException {
 
-        Keyword keyword = keywordRepository.findOne(joinDTO.getKeywordId());
-        if (keyword == null) { //TODO: KeywordRepository Data JPA로 변경 및 Optional 처리
-            throw new IllegalArgumentException("존재하지 않는 키워드입니다.");
-        }
+        Keyword keyword = keywordRepository
+                .findById(joinDTO.getKeywordId())
+                .orElseThrow(IllegalArgumentException::new);
+
         Community community = communityRepository
                 .findById(joinDTO.getCommunityId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 커뮤니티입니다."));
+                .orElseThrow(IllegalArgumentException::new);
         User user = userRepository
                 .findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+                .orElseThrow(IllegalArgumentException::new);
         keywordUserRepository
                 .findByUserAndCommunityAndKeyword(user, community, keyword)
                 .ifPresent((__) -> {
@@ -121,56 +127,96 @@ public class KeywordService {
     }
 
     @Transactional(readOnly = true)
-    public List<KeywordResponse.KeywordDTO>
+    public PreResponseDTO<List<KeywordResponse.KeywordDTO>>
     getJoinedKeywords(final Long userId,
                       final Long communityId) {
+        communityUserRepository
+                .findOptionalByUserIdAndCommunityId(userId, communityId)
+                .ifPresent(__ -> {
+                    throw new IllegalArgumentException();
+                });
 
-        return keywordRepository.getJoinedKeywords(userId, communityId)
+        List<KeywordResponse.KeywordDTO>
+                keywordDTOS = keywordRepository
+                .getJoinedKeywords(userId, communityId)
                 .stream()
                 .map(KeywordResponse.KeywordDTO::of)
                 .collect(Collectors.toList());
+
+        return new PreResponseDTO<>(
+                keywordDTOS,
+                keywordDTOS.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK
+        );
+
     }
 
     @Transactional
     public void
-    keywordMerge(final KeywordRequest.MergeDTO mergeDTO) {
+    keywordMerge(final KeywordRequest.MergeDTO mergeDTO,
+                 final Long userId) {
+
+        userRepository
+                .findById(userId)
+                .map(user -> {
+                    if (Role.ADMIN.equals(user.getRole()))
+                        throw new NoSuchElementException("권한이 없습니다.");
+                    return user;
+                }).orElseThrow(NoSuchElementException::new);
 
         //keywordUser.keywordId 수정
-        int updatedKeywordUserNum = keywordUserRepository.updateAllKeywordIdByIdInBulk(mergeDTO.getSourceKeywordIdList(),
-                mergeDTO.getDestinationKeywordId());
-
+        keywordUserRepository
+                .updateAllKeywordIdByIdInBulk(
+                        mergeDTO.getSourceKeywordIdList(),
+                        mergeDTO.getDestinationKeywordId());
         //thread.keywordId 수정
-        int updatedThreadNum = threadRepository.updateAllKeywordIdByIdInBulk(mergeDTO.getSourceKeywordIdList(),
-                mergeDTO.getDestinationKeywordId());
-
+        threadRepository
+                .updateAllKeywordIdByIdInBulk(
+                        mergeDTO.getSourceKeywordIdList(),
+                        mergeDTO.getDestinationKeywordId());
         //keyword 삭제
-        int deletedKeywordNum = keywordRepository.deleteAllByIdInBulk(mergeDTO.getSourceKeywordIdList());
+        keywordRepository
+                .deleteAllByIdInBulk(
+                        mergeDTO.getSourceKeywordIdList());
     }
-    //1. 병합/삭제 진행중인 키워드 그룹에 인터랙션을 진행함(참여, 페이지 이동) >> test?
-    //2. 병합/삭제 대상의 키워드 그룹 페이지에 있던 있던 유저(그리고 글을 쓰고있었다?) >> short polling으로
 
     //키워드 삭제(선택한 복수개)
     @Transactional
     public void
-    keywordDelete(final KeywordRequest.DeleteDTO deleteDTO) {
+    deleteKeyword(final KeywordRequest.DeleteDTO deleteDTO,
+                  final Long userId) {
 
-        //keywordUser 삭제
-        int deletedKeywordUserNum = keywordUserRepository.deleteAllByKeywordIdInBulk(deleteDTO.getKeywordIdList());
-        System.out.println(deletedKeywordUserNum);
+        userRepository
+                .findById(userId)
+                .ifPresentOrElse(user -> {
+                            if (!Role.ADMIN.equals(user.getRole()))
+                                throw new NoSuchElementException("권한이 없습니다.");
+                        },
+                        NoSuchElementException::new
+                );
 
         //thread 삭제
-        int deletedChildThreadNum = threadRepository.deleteAllChildThreadByKeywordIdInBulk(deleteDTO.getKeywordIdList());
-        int deletedParentThreadNum = threadRepository.deleteAllParentThreadByKeywordIdInBulk(deleteDTO.getKeywordIdList());
-        System.out.println(deletedParentThreadNum + deletedChildThreadNum);
-
+        threadRepository
+                .deleteAllChildThreadByKeywordIdInBulk(
+                        deleteDTO.getKeywordIdList());
+        threadRepository.
+                deleteAllParentThreadByKeywordIdInBulk(
+                        deleteDTO.getKeywordIdList());
+        //keywordUser 삭제
+        keywordUserRepository
+                .deleteAllByKeywordIdInBulk(
+                        deleteDTO.getKeywordIdList());
         //keyword 삭제
-        int deletedKeywordNum = keywordRepository.deleteAllByIdInBulk(deleteDTO.getKeywordIdList());
-        System.out.println(deletedKeywordNum);
+        keywordRepository
+                .deleteAllByIdInBulk(
+                        deleteDTO.getKeywordIdList());
+
     }
 
     @Transactional(readOnly = true)
     public boolean
     isKeywordExist(final Long keywordId) {
-        return keywordRepository.findOne(keywordId) != null;
+        return keywordRepository
+                .findById(keywordId)
+                .isPresent();
     }
 }

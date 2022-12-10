@@ -26,12 +26,14 @@ public class UserService {
     private final CommunityUserRepository communityUserRepository;
 
     @Transactional
-    public Long authenticateWithUsername(final String username) {
+    public Long
+    authenticateWithUsername(final String username) {
         Long userId = userRepository.findOrSaveUsername(username);
         return userId;
     }
 
-    public Cookie createUserIdCookie(final Long userId) {
+    public Cookie
+    createUserIdCookie(final Long userId) {
         Cookie userIdCookie = new Cookie("user_id", Long.toString(userId));
         userIdCookie.setMaxAge(3600 * 1000);
         userIdCookie.setPath("/");
@@ -41,8 +43,9 @@ public class UserService {
     }
 
     @Transactional
-    public PreResponseDTO<UserResponse.UpdateProfileDTO> updateUserProfile(final Long userId,
-                                                                           final UserRequest.UpdateProfileDTO updateProfileDTO) throws IllegalArgumentException {
+    public PreResponseDTO<UserResponse.UpdateProfileDTO>
+    updateUserProfile(final Long userId,
+                      final UserRequest.UpdateProfileDTO updateProfileDTO) throws IllegalArgumentException {
 
         User user = userRepository
                 .findById(userId)
@@ -55,7 +58,7 @@ public class UserService {
                     .findByUsername(username)
                     .filter(user1 -> !Objects.equals(user.getId(), userId))
                     .isPresent();
-            
+
             if (isUsedUsername) {
                 return new PreResponseDTO("이미 사용중인 이름입니다.", HttpStatus.BAD_REQUEST);
             }
@@ -67,7 +70,9 @@ public class UserService {
     }
 
     @Transactional
-    public PreResponseDTO<UserResponse.UserInfoDTO> getUserInfo(final Long userId, final Long communityId) throws IllegalArgumentException {
+    public PreResponseDTO<UserResponse.UserInfoDTO>
+    getUserInfo(final Long userId,
+                final Long communityId) throws IllegalArgumentException {
         try {
             User user = userRepository
                     .findById(userId)
@@ -92,7 +97,8 @@ public class UserService {
     }
 
     @Transactional
-    public void updateLastActivity(Long userId) throws IllegalArgumentException {
+    public void
+    updateLastActivity(final Long userId) throws IllegalArgumentException {
         userRepository
                 .findById(userId)
                 .orElseThrow(
@@ -101,7 +107,8 @@ public class UserService {
                 .updateLastActivity();
     }
 
-    public List<UserResponse.LastActivityDTO> getUserInfoInKeyword(Long keywordId) {
+    public List<UserResponse.LastActivityDTO>
+    getUserInfoInKeyword(final Long keywordId) {
         return userRepository
                 .findByKeywordUserKeywordId(keywordId)
                 .stream()
@@ -109,7 +116,8 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public List<UserResponse.LastActivityDTO> getUserInfoInCommunity(Long communityId) {
+    public List<UserResponse.LastActivityDTO>
+    getUserInfoInCommunity(final Long communityId) {
         return userRepository
                 .findByCommunityUserCommunityId(communityId)
                 .stream()
