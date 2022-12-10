@@ -2,10 +2,15 @@ package com.waglewagle.rest.user.service;
 
 import com.waglewagle.rest.common.PreResponseDTO;
 import com.waglewagle.rest.community.entity.CommunityUser;
+import com.waglewagle.rest.community.exception.NoSuchCommunityException;
+import com.waglewagle.rest.community.repository.CommunityRepository;
 import com.waglewagle.rest.community.repository.CommunityUserRepository;
 import com.waglewagle.rest.user.data_object.dto.request.UserRequest;
 import com.waglewagle.rest.user.data_object.dto.response.UserResponse;
 import com.waglewagle.rest.user.entity.User;
+import com.waglewagle.rest.user.exception.DuplicatedUsernameException;
+import com.waglewagle.rest.user.exception.NoSuchUserException;
+import com.waglewagle.rest.user.exception.UnauthorizedException;
 import com.waglewagle.rest.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.Cookie;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -24,16 +30,19 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final CommunityUserRepository communityUserRepository;
+    private final CommunityRepository communityRepository;
 
     @Transactional
     public Long
     authenticateWithUsername(final String username) {
+
         Long userId = userRepository.findOrSaveUsername(username);
         return userId;
     }
 
     public Cookie
     createUserIdCookie(final Long userId) {
+
         Cookie userIdCookie = new Cookie("user_id", Long.toString(userId));
         userIdCookie.setMaxAge(3600 * 1000);
         userIdCookie.setPath("/");
@@ -49,19 +58,17 @@ public class UserService {
 
         User user = userRepository
                 .findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-        if (Objects.isNull(user)) return null;
+                .orElseThrow(NoSuchUserException::new);
 
         String username = updateProfileDTO.getUsername();
+
         if (username != null) {
-            boolean isUsedUsername = userRepository
+            userRepository
                     .findByUsername(username)
                     .filter(user1 -> !Objects.equals(user.getId(), userId))
-                    .isPresent();
-
-            if (isUsedUsername) {
-                return new PreResponseDTO("이미 사용중인 이름입니다.", HttpStatus.BAD_REQUEST);
-            }
+                    .ifPresent((__) -> {
+                        throw new DuplicatedUsernameException();
+                    });
         }
 
         user.updateProfile(updateProfileDTO);
@@ -69,46 +76,46 @@ public class UserService {
         return new PreResponseDTO<>(UserResponse.UpdateProfileDTO.of(user), HttpStatus.OK);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public PreResponseDTO<UserResponse.UserInfoDTO>
     getUserInfo(final Long userId,
                 final Long communityId) throws IllegalArgumentException {
-        try {
-            User user = userRepository
-                    .findById(userId)
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않은 회원입니다."));
 
-            if (communityId == null) {
-                return new PreResponseDTO<>(UserResponse.UserInfoDTO.of(user), HttpStatus.OK);
-            }
-
-            CommunityUser communityUser = communityUserRepository.findByUserIdAndCommunityId(userId, communityId);
-            if (communityUser == null) {
-                return new PreResponseDTO<>(null, HttpStatus.UNAUTHORIZED);
-            }
-
-            return new PreResponseDTO<>(UserResponse.UserInfoDTO.from(user, communityUser), HttpStatus.OK);
-
-        } catch (IllegalArgumentException e) {
-            return new PreResponseDTO<>(null, HttpStatus.FORBIDDEN);
+        User user = userRepository
+                .findById(userId)
+                .orElseThrow(NoSuchUserException::new);
+        
+        if (communityId == null) {
+            return new PreResponseDTO<>(UserResponse.UserInfoDTO.of(user), HttpStatus.OK);
         }
+
+        communityRepository
+                .findById(communityId)
+                .orElseThrow(NoSuchCommunityException::new);
+        CommunityUser communityUser = Optional
+                .ofNullable(communityUserRepository
+                        .findByUserIdAndCommunityId(userId, communityId))
+                .orElseThrow(UnauthorizedException::new);
+
+        return new PreResponseDTO<>(UserResponse.UserInfoDTO.from(user, communityUser), HttpStatus.OK);
 
 
     }
 
     @Transactional
     public void
-    updateLastActivity(final Long userId) throws IllegalArgumentException {
+    updateLastActivity(final Long userId) throws NoSuchUserException {
+
         userRepository
                 .findById(userId)
-                .orElseThrow(
-                        () -> new IllegalArgumentException("존재하지 않은 회원입니다.")
-                )
+                .orElseThrow(NoSuchUserException::new)
                 .updateLastActivity();
     }
 
+    @Transactional(readOnly = true)
     public List<UserResponse.LastActivityDTO>
     getUserInfoInKeyword(final Long keywordId) {
+
         return userRepository
                 .findByKeywordUserKeywordId(keywordId)
                 .stream()
@@ -116,8 +123,10 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<UserResponse.LastActivityDTO>
     getUserInfoInCommunity(final Long communityId) {
+
         return userRepository
                 .findByCommunityUserCommunityId(communityId)
                 .stream()

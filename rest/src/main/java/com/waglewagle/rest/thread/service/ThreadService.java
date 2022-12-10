@@ -1,14 +1,20 @@
 package com.waglewagle.rest.thread.service;
 
 import com.waglewagle.rest.common.PreResponseDTO;
+import com.waglewagle.rest.common.exception.InvalidInputException;
 import com.waglewagle.rest.keyword.entity.Keyword;
+import com.waglewagle.rest.keyword.exception.NoSuchKeywordException;
 import com.waglewagle.rest.keyword.repository.KeywordRepository;
 import com.waglewagle.rest.thread.data_object.dto.ThreadDTO;
 import com.waglewagle.rest.thread.data_object.dto.request.ThreadRequest;
 import com.waglewagle.rest.thread.data_object.dto.response.ThreadResponse;
 import com.waglewagle.rest.thread.entity.Thread;
+import com.waglewagle.rest.thread.exception.InvalidThreadException;
+import com.waglewagle.rest.thread.exception.NoSuchThreadException;
 import com.waglewagle.rest.thread.repository.ThreadRepository;
 import com.waglewagle.rest.user.entity.User;
+import com.waglewagle.rest.user.exception.NoSuchUserException;
+import com.waglewagle.rest.user.exception.UnauthorizedException;
 import com.waglewagle.rest.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,21 +38,24 @@ public class ThreadService {
     creatThread(final Long userId,
                 final ThreadRequest.CreateDTO createDTO)
             throws
-            IllegalArgumentException,
-            NoSuchElementException {
+            InvalidInputException,
+            InvalidThreadException,
+            NoSuchUserException,
+            NoSuchKeywordException,
+            NoSuchThreadException {
 
         Long keywordId = Optional
                 .ofNullable(createDTO.getKeywordId())
-                .orElseThrow(() -> new IllegalArgumentException("키워드 아이디를 입력해야 합니다."));
+                .orElseThrow(InvalidInputException::new);
         String content = Optional
                 .ofNullable(createDTO.getContent())
-                .orElseThrow(() -> new NoSuchElementException("쓰레드는 내용이 존재해야 합니다."));
+                .orElseThrow(InvalidInputException::new);
         User author = userRepository
                 .findById(userId)
-                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다."));
+                .orElseThrow(NoSuchUserException::new);
         Keyword keyword = keywordRepository
                 .findById(keywordId)
-                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 키워드입니다."));
+                .orElseThrow(NoSuchKeywordException::new);
 
 
         Long parentThreadId = createDTO.getParentThreadId();
@@ -61,16 +70,13 @@ public class ThreadService {
                 .findById(parentThreadId)
                 .map(thread -> {
                     if (thread.getParentThread() == null)
-                        throw new NoSuchElementException("부모 쓰레드가 존재하지 않습니다.");
-                    return thread;
-                }).map(thread -> {
-                    if (thread.getParentThread().getParentThread() != null)
-                        throw new IllegalArgumentException("대댓글은 허용되지 않습니다.");
+                        throw new NoSuchThreadException();
                     return thread;
                 }).filter(thread ->
+                        thread.getParentThread().getParentThread() == null
+                ).filter(thread ->
                         Objects.equals(thread.getKeyword().getId(), createDTO.getKeywordId()))
-                .orElseThrow(() ->
-                        new NoSuchElementException("올바른 쓰레드가 아닙니다."));
+                .orElseThrow(InvalidThreadException::new);
 
 
         ThreadDTO.CreateDTO createDTO2 = ThreadDTO.CreateDTO.from(author, parentThread, keyword, content);
@@ -85,16 +91,16 @@ public class ThreadService {
     deleteThread(final Long userId,
                  final Long threadId)
             throws
-            IllegalArgumentException,
-            NoSuchElementException {
+            UnauthorizedException,
+            NoSuchThreadException {
 
         threadRepository
                 .findById(threadId)
                 .map((thread) -> {
                     if (thread.getAuthor().getId() != userId)
-                        throw new IllegalArgumentException();
+                        throw new UnauthorizedException();
                     return thread;
-                }).orElseThrow(() -> new NoSuchElementException("찾는 쓰레드가 존재하지 않습니다."));
+                }).orElseThrow(NoSuchThreadException::new);
 
         threadRepository.deleteAllByParentThreadId(threadId);
         threadRepository.deleteById(threadId);
@@ -103,13 +109,19 @@ public class ThreadService {
     @Transactional(readOnly = true)
     public PreResponseDTO<List<ThreadResponse.ThreadDTO>>
     getThreadsInKeyword(final Long keywordId) {
+
+        keywordRepository
+                .findById(keywordId)
+                .orElseThrow(NoSuchKeywordException::new);
+
         List<Thread> parentThreads = threadRepository.findParentThreadsInKeyword(keywordId);
         List<Thread> childThreads = threadRepository
                 .findChildThreads(
                         parentThreads
                                 .stream()
-                                .map(t -> t.getId())
+                                .map(Thread::getId)
                                 .collect(Collectors.toList()));
+
         List<ThreadResponse.ThreadDTO>
                 threadDTOS = mapParentAndChildThreads(parentThreads, childThreads);
 

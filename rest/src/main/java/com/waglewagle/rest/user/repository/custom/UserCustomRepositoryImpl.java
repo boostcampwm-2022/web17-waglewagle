@@ -26,6 +26,7 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
     @Transactional
     public Long
     findOrSaveUsername(final String username) {
+
         User user = jpqlQueryFactory
                 .select(QUser.user)
                 .from(QUser.user)
@@ -46,6 +47,7 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
 
     public List<User>
     findByKeywordUserKeywordId(final Long keywordId) {
+
         return jpqlQueryFactory
                 .select(keywordUser.user)
                 .from(keywordUser)
@@ -56,6 +58,7 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
 
     public List<User>
     findByCommunityUserCommunityId(final Long communityId) {
+        
         return jpqlQueryFactory
                 .select(communityUser.user)
                 .from(communityUser)

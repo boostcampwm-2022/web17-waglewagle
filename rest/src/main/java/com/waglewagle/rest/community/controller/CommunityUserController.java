@@ -1,5 +1,6 @@
 package com.waglewagle.rest.community.controller;
 
+import com.waglewagle.rest.common.PreResponseDTO;
 import com.waglewagle.rest.community.data_object.dto.request.CommunityUserRequest;
 import com.waglewagle.rest.community.service.CommunityUserService;
 import lombok.RequiredArgsConstructor;
@@ -21,24 +22,16 @@ public class CommunityUserController {
      * communityId: string
      */
     @PostMapping("")
-    public ResponseEntity<String>
+    public ResponseEntity
     joinCommunity(@RequestBody final CommunityUserRequest.JoinDTO joinDTO,
                   @CookieValue("user_id") final Long userId) {
 
         Long communityId = Long.parseLong(joinDTO.getCommunityId());
+        PreResponseDTO preResponseDTO = communityUserService.joinCommunity(userId, communityId);
 
-        if (communityUserService.isJoined(userId, communityId)) {
-            return new ResponseEntity<>(null, HttpStatus.OK); //TODO: TEMP FOR DEMO
-//             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
-
-        try {
-            communityUserService.joinCommunity(userId, communityId);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<>(null, HttpStatus.CREATED);
+        return new ResponseEntity<>(
+                preResponseDTO.getData(),
+                preResponseDTO.getHttpStatus());
     }
 
     /**
@@ -51,15 +44,11 @@ public class CommunityUserController {
                                @CookieValue("user_id") final Long userId) {
 
         if (updateProfileDTO.isEmpty()) {
-            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
-        if (!communityUserService.isJoined(userId, communityId)) {
-            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
-        }
-
         communityUserService.updateCommunityUserProfile(updateProfileDTO, communityId, userId);
 
-        return new ResponseEntity(null, HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @PutMapping("{community_id}/first-visit")
@@ -67,16 +56,9 @@ public class CommunityUserController {
     updateIsFirstVisit(@PathVariable("community_id") final Long communityId,
                        @CookieValue("user_id") final Long userId) {
 
-        if (!communityUserService.isJoined(userId, communityId)) {
-            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
-        }
-        if (!communityUserService.isFirstVisit(userId, communityId)) {
-            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
-        }
-
         communityUserService.updateIsFirstVisit(userId, communityId);
 
-        return new ResponseEntity(null, HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
 }
