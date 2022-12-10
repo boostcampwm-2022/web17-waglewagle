@@ -57,13 +57,6 @@ public class User {
         this.role = role;
     }
 
-    public User update(String username, String profileImageUrl) {
-        this.username = username;
-        this.profileImageUrl = profileImageUrl;
-
-        return this;
-    }
-
     public String getRoleKey() {
         return this.role.getKey();
     }

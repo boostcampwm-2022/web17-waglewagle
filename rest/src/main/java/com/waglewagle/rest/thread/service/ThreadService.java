@@ -3,7 +3,7 @@ package com.waglewagle.rest.thread.service;
 import com.waglewagle.rest.common.PreResponseDTO;
 import com.waglewagle.rest.keyword.entity.Keyword;
 import com.waglewagle.rest.keyword.repository.KeywordRepository;
-import com.waglewagle.rest.thread.data_object.dto.ThreadDTO.CreateDTO;
+import com.waglewagle.rest.thread.data_object.dto.ThreadDTO;
 import com.waglewagle.rest.thread.data_object.dto.request.ThreadRequest;
 import com.waglewagle.rest.thread.data_object.dto.response.ThreadResponse;
 import com.waglewagle.rest.thread.entity.Thread;
@@ -28,56 +28,81 @@ public class ThreadService {
     private final KeywordRepository keywordRepository;
 
     @Transactional
-    public PreResponseDTO<Thread> creatThread(final Long userId,
-                                              final ThreadRequest.CreateThreadInputDTO createThreadInputDTO) throws IllegalArgumentException {
+    public PreResponseDTO<ThreadResponse.ThreadDTO>
+    creatThread(final Long userId,
+                final ThreadRequest.CreateDTO createDTO)
+            throws
+            IllegalArgumentException,
+            NoSuchElementException {
 
+        Long keywordId = Optional
+                .ofNullable(createDTO.getKeywordId())
+                .orElseThrow(() -> new IllegalArgumentException("키워드 아이디를 입력해야 합니다."));
+        String content = Optional
+                .ofNullable(createDTO.getContent())
+                .orElseThrow(() -> new NoSuchElementException("쓰레드는 내용이 존재해야 합니다."));
         User author = userRepository
                 .findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-        Keyword keyword = keywordRepository.findOne(createThreadInputDTO.getKeywordId());
-        if (keyword == null)
-            throw new IllegalArgumentException("존재하지 않는 키워드입니다.");
-        String content = createThreadInputDTO.getContent();
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다."));
+        Keyword keyword = keywordRepository
+                .findById(keywordId)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 키워드입니다."));
 
 
-        Long parentThreadId = createThreadInputDTO.getParentThreadId();
-
+        Long parentThreadId = createDTO.getParentThreadId();
         if (parentThreadId == null) {
-            CreateDTO createDTO = CreateDTO.from(author, null, keyword, content);
-            return new PreResponseDTO<>(threadRepository.save(Thread.of(createDTO)), HttpStatus.CREATED);
+            ThreadDTO.CreateDTO createDTO1 = ThreadDTO.CreateDTO.from(author, null, keyword, content);
+            return new PreResponseDTO<>(
+                    ThreadResponse.ThreadDTO.of(threadRepository.save(Thread.of(createDTO1))),
+                    HttpStatus.CREATED);
         }
 
-        Thread parentThread = threadRepository.findById(parentThreadId).orElse(null);
-        if (parentThread == null || (parentThread != null && parentThread.getParentThread() != null)) {
-            return new PreResponseDTO<>(null, HttpStatus.BAD_REQUEST);
-        }
+        Thread parentThread = threadRepository
+                .findById(parentThreadId)
+                .map(thread -> {
+                    if (thread.getParentThread() == null)
+                        throw new NoSuchElementException("부모 쓰레드가 존재하지 않습니다.");
+                    return thread;
+                }).map(thread -> {
+                    if (thread.getParentThread().getParentThread() != null)
+                        throw new IllegalArgumentException("대댓글은 허용되지 않습니다.");
+                    return thread;
+                }).filter(thread ->
+                        Objects.equals(thread.getKeyword().getId(), createDTO.getKeywordId()))
+                .orElseThrow(() ->
+                        new NoSuchElementException("올바른 쓰레드가 아닙니다."));
 
-        CreateDTO createDTO = CreateDTO.from(author, parentThread, keyword, content);
-        return new PreResponseDTO<>(threadRepository.save(Thread.of(createDTO)), HttpStatus.CREATED);
 
-        //TODO: java Optional 문법!
+        ThreadDTO.CreateDTO createDTO2 = ThreadDTO.CreateDTO.from(author, parentThread, keyword, content);
+        return new PreResponseDTO<>(
+                ThreadResponse.ThreadDTO.of(threadRepository.save(Thread.of(createDTO2))),
+                HttpStatus.CREATED);
 
     }
 
     @Transactional
-    public void deleteThread(final Long userId, final Long threadId) {
+    public void
+    deleteThread(final Long userId,
+                 final Long threadId)
+            throws
+            IllegalArgumentException,
+            NoSuchElementException {
 
-        Optional<Thread> thread = threadRepository.findById(threadId);
+        threadRepository
+                .findById(threadId)
+                .map((thread) -> {
+                    if (thread.getAuthor().getId() != userId)
+                        throw new IllegalArgumentException();
+                    return thread;
+                }).orElseThrow(() -> new NoSuchElementException("찾는 쓰레드가 존재하지 않습니다."));
 
-        if (thread.isEmpty()) {
-            return; //TODO: 예외 혹은 제대로된 리턴
-        }
-
-        if (!Objects.equals(thread.get().getAuthor().getId(), userId)) {
-            return; //TODO: 예외 혹은 제대로된 리턴
-        }
-
-        threadRepository.deleteAllByParentThreadId(threadId); //TODO: 아직 동작 확인 못함(테스트코드)
+        threadRepository.deleteAllByParentThreadId(threadId);
         threadRepository.deleteById(threadId);
     }
 
     @Transactional(readOnly = true)
-    public List<ThreadResponse.ThreadDTO> getThreadsInKeyword(final Long keywordId) {
+    public PreResponseDTO<List<ThreadResponse.ThreadDTO>>
+    getThreadsInKeyword(final Long keywordId) {
         List<Thread> parentThreads = threadRepository.findParentThreadsInKeyword(keywordId);
         List<Thread> childThreads = threadRepository
                 .findChildThreads(
@@ -85,27 +110,33 @@ public class ThreadService {
                                 .stream()
                                 .map(t -> t.getId())
                                 .collect(Collectors.toList()));
+        List<ThreadResponse.ThreadDTO>
+                threadDTOS = mapParentAndChildThreads(parentThreads, childThreads);
 
-
-        return mapParentAndChildThreads(parentThreads, childThreads);
+        return new PreResponseDTO<>(
+                threadDTOS,
+                threadDTOS.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK
+        );
     }
 
-    public List<ThreadResponse.ThreadDTO> mapParentAndChildThreads(final List<Thread> parentThreads,
-                                                                   final List<Thread> childThreads) {
+    public List<ThreadResponse.ThreadDTO>
+    mapParentAndChildThreads(final List<Thread> parentThreads,
+                             final List<Thread> childThreads) {
 
-        HashMap<Long, List<ThreadResponse.ThreadDTO>> idToDTOs = new HashMap<>();
+        HashMap<Long, List<ThreadResponse.ThreadDTO>>
+                parentIdToChild = new HashMap<>();
         childThreads.forEach(thread -> {
-            if (!idToDTOs.containsKey(thread.getParentThread().getId())) {
-                idToDTOs.put(thread.getParentThread().getId(), new ArrayList<>());
+            if (!parentIdToChild.containsKey(thread.getParentThread().getId())) {
+                parentIdToChild.put(thread.getParentThread().getId(), new ArrayList<>());
             }
-            idToDTOs.get(thread.getParentThread().getId()).add(ThreadResponse.ThreadDTO.of(thread));
+            parentIdToChild.get(thread.getParentThread().getId()).add(ThreadResponse.ThreadDTO.of(thread));
         });
         return parentThreads
                 .stream()
                 .map(thread -> {
                     ThreadResponse.ThreadDTO threadDTO = ThreadResponse.ThreadDTO.of(thread);
-                    if (idToDTOs.containsKey(thread.getId()))
-                        idToDTOs.get(thread.getId()).forEach(threadDTO::addChild);
+                    if (parentIdToChild.containsKey(thread.getId()))
+                        parentIdToChild.get(thread.getId()).forEach(threadDTO::addChild);
                     return threadDTO;
                 })
                 .collect(Collectors.toList());

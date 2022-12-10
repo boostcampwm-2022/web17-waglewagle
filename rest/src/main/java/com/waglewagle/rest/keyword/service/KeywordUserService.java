@@ -32,10 +32,10 @@ public class KeywordUserService {
 
         User user = userRepository
                 .findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+                .orElseThrow(IllegalArgumentException::new);
         Community community = communityRepository
                 .findById(disjoinDTO.getCommunityId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 커뮤니티입니다."));
+                .orElseThrow(IllegalArgumentException::new);
 
         keywordUserRepository.deleteByKeywordAndCommunityAndUser(keyword, community, user);
     }

@@ -1,5 +1,6 @@
 package com.waglewagle.rest.keyword.controller;
 
+import com.waglewagle.rest.common.PreResponseDTO;
 import com.waglewagle.rest.community.service.CommunityService;
 import com.waglewagle.rest.community.service.CommunityUserService;
 import com.waglewagle.rest.keyword.data_object.dto.AssociationDTO;
@@ -8,8 +9,6 @@ import com.waglewagle.rest.keyword.data_object.dto.response.KeywordResponse;
 import com.waglewagle.rest.keyword.entity.Keyword;
 import com.waglewagle.rest.keyword.service.KeywordService;
 import com.waglewagle.rest.keyword.service.KeywordUserService;
-import com.waglewagle.rest.user.entity.User;
-import com.waglewagle.rest.user.enums.Role;
 import com.waglewagle.rest.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/api/v1/keyword") //정확한 표현법좀???
@@ -140,35 +138,22 @@ public class KeywordController {
     public ResponseEntity
     getJoinedKeywords(@PathVariable("community_id") final Long communityId,
                       @CookieValue("user_id") final Long userId) {
-        if (!communityUserService.isJoined(userId, communityId)) {
-            // 참여하지 않은 커뮤니티의 키워드를 요청했다.
-            // not found?
-            // unauthorized?
-            // bad request?
-            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
-        }
 
-        List<KeywordResponse.KeywordDTO> keywordDTODTOS = keywordService.getJoinedKeywords(userId, communityId);
+        PreResponseDTO<List<KeywordResponse.KeywordDTO>>
+                preResponseDTO = keywordService.getJoinedKeywords(userId, communityId);
 
 
-        return new ResponseEntity(keywordDTODTOS, HttpStatus.OK);
-
+        return new ResponseEntity(
+                preResponseDTO.getData(),
+                preResponseDTO.getHttpStatus());
     }
 
     @PutMapping("/merge")
-    public ResponseEntity<String>
+    public ResponseEntity
     mergeKeywords(@CookieValue("user_id") final Long userId,
                   @RequestBody final KeywordRequest.MergeDTO mergeDTO) {
 
-        Optional<User> optUser = userRepository.findById(userId);
-
-        if (optUser.isEmpty())
-            return new ResponseEntity<>("존재하지 않는 회원입니다.", HttpStatus.FORBIDDEN);
-        if (optUser.map(User::getRole).filter(role -> role.equals(Role.ADMIN)).isEmpty())
-            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-
-        keywordService.keywordMerge(mergeDTO);
-
+        keywordService.keywordMerge(mergeDTO, userId);
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
@@ -177,14 +162,7 @@ public class KeywordController {
     deleteKeywords(@CookieValue("user_id") final Long userId,
                    @RequestBody final KeywordRequest.DeleteDTO deleteDTO) {
 
-        Optional<User> optUser = userRepository.findById(userId);
-
-        if (optUser.isEmpty())
-            return new ResponseEntity<>("존재하지 않는 회원입니다.", HttpStatus.FORBIDDEN);
-        if (optUser.map(User::getRole).filter(role -> role.equals(Role.ADMIN)).isEmpty())
-            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-
-        keywordService.keywordDelete(deleteDTO);
+        keywordService.deleteKeyword(deleteDTO, userId);
 
         return new ResponseEntity(HttpStatus.OK);
     }
