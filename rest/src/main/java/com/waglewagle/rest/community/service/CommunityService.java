@@ -5,6 +5,7 @@ import com.waglewagle.rest.community.data_object.dto.response.CommunityResponse;
 import com.waglewagle.rest.community.entity.Community;
 import com.waglewagle.rest.community.repository.CommunityRepository;
 import com.waglewagle.rest.user.entity.User;
+import com.waglewagle.rest.user.exception.NoSuchUserException;
 import com.waglewagle.rest.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,6 @@ public class CommunityService {
     @Transactional
     public boolean
     isExistCommunity(final Long communityId) {
-
         return communityRepository.findById(communityId).isPresent();
     }
 
@@ -45,12 +45,11 @@ public class CommunityService {
     public PreResponseDTO<CommunityResponse.CommunityDTO>
     createCommunity(final Long userId,
                     final String title,
-                    final String description) {
+                    final String description) throws NoSuchUserException {
 
-        User user = userRepository.findById(userId).orElse(null);
-        if (user == null) {
-            return new PreResponseDTO<>(null, HttpStatus.FORBIDDEN);
-        }
+        User user = userRepository
+                .findById(userId)
+                .orElseThrow(NoSuchUserException::new);
 
         Community community = Community.from(title, description, user);
         communityRepository.save(community);

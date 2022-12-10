@@ -75,11 +75,6 @@ public class ThreadController {
     public ResponseEntity<List<ThreadResponse.ThreadDTO>>
     getThreadsInKeyword(@RequestParam("keyword-id") final Long keywordId) {
 
-        if (!keywordService.isKeywordExist(keywordId)) {
-            // TODO : Error code
-            return new ResponseEntity(null, HttpStatus.NOT_FOUND);
-        }
-
         PreResponseDTO<List<ThreadResponse.ThreadDTO>>
                 preResponseDTO = threadService.getThreadsInKeyword(keywordId);
 

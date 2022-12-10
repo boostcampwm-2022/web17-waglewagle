@@ -74,15 +74,9 @@ public class UserController {
     public ResponseEntity<String>
     updateLastActivity(@CookieValue("user_id") final Long userId) {
 
-        try {
-            userService.updateLastActivity(userId);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+        userService.updateLastActivity(userId);
 
-        return new ResponseEntity<>(
-                null,
-                HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("keyword")
