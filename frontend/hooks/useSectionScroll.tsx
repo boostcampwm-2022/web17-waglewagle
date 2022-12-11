@@ -1,22 +1,25 @@
-import { useCallback } from 'react';
+import throttle from '@utils/throttle';
+import { useMemo } from 'react';
 import { useRef, useEffect } from 'react';
 
 const useSectionScroll = (maxPage: number) => {
   const pageRef = useRef<number>(0); // page에 따라 불필요한 리렌더링이 발생하지 않게하기위해 ref 사용
 
-  const moveSectionScroll = useCallback(
-    (e: WheelEvent) => {
-      e.preventDefault();
-      // 아래 스크롤
-      if (e.deltaY > 0 && pageRef.current < maxPage) {
-        pageRef.current += 1;
-      }
-      if (e.deltaY < 0 && pageRef.current > 0) {
-        pageRef.current -= 1;
-      }
+  // eslint가 useCallback에
+  const moveSectionScroll = useMemo(
+    () =>
+      throttle((e: WheelEvent) => {
+        e.preventDefault();
+        // 아래 스크롤
+        if (e.deltaY > 0 && pageRef.current < maxPage) {
+          pageRef.current += 1;
+        }
+        if (e.deltaY < 0 && pageRef.current > 0) {
+          pageRef.current -= 1;
+        }
 
-      window.scrollTo(0, pageRef.current * window.innerHeight);
-    },
+        window.scrollTo(0, pageRef.current * window.innerHeight);
+      }, 500),
     [maxPage],
   );
 
