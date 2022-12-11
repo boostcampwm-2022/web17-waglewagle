@@ -73,7 +73,7 @@
   }
 
   .doodle-by-man {
-    animation: 0.5s linear 1.2s forwards fade-in;
+    animation: 0.5s linear 1s forwards fade-in;
   }
 }
 
@@ -121,29 +121,35 @@
   left: 100px;
 }
 
-.drawing-man-image {
-  position: fixed;
-
-  bottom: 50px;
-  right: 50px;
-}
-
 .doodle-by-man {
   position: absolute;
-  bottom: 309px;
+  bottom: 319px;
   right: 120px;
   font-family: 'NanumBugGeugSeong';
   font-size: 1.2rem;
 }
 
+.drawing-man-image {
+  position: fixed;
+  opacity: 0;
+
+  bottom: 50px;
+  right: 50px;
+
+  transition: 0.5s all ease-in-out;
+}
+
+.showing {
+  opacity: 1;
+  transform: translateY(-10px);
+}
+
 @keyframes fade-in {
   from {
-    transform: translateX(-10px);
     opacity: 0;
   }
 
   to {
-    transform: translateX(0);
     opacity: 1;
   }
 }

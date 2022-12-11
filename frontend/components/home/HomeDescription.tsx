@@ -12,6 +12,7 @@ import Image from 'next/image';
 const cx = classnames.bind(styles);
 
 const HomeDescription = () => {
+  const [innerHeight, setInnerHeight] = useState<number>(0);
   const [offsetY, setOffsetY] = useState<number>(0);
   const pageRef = useSectionScroll(4); // 최대 페이지를 넣어주면 섹션별로 움직이도록
   const instantOpacityObserver = useScrollChangeColor(0);
@@ -32,16 +33,23 @@ const HomeDescription = () => {
     setOffsetY(window.scrollY);
   };
 
+  const handleResize = () => {
+    setInnerHeight(window.innerHeight);
+  };
+
   const handleClickUp: MouseEventHandler = () => {
     pageRef.current = 0;
     window.scrollTo(0, pageRef.current * window.innerHeight);
   };
 
   useEffect(() => {
+    setInnerHeight(window.innerHeight);
     window.addEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleResize);
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
@@ -58,9 +66,6 @@ const HomeDescription = () => {
       }
       if (teamArticleRef.current) {
         instantOpacityObserver.observe(teamArticleRef.current);
-      }
-      if (drawingManRef.current) {
-        instantOpacityObserver.observe(drawingManRef.current);
       }
     }
 
@@ -98,9 +103,7 @@ const HomeDescription = () => {
           className={cx('parallex-image', 'thinking-image')}
           src='/images/parallax/thinking.png'
           style={{
-            transform: `translateY(${
-              offsetY * 0.5 - window.innerHeight * 0.5
-            }px)`,
+            transform: `translateY(${offsetY * 0.5 - innerHeight * 0.5}px)`,
           }}
           width={256}
           height={238}
@@ -128,7 +131,7 @@ const HomeDescription = () => {
           className={cx('parallex-image', 'friendly-image')}
           src='/images/parallax/friendly.png'
           style={{
-            transform: `translateY(${offsetY * 0.5 - window.innerHeight}px)`,
+            transform: `translateY(${offsetY * 0.5 - innerHeight}px)`,
           }}
           width={256}
           height={238}
@@ -190,7 +193,9 @@ const HomeDescription = () => {
       </article>
       <Image
         ref={drawingManRef}
-        className={cx('parallex-image', 'drawing-man-image')}
+        className={cx('parallex-image', 'drawing-man-image', {
+          showing: offsetY > innerHeight * 3,
+        })}
         src='/images/parallax/drawing-man.png'
         width={128}
         height={259}
