@@ -11,6 +11,7 @@ const useSectionScroll = (maxPage: number) => {
       throttle((e: WheelEvent) => {
         e.preventDefault();
         // 아래 스크롤
+
         if (e.deltaY > 0 && pageRef.current < maxPage) {
           pageRef.current += 1;
         }
