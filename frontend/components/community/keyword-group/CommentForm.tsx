@@ -1,4 +1,4 @@
-import useAddCommentMutation from '@hooks/thread/useAddCommentMutation';
+import { useAddCommentMutation } from '@hooks/thread';
 import styles from '@sass/components/community/keyword/CommentForm.module.scss';
 import classnames from 'classnames/bind';
 import { ChangeEventHandler, FormEventHandler, useState } from 'react';

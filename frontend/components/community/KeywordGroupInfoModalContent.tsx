@@ -1,8 +1,9 @@
-import useJoinKeywordMutation from '@hooks/useJoinKeywordMutation';
-import { useRouter } from 'next/router';
-import styles from '@sass/components/community/KeywordGroupInfoModalContent.module.scss';
-import classnames from 'classnames/bind';
 import { DefaultButton } from '@components/common';
+import { useJoinKeywordMutation } from '@hooks/keyword';
+import styles
+  from '@sass/components/community/KeywordGroupInfoModalContent.module.scss';
+import classnames from 'classnames/bind';
+import { useRouter } from 'next/router';
 const cx = classnames.bind(styles);
 
 interface KeywordGroupInfoModalContentProps {

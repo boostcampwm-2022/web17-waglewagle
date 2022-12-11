@@ -1,11 +1,11 @@
-import Image from 'next/image';
+import { KeywordRelatedData, MyKeywordData } from '#types/types';
+import { Loading } from '@components/common';
+import { RELATED_KEYWORD_NUMBERS } from '@constants/constants';
+import { useRelatedKeywordList } from '@hooks/keyword';
 import styles from '@sass/components/community/KeywordAssociated.module.scss';
 import classnames from 'classnames/bind';
-import { KeywordRelatedData, MyKeywordData } from '../../types/types';
-import useRelatedKeywordList from '@hooks/useRelatedKeywordList';
-import { Loading } from '@components/common';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { RELATED_KEYWORD_NUMBERS } from '@constants/constants';
 const cx = classnames.bind(styles);
 
 interface KeywordAssociatedProps {
