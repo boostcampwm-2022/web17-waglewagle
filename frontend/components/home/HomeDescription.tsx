@@ -1,8 +1,8 @@
 import classnames from 'classnames/bind';
 import styles from '@sass/components/home/HomeDescription.module.scss';
-import { MouseEventHandler, useEffect, useRef } from 'react';
+import { MouseEventHandler, useEffect, useRef, useState } from 'react';
 import useScrollDrawSvg from '@hooks/useScrollDrawSvg';
-import useScrollChangeColor from '@hooks/useScrollChangeColor';
+import useScrollChangeColor from '@hooks/useScrollChangeOpacity';
 import useSectionScroll from '@hooks/useSectionScroll';
 import IntroduceProduct from '../common/svg/IntroduceProduct';
 import QuestionProblem from '@components/common/svg/QuestionProblem';
@@ -12,19 +12,25 @@ import Image from 'next/image';
 const cx = classnames.bind(styles);
 
 const HomeDescription = () => {
+  const [offsetY, setOffsetY] = useState<number>(0);
   const pageRef = useSectionScroll(4); // 최대 페이지를 넣어주면 섹션별로 움직이도록
-  const colorObserver = useScrollChangeColor();
+  const instantOpacityObserver = useScrollChangeColor(0);
   const svgObserver = useScrollDrawSvg();
 
   const problemArticleRef = useRef<HTMLElement>(null);
   const solutionArticleRef = useRef<HTMLElement>(null);
   const manualArticleRef = useRef<HTMLElement>(null);
   const teamArticleRef = useRef<HTMLElement>(null);
+  const drawingManRef = useRef<HTMLImageElement>(null);
 
   const problemSvgRef = useRef<SVGSVGElement>(null);
   const solutionSvgRef = useRef<SVGSVGElement>(null);
   const productSvgRef = useRef<SVGSVGElement>(null);
   const teamSvgRef = useRef<SVGSVGElement>(null);
+
+  const handleScroll = () => {
+    setOffsetY(window.scrollY);
+  };
 
   const handleClickUp: MouseEventHandler = () => {
     pageRef.current = 0;
@@ -32,21 +38,38 @@ const HomeDescription = () => {
   };
 
   useEffect(() => {
-    if (colorObserver) {
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (instantOpacityObserver) {
       if (problemArticleRef.current) {
-        colorObserver.observe(problemArticleRef.current);
+        instantOpacityObserver.observe(problemArticleRef.current);
       }
       if (solutionArticleRef.current) {
-        colorObserver.observe(solutionArticleRef.current);
+        instantOpacityObserver.observe(solutionArticleRef.current);
       }
       if (manualArticleRef.current) {
-        colorObserver.observe(manualArticleRef.current);
+        instantOpacityObserver.observe(manualArticleRef.current);
       }
       if (teamArticleRef.current) {
-        colorObserver.observe(teamArticleRef.current);
+        instantOpacityObserver.observe(teamArticleRef.current);
+      }
+      if (drawingManRef.current) {
+        instantOpacityObserver.observe(drawingManRef.current);
       }
     }
 
+    return () => {
+      instantOpacityObserver && instantOpacityObserver.disconnect();
+    };
+  }, [instantOpacityObserver]);
+
+  useEffect(() => {
     if (svgObserver) {
       if (problemSvgRef.current) {
         svgObserver.observe(problemSvgRef.current);
@@ -63,10 +86,9 @@ const HomeDescription = () => {
     }
 
     return () => {
-      colorObserver && colorObserver.disconnect();
       svgObserver && svgObserver.disconnect();
     };
-  }, [colorObserver, svgObserver]);
+  }, [svgObserver]);
 
   return (
     <section id='description' className={cx('description')}>
@@ -75,6 +97,11 @@ const HomeDescription = () => {
         <Image
           className={cx('parallex-image', 'thinking-image')}
           src='/images/parallax/thinking.png'
+          style={{
+            transform: `translateY(${
+              offsetY * 0.5 - window.innerHeight * 0.5
+            }px)`,
+          }}
           width={256}
           height={238}
           alt='고민하는 사람 그림'
@@ -100,6 +127,9 @@ const HomeDescription = () => {
         <Image
           className={cx('parallex-image', 'friendly-image')}
           src='/images/parallax/friendly.png'
+          style={{
+            transform: `translateY(${offsetY * 0.5 - window.innerHeight}px)`,
+          }}
           width={256}
           height={238}
           alt='친구끼리 장난치는 그림'
@@ -159,6 +189,7 @@ const HomeDescription = () => {
         </button>
       </article>
       <Image
+        ref={drawingManRef}
         className={cx('parallex-image', 'drawing-man-image')}
         src='/images/parallax/drawing-man.png'
         width={128}

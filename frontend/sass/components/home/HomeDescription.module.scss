@@ -24,7 +24,8 @@
 }
 
 .description-title,
-.description-paragraph {
+.description-paragraph,
+.doodle-by-man {
   opacity: 0;
   transition: all 0.5s ease-in;
 }
@@ -70,6 +71,10 @@
   .description-paragraph {
     opacity: 1;
   }
+
+  .doodle-by-man {
+    animation: 0.5s linear 1.2s forwards fade-in;
+  }
 }
 
 .svg-drawing {
@@ -107,7 +112,7 @@
 }
 
 .thinking-image {
-  bottom: 50px;
+  bottom: 5px;
   right: 50px;
 }
 
@@ -129,4 +134,16 @@
   right: 120px;
   font-family: 'NanumBugGeugSeong';
   font-size: 1.2rem;
+}
+
+@keyframes fade-in {
+  from {
+    transform: translateX(-10px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
