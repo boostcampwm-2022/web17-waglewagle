@@ -35,16 +35,18 @@ const KeywordGroupUserList = ({
         </p>
       </div>
       <ul>
-        {userList?.map(({ userId, username, lastActivity }) => (
-          <li key={userId} className={cx('user-list')}>
-            <p className={cx('username')}>{username}</p>
-            {calculateTimeGap(lastActivity) === '방금 전' ? (
-              <div className={cx('online-badge')}></div>
-            ) : (
-              calculateTimeGap(lastActivity)
-            )}
-          </li>
-        ))}
+        {userList
+          ?.sort((a, b) => (a.lastActivity < b.lastActivity ? 1 : -1))
+          .map(({ userId, username, lastActivity }) => (
+            <li key={userId} className={cx('user-list')}>
+              <p className={cx('username')}>{username}</p>
+              {calculateTimeGap(lastActivity) === '방금 전' ? (
+                <div className={cx('online-badge')}></div>
+              ) : (
+                calculateTimeGap(lastActivity)
+              )}
+            </li>
+          ))}
       </ul>
     </div>
   );
