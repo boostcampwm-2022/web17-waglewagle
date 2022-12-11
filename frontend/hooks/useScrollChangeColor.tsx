@@ -9,16 +9,16 @@ interface IntersectionObserverOption {
   threshold?: number;
 }
 
-const useScrollChangeColor = () => {
+const useScrollChangeOpacity = () => {
   const [observer, setObserver] = useState<IntersectionObserver | null>(null);
 
-  const changeColor = (entries: IntersectionObserverEntry[]) => {
+  const changeOpacity = (entries: IntersectionObserverEntry[]) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         // 이후에는 다양하게
-        entry.target.classList.add(cx('color-changed'));
+        entry.target.classList.add(cx('opacity-changed'));
       } else {
-        entry.target.classList.remove(cx('color-changed'));
+        entry.target.classList.remove(cx('opacity-changed'));
       }
     });
   };
@@ -28,11 +28,11 @@ const useScrollChangeColor = () => {
       threshold: 0.8,
     };
 
-    const colorObserver = new IntersectionObserver(changeColor, option);
-    setObserver(colorObserver);
+    const opacityObserver = new IntersectionObserver(changeOpacity, option);
+    setObserver(opacityObserver);
   }, []);
 
   return observer;
 };
 
-export default useScrollChangeColor;
+export default useScrollChangeOpacity;

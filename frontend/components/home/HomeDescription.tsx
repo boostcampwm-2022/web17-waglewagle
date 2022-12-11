@@ -13,7 +13,7 @@ const cx = classnames.bind(styles);
 
 const HomeDescription = () => {
   const pageRef = useSectionScroll(4); // 최대 페이지를 넣어주면 섹션별로 움직이도록
-  const colorObserver = useScrollChangeColor(); // TODO : intersectionObserver 완전 추상화도 가능하겠는데? 현재는 추가하면 작업해줄 것이 많다.
+  const colorObserver = useScrollChangeColor();
   const svgObserver = useScrollDrawSvg();
 
   const problemArticleRef = useRef<HTMLElement>(null);
