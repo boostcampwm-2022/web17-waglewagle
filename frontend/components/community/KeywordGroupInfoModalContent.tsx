@@ -1,7 +1,6 @@
 import { DefaultButton } from '@components/common';
 import { useJoinKeywordMutation } from '@hooks/keyword';
-import styles
-  from '@sass/components/community/KeywordGroupInfoModalContent.module.scss';
+import styles from '@sass/components/community/KeywordGroupInfoModalContent.module.scss';
 import classnames from 'classnames/bind';
 import { useRouter } from 'next/router';
 const cx = classnames.bind(styles);
@@ -10,12 +9,14 @@ interface KeywordGroupInfoModalContentProps {
   keywordId: string;
   keyword: string;
   memberCount: number;
+  closeKeywordModal: () => void;
 }
 
 const KeywordGroupInfoModalContent = ({
   keywordId,
   keyword,
   memberCount,
+  closeKeywordModal,
 }: KeywordGroupInfoModalContentProps) => {
   const router = useRouter();
   const communityId = router.query.id as string;
@@ -23,7 +24,7 @@ const KeywordGroupInfoModalContent = ({
 
   const handleClickEnter = async () => {
     mutateJoinKeyword({ keywordId, keywordName: keyword, communityId });
-    // 왜 여기에서는 closeKeywordModal()이 함수가 아니라고 할까?
+    closeKeywordModal();
   };
 
   return (

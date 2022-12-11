@@ -14,7 +14,7 @@ const KeywordGroupModalContent = ({
   return (
     <KeywordGroupLayout>
       <KeywordGroupMain keywordId={keywordId} keyword={keyword} />
-      <KeywordGroupUserList keywordId={keywordId} />
+      <KeywordGroupUserList keywordId={keywordId} keyword={keyword} />
     </KeywordGroupLayout>
   );
 };

@@ -20,8 +20,10 @@ const Main = () => {
   useEffect(() => {
     if (userData) {
       apis.joinCommunity(MVP_DEFAULT.COMMUNITY_ID);
+    } else {
+      router.push('/');
     }
-  }, [userData]);
+  }, [router, userData]);
 
   if (!userData) {
     return <Loading />;

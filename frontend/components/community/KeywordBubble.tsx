@@ -46,8 +46,10 @@ const KeywordBubble = ({
   };
 
   const handleClick: MouseEventHandler<HTMLDivElement> = (e) => {
-    setModalPosData({ x: e.clientX, y: e.clientY });
-    setIsOpenKeywordModal(true);
+    if (!isOpenKeywordModal) {
+      setModalPosData({ x: e.clientX, y: e.clientY });
+      setIsOpenKeywordModal(true);
+    }
   };
 
   return (
@@ -83,6 +85,7 @@ const KeywordBubble = ({
             keywordId={keywordId}
             keyword={keyword}
             memberCount={memberCount}
+            closeKeywordModal={closeKeywordModal}
           />
         )}
       </MouseModal>
