@@ -95,3 +95,35 @@
     stroke-dashoffset: 0;
   }
 }
+
+.parallex-image {
+  z-index: -1;
+  position: absolute;
+
+  @media screen and (max-width: 1024px) {
+    visibility: hidden;
+  }
+}
+
+.thinking-image {
+  bottom: 50px;
+  right: 50px;
+}
+
+.friendly-image {
+  bottom: 50px;
+  left: 100px;
+}
+
+.drawing-man-image {
+  bottom: 50px;
+  right: 50px;
+}
+
+.doodle-by-man {
+  position: absolute;
+  bottom: 309px;
+  right: 120px;
+  font-family: 'NanumBugGeugSeong';
+  font-size: 1.2rem;
+}

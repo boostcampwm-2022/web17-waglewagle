@@ -8,6 +8,7 @@ import IntroduceProduct from '../common/svg/IntroduceProduct';
 import QuestionProblem from '@components/common/svg/QuestionProblem';
 import QuestionSolution from '@components/common/svg/QuestionSolution';
 import IntroduceTeam from '@components/common/svg/IntroduceTeam';
+import Image from 'next/image';
 const cx = classnames.bind(styles);
 
 const HomeDescription = () => {
@@ -71,6 +72,13 @@ const HomeDescription = () => {
     <section id='description' className={cx('description')}>
       <article className={cx('description-article')} ref={problemArticleRef}>
         <QuestionProblem ref={problemSvgRef} />
+        <Image
+          className={cx('parallex-image', 'thinking-image')}
+          src='/images/parallax/thinking.png'
+          width={256}
+          height={238}
+          alt='고민하는 사람 그림'
+        />
         <h3 className={cx('description-title')}>우리가 느낀 문제점</h3>
         <p className={cx('description-paragraph')}>
           새로운 커뮤니티에 들어가면, 거기에 어떤 사람들이 있는지 궁금합니다.
@@ -89,6 +97,13 @@ const HomeDescription = () => {
       </article>
       <article className={cx('description-article')} ref={solutionArticleRef}>
         <QuestionSolution ref={solutionSvgRef} />
+        <Image
+          className={cx('parallex-image', 'friendly-image')}
+          src='/images/parallax/friendly.png'
+          width={256}
+          height={238}
+          alt='친구끼리 장난치는 그림'
+        />
         <h3 className={cx('description-title')}>
           커뮤니티 내, 관심 키워드 시각화 서비스
         </h3>
@@ -103,6 +118,14 @@ const HomeDescription = () => {
       </article>
       <article className={cx('description-article')} ref={manualArticleRef}>
         <IntroduceProduct ref={productSvgRef} />
+        <span className={cx('doodle-by-man')}>슈붕이 최고야</span>
+        <Image
+          className={cx('parallex-image', 'drawing-man-image')}
+          src='/images/parallax/drawing-man.png'
+          width={128}
+          height={259}
+          alt='그림 그리는 남자 그림'
+        />
         <h3 className={cx('description-title')}>와글와글 사용법</h3>
         <p className={cx('description-paragraph')}>
           커뮤니티에 들어가셨다면, 나를 표현해줄 키워드를 골라보세요. 어떤
@@ -118,6 +141,16 @@ const HomeDescription = () => {
       </article>
       <article className={cx('description-article')} ref={teamArticleRef}>
         <IntroduceTeam ref={teamSvgRef} />
+        <span className={cx('doodle-by-man')}>
+          우리는 아직 정의되지 않았습니다.
+        </span>
+        <Image
+          className={cx('parallex-image', 'drawing-man-image')}
+          src='/images/parallax/drawing-man.png'
+          width={128}
+          height={259}
+          alt='그림 그리는 남자 그림'
+        />
         <h3 className={cx('description-title')}></h3>
         <p className={cx('description-paragraph')}>
           <a href='https://github.com/boostcampwm-2022/web17-waglewagle/wiki'>
