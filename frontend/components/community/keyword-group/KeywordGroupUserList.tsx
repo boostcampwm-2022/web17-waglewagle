@@ -7,9 +7,13 @@ const cx = classnames.bind(styles);
 
 interface KeywordGroupUserListProps {
   keywordId: string;
+  keyword: string;
 }
 
-const KeywordGroupUserList = ({ keywordId }: KeywordGroupUserListProps) => {
+const KeywordGroupUserList = ({
+  keywordId,
+  keyword,
+}: KeywordGroupUserListProps) => {
   const { data: userList } = useKeywordUserListQuery(keywordId);
 
   const onlineUserCount = useMemo(
@@ -25,7 +29,7 @@ const KeywordGroupUserList = ({ keywordId }: KeywordGroupUserListProps) => {
   return (
     <div className={cx('layout')}>
       <div className={cx('header')}>
-        <h3 className={cx('title')}>코딩</h3>
+        <h3 className={cx('title')}>{keyword}</h3>
         <p className={cx('online-count')}>
           {onlineUserCount}명이 이야기 나누는 중
         </p>
