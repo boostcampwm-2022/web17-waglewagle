@@ -41,12 +41,17 @@ const getUserData = async (communityId?: string): Promise<UserData> => {
   return response.data;
 };
 
+const updateLastActivity = () => {
+  apiInstance.put('/v1/user/last-activity');
+};
+
 const apis = {
   fetchLogin,
   getUserCommunityList,
   joinCommunity,
   updateFirstVisitInCommunity,
   getUserData,
+  updateLastActivity,
 };
 
 export default apis;

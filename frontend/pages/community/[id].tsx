@@ -1,23 +1,23 @@
-import { Modal, Loading } from '@components/common';
+import { KeywordGroupData, MyKeywordData } from '#types/types';
+import { Loading, Modal } from '@components/common';
+import SeoHead from '@components/common/Head';
 import {
   CommunityHeader,
   CommunityLayout,
   KeywordBubbleChart,
 } from '@components/community';
-import KeywordAdder from '@components/community/KeywordAdder';
-import AddCircleIcon from '@public/images/add-circle.svg';
-import { KEYWORD_ADDER_THEME, MVP_DEFAULT } from '@constants/constants';
-import { useState, useEffect } from 'react';
-import useUserMe from '@hooks/useUserMe';
-import { useRouter } from 'next/router';
-import dynamic from 'next/dynamic';
-import SeoHead from '@components/common/Head';
-import config from '../../config';
-import { KeywordGroupData, MyKeywordData } from '#types/types';
-import apis from '../../apis/apis';
-import MyKeywordHighlight from '@components/community/MyKeywordHighlight';
-import MainKeywordHandlerLayout from '@components/community/MainKeywordHandlerLayout';
 import { KeywordGroupModalContent } from '@components/community/keyword-group';
+import KeywordAdder from '@components/community/KeywordAdder';
+import MainKeywordHandlerLayout from '@components/community/MainKeywordHandlerLayout';
+import MyKeywordHighlight from '@components/community/MyKeywordHighlight';
+import { KEYWORD_ADDER_THEME, MVP_DEFAULT } from '@constants/constants';
+import useUserMe from '@hooks/useUserMe';
+import AddCircleIcon from '@public/images/add-circle.svg';
+import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import apis from '../../apis/apis';
+import config from '../../config';
 
 const LoginModalContent = dynamic(
   () => import('../../components/common/LoginModalContent'),
@@ -58,9 +58,16 @@ const Community = () => {
   };
 
   useEffect(() => {
+    let interval: NodeJS.Timer;
     if (userData) {
       apis.joinCommunity(MVP_DEFAULT.COMMUNITY_ID);
+      interval = setInterval(() => {
+        apis.updateLastActivity();
+      }, 60000);
     }
+    return () => {
+      clearInterval(interval);
+    };
   }, [userData]);
 
   useEffect(() => {
