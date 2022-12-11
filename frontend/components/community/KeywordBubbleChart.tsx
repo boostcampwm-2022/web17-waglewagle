@@ -1,8 +1,7 @@
 import { BubbleData, KeywordData, KeywordGroupData } from '#types/types';
 import { Loading } from '@components/common';
 import { KEYWORD_BUBBLE_MAX_NUMBER } from '@constants/constants';
-import useKeywordListQuery from '@hooks/useKeywordListQuery';
-import useMyKeywordQuery from '@hooks/useMyKeywordQuery';
+import { useKeywordListQuery, useMyKeywordQuery } from '@hooks/keyword';
 import styles from '@sass/components/community/KeywordBubbleChart.module.scss';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import debounce from '@utils/debounce';

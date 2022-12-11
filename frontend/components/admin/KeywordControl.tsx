@@ -1,4 +1,5 @@
 import { KeywordData } from '#types/types';
+import { apis } from '@apis/index';
 import KeywordDeleteModalContent from '@components/admin/KeywordDeleteModalContent';
 import KeywordMergeModalContent from '@components/admin/KeywordMergeModalContent';
 import { Modal } from '@components/common';
@@ -8,7 +9,6 @@ import { useQuery } from '@tanstack/react-query';
 import classnames from 'classnames/bind';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import apis from '../../apis/apis';
 const cx = classnames.bind(styles);
 
 type Keyword = {
@@ -27,7 +27,10 @@ const KeywordControl = () => {
 
   const _ = useQuery<KeywordData[]>(
     [REACT_QUERY_KEY.KEYWORD, id],
-    () => apis.getKeywords(id as string),
+    async () => {
+      const { data } = await apis.keyword.getKeywords(id as string);
+      return data;
+    },
     {
       enabled: !!id,
       onSuccess: (data) => {

@@ -1,10 +1,11 @@
-import { MouseEventHandler } from 'react';
+import { MyKeywordData } from '#types/types';
+import { useDisjoinKeywordMutation } from '@hooks/keyword';
 import styles from '@sass/components/community/MyKeyword.module.scss';
 import classnames from 'classnames/bind';
-import { MyKeywordData } from '#types/types';
-import useDisjoinKeywordMutation from '@hooks/useDisjoinKeywordMutation';
 import { useRouter } from 'next/router';
+import { MouseEventHandler } from 'react';
 const cx = classnames.bind(styles);
+
 interface MyKeywordProps {
   keywordData: MyKeywordData;
 }

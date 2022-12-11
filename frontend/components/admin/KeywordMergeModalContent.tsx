@@ -1,10 +1,10 @@
+import { apis } from '@apis/index';
 import { REACT_QUERY_KEY } from '@constants/constants';
 import styles from '@sass/components/admin/KeywordMergeModalContent.module.scss';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import classnames from 'classnames/bind';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import apis from '../../apis/apis';
 const cx = classnames.bind(styles);
 
 type Keyword = {
@@ -30,15 +30,14 @@ function KeywordMergeModalContent({
 
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
-    mutationFn: () => {
-      return apis.mergeKeyword(
-        id as string,
-        selectedKeywordId,
-        selectedKeywordList
+    mutationFn: () =>
+      apis.keyword.mergeKeyword({
+        communityId: id as string,
+        destinationKeywordId: selectedKeywordId,
+        sourceKeywordIdList: selectedKeywordList
           .map((selectedKeyword) => selectedKeyword.keywordId)
           .filter((keywordId) => keywordId !== selectedKeywordId),
-      );
-    },
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries([REACT_QUERY_KEY.KEYWORD, id]);
       closeModal();

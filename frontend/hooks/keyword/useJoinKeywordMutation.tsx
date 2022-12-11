@@ -1,8 +1,8 @@
 import { MyKeywordData } from '#types/types';
+import { apis } from '@apis/index';
 import { REACT_QUERY_KEY } from '@constants/constants';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
-import apis from '../apis/apis';
 
 // 반환값, 요청 URL이 모두 다르기 때문에 join과 add 쿼리를 분리함.
 const useJoinKeywordMutation = (
@@ -22,7 +22,7 @@ const useJoinKeywordMutation = (
       keywordId: joinKeywordFullData.keywordId,
       communityId: joinKeywordFullData.communityId,
     };
-    await apis.joinKeyword(joinKeywordData);
+    await apis.keyword.joinKeyword(joinKeywordData);
   };
 
   const { mutate, isError, error } = useMutation({

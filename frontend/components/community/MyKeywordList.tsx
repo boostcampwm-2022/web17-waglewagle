@@ -1,4 +1,4 @@
-import useMyKeywordQuery from '@hooks/useMyKeywordQuery';
+import { useMyKeywordQuery } from '@hooks/keyword';
 import styles from '@sass/components/community/MyKeywordList.module.scss';
 import classnames from 'classnames/bind';
 import { useRouter } from 'next/router';

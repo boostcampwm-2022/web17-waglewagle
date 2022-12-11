@@ -1,5 +1,5 @@
 import Thread from '@components/community/keyword-group/Thread';
-import useThreadListQuery from '@hooks/useThreadListQuery';
+import { useThreadListQuery } from '@hooks/thread';
 import styles from '@sass/components/community/keyword/ThreadList.module.scss';
 import classnames from 'classnames/bind';
 const cx = classnames.bind(styles);
