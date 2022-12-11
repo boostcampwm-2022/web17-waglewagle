@@ -112,8 +112,12 @@ const KeywordAdder = ({
           type='text'
           value={searchKeyword}
           onChange={handleChangeSearchKeyword}
+          aria-label='관심사 키워드 입력 영역'
+          placeholder='키워드를 입력해주세요.'
         />
-        <button type='submit'>{addButtonValue}</button>
+        <button type='submit' aria-label='관심사 키워드 추가 버튼'>
+          {addButtonValue}
+        </button>
       </AutoCompleteFormLayout>
     </div>
   );

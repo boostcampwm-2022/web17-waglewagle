@@ -10,6 +10,7 @@
 // layoutTheme 추가가 필요한 경우, 새로운 class를 만들어서 input과 button 스타일을 지정해주면 됨.
 .main {
   position: relative;
+  width: 250px;
 
   input {
     width: 100%;
@@ -17,6 +18,9 @@
     padding: 15px 30px;
     border: 1px solid black;
     border-radius: 15px;
+    &::placeholder {
+      font-size: 0.9rem;
+    }
   }
 
   button {
