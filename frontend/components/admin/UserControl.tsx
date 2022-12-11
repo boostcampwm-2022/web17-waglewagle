@@ -1,4 +1,4 @@
-import useKeywordUserListQuery from '@hooks/useKeywordUserListQuery';
+import useKeywordUserListQuery from '@hooks/keyword/useKeywordUserListQuery';
 import styles from '@sass/components/admin/UserControl.module.scss';
 import classnames from 'classnames/bind';
 import { useRouter } from 'next/router';
