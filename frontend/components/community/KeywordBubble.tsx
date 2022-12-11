@@ -60,7 +60,7 @@ const KeywordBubble = ({
         transform: `translate(${posX - radius}px, ${posY - radius}px)`,
         width: `${radius * 2}px`,
         height: `${radius * 2}px`,
-        fontSize: `${10 + radius * 0.2}px`,
+        fontSize: `${12 + radius * 0.2}px`,
       }}
     >
       <div>
