@@ -46,6 +46,24 @@
   }
 }
 
+.go-back-button {
+  margin-top: 30px;
+  border: none;
+  background-color: transparent;
+  font-size: 1.5rem;
+  font-family: 'NanumBugGeugSeong';
+  transition: 0.3s all linear;
+
+  &:hover {
+    cursor: pointer;
+    transform: translateY(-5px);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
 .color-changed {
   .description-title,
   .description-paragraph {

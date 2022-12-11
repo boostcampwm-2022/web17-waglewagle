@@ -83,7 +83,7 @@ const KeywordBubbleChart = ({
     }
 
     const bubbleDataArray = slicedCommunityKeywordData.map((keywordData) => {
-      const radius = 30 + keywordData.memberCount * 2;
+      const radius = 20 + keywordData.memberCount * 3;
       const circleData = circleContainerRef.current!.addCircle(
         keywordData.keywordId,
         radius,

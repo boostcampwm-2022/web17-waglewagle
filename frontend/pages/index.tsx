@@ -26,11 +26,11 @@ const Home = () => {
   };
 
   useEffect(() => {
-    if (userData) {
+    if (userData && router.isReady) {
       apis.joinCommunity(MVP_DEFAULT.COMMUNITY_ID);
       router.push('/main');
     }
-  }, [userData]);
+  }, [userData, router]);
 
   return (
     <HomeLayout>
