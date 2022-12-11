@@ -5,7 +5,7 @@ import com.waglewagle.rest.common.exception.InvalidInputException;
 import com.waglewagle.rest.keyword.entity.Keyword;
 import com.waglewagle.rest.keyword.exception.NoSuchKeywordException;
 import com.waglewagle.rest.keyword.repository.KeywordRepository;
-import com.waglewagle.rest.thread.data_object.dto.ThreadDTO;
+import com.waglewagle.rest.thread.data_object.dto.ThreadVO;
 import com.waglewagle.rest.thread.data_object.dto.request.ThreadRequest;
 import com.waglewagle.rest.thread.data_object.dto.response.ThreadResponse;
 import com.waglewagle.rest.thread.entity.Thread;
@@ -60,9 +60,9 @@ public class ThreadService {
 
         Long parentThreadId = createDTO.getParentThreadId();
         if (parentThreadId == null) {
-            ThreadDTO.CreateDTO createDTO1 = ThreadDTO.CreateDTO.from(author, null, keyword, content);
+            ThreadVO.CreateVO createVO1 = ThreadVO.CreateVO.from(author, null, keyword, content);
             return new PreResponseDTO<>(
-                    ThreadResponse.ThreadDTO.of(threadRepository.save(Thread.of(createDTO1))),
+                    ThreadResponse.ThreadDTO.of(threadRepository.save(Thread.of(createVO1))),
                     HttpStatus.CREATED);
         }
 
@@ -79,13 +79,13 @@ public class ThreadService {
                 .orElseThrow(InvalidThreadException::new);
 
 
-        ThreadDTO.CreateDTO createDTO2 = ThreadDTO.CreateDTO.from(author, parentThread, keyword, content);
+        ThreadVO.CreateVO createVO2 = ThreadVO.CreateVO.from(author, parentThread, keyword, content);
         return new PreResponseDTO<>(
-                ThreadResponse.ThreadDTO.of(threadRepository.save(Thread.of(createDTO2))),
+                ThreadResponse.ThreadDTO.of(threadRepository.save(Thread.of(createVO2))),
                 HttpStatus.CREATED);
 
     }
-
+    
     @Transactional
     public void
     deleteThread(final Long userId,

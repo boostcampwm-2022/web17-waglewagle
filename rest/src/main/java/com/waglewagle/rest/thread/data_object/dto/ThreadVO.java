@@ -8,25 +8,25 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-public class ThreadDTO {
+public class ThreadVO {
 
     @Getter
     @Setter
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class CreateDTO {
+    public static class CreateVO {
 
         private User author;
         private Thread parentThread;
         private Keyword keyword;
         private String content;
 
-        public static CreateDTO from(User author, Thread parentThread, Keyword keyword, String content) {
-            CreateDTO createDTO = new CreateDTO();
-            createDTO.setAuthor(author);
-            createDTO.setParentThread(parentThread);
-            createDTO.setKeyword(keyword);
-            createDTO.setContent(content);
-            return createDTO;
+        public static CreateVO from(User author, Thread parentThread, Keyword keyword, String content) {
+            CreateVO createVO = new CreateVO();
+            createVO.setAuthor(author);
+            createVO.setParentThread(parentThread);
+            createVO.setKeyword(keyword);
+            createVO.setContent(content);
+            return createVO;
 
         }
     }
