@@ -119,13 +119,6 @@ const HomeDescription = () => {
       <article className={cx('description-article')} ref={manualArticleRef}>
         <IntroduceProduct ref={productSvgRef} />
         <span className={cx('doodle-by-man')}>슈붕이 최고야</span>
-        <Image
-          className={cx('parallex-image', 'drawing-man-image')}
-          src='/images/parallax/drawing-man.png'
-          width={128}
-          height={259}
-          alt='그림 그리는 남자 그림'
-        />
         <h3 className={cx('description-title')}>와글와글 사용법</h3>
         <p className={cx('description-paragraph')}>
           커뮤니티에 들어가셨다면, 나를 표현해줄 키워드를 골라보세요. 어떤
@@ -144,13 +137,6 @@ const HomeDescription = () => {
         <span className={cx('doodle-by-man')}>
           우리는 아직 정의되지 않았습니다.
         </span>
-        <Image
-          className={cx('parallex-image', 'drawing-man-image')}
-          src='/images/parallax/drawing-man.png'
-          width={128}
-          height={259}
-          alt='그림 그리는 남자 그림'
-        />
         <h3 className={cx('description-title')}></h3>
         <p className={cx('description-paragraph')}>
           <a href='https://github.com/boostcampwm-2022/web17-waglewagle/wiki'>
@@ -172,6 +158,13 @@ const HomeDescription = () => {
           처음으로 돌아가기
         </button>
       </article>
+      <Image
+        className={cx('parallex-image', 'drawing-man-image')}
+        src='/images/parallax/drawing-man.png'
+        width={128}
+        height={259}
+        alt='그림 그리는 남자 그림'
+      />
     </section>
   );
 };
