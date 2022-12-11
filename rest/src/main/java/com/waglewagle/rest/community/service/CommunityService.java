@@ -22,13 +22,7 @@ public class CommunityService {
 
     private final CommunityRepository communityRepository;
     private final UserRepository userRepository;
-
-    @Transactional
-    public boolean
-    isExistCommunity(final Long communityId) {
-        return communityRepository.findById(communityId).isPresent();
-    }
-
+    
     @Transactional
     public PreResponseDTO<List<CommunityResponse.CommunityDTO>>
     getJoinedCommunities(final Long userId) {

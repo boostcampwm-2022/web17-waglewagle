@@ -35,6 +35,7 @@ public class ThreadController {
 
         PreResponseDTO<ThreadResponse.ThreadDTO>
                 preResponseDTO = threadService.creatThread(userId, createDTO);
+
         return new ResponseEntity<>(
                 preResponseDTO.getData(),
                 preResponseDTO.getHttpStatus());
