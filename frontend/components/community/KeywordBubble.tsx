@@ -1,151 +1,93 @@
-import { Modal } from '@components/common';
 import useUserMe from '@hooks/useUserMe';
+import { useRouter } from 'next/router';
+import { useState, MouseEventHandler } from 'react';
 import styles from '@sass/components/community/KeywordBubble.module.scss';
 import classnames from 'classnames/bind';
-import { useState } from 'react';
-import KeywordModalContent from './keyword/KeywordModalContent';
+import { ClickPosData, KeywordGroupData } from '#types/types';
+import KeywordGroupEnterModalContent from './KeywordGroupEnterModalContent';
+import MouseModal from '@components/common/MouseModal';
+import KeywordGroupInfoModalContent from './KeywordGroupInfoModalContent';
 const cx = classnames.bind(styles);
 
 interface KeywordBubbleProps {
+  isJoined: boolean;
+  isHighlight: boolean;
+  keywordId: string;
   keyword: string;
+  memberCount: number;
   posX: number;
   posY: number;
   radius: number;
+  handleChangeKeywordGroupData: (newKeywordGroupData: KeywordGroupData) => void;
 }
 
 // requestAnimationFrame으로 이동
-const KeywordBubble = ({ keyword, posX, posY, radius }: KeywordBubbleProps) => {
-  const userData = useUserMe();
-  const [isHover, setIsHover] = useState<boolean>(false);
+const KeywordBubble = ({
+  isHighlight,
+  isJoined,
+  keywordId,
+  keyword,
+  memberCount,
+  posX,
+  posY,
+  radius,
+  handleChangeKeywordGroupData,
+}: KeywordBubbleProps) => {
+  const router = useRouter();
+  const communityId: string = router.query.id as string;
+  const userData = useUserMe(communityId);
+  const [modalPosData, setModalPosData] = useState<ClickPosData>();
   const [isOpenKeywordModal, setIsOpenKeywordModal] = useState<boolean>(false);
 
-  const handleMouseEnter = () => {
-    setIsHover(true);
+  const closeKeywordModal = () => {
+    setTimeout(() => {
+      setIsOpenKeywordModal(false);
+    }); // TODO: setTimeout을 사용해야 닫을 수 있음.
   };
 
-  const handleMouseLeave = () => {
-    setIsHover(false);
-  };
-
-  const handleClick = () => {
-    userData && setIsOpenKeywordModal(true); // 유저 정보가 있을때만 모달창을 띄워줌
+  const handleClick: MouseEventHandler<HTMLDivElement> = (e) => {
+    setModalPosData({ x: e.clientX, y: e.clientY });
+    setIsOpenKeywordModal(true);
   };
 
   return (
     <div
-      onClick={handleClick}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      className={cx('bubble')}
+      onClick={userData && handleClick}
+      className={cx('bubble', { highlight: isHighlight && isJoined })}
       style={{
-        transform: `translate(${posX - radius}px, ${posY - radius}px) scale(${
-          isHover ? 1.2 : 1.0
-        })`, // 원의 중앙이 좌표와 일치할 수 있도록 tranform
+        transform: `translate(${posX - radius}px, ${posY - radius}px)`,
         width: `${radius * 2}px`,
         height: `${radius * 2}px`,
         fontSize: `${10 + radius * 0.2}px`,
       }}
     >
-      <span>{keyword}</span>
-      <Modal
+      <div>
+        <span>{keyword}</span>
+      </div>
+      <MouseModal
+        left={modalPosData?.x}
+        top={modalPosData?.y}
         isOpenModal={isOpenKeywordModal}
         closeModal={() => setIsOpenKeywordModal(false)}
       >
-        <KeywordModalContent />
-      </Modal>
+        {isJoined ? (
+          <KeywordGroupEnterModalContent
+            keywordId={keywordId}
+            keyword={keyword}
+            memberCount={memberCount}
+            handleChangeKeywordGroupData={handleChangeKeywordGroupData}
+            closeKeywordModal={closeKeywordModal}
+          />
+        ) : (
+          <KeywordGroupInfoModalContent
+            keywordId={keywordId}
+            keyword={keyword}
+            memberCount={memberCount}
+          />
+        )}
+      </MouseModal>
     </div>
   );
 };
-
-// TODO: 지우기
-// setInterval로 이동 => 0, 0부터 이동
-// const KeywordBubble = ({ bubbleData }: KeywordBubbleProps) => {
-//   const bubbleRef = useRef<HTMLDivElement | null>(null);
-//   const [posX, setPosX] = useState<number>(0);
-//   const [posY, setPosY] = useState<number>(0);
-
-//   useEffect(() => {
-//     const animate = () => {
-//       const circle = new Circle(3, 3, 5, { x: 100, y: 100 }, 3);
-
-//       const update = () => {
-//         if (circle.isMoving) {
-//           const { x, y } = circle.move();
-
-//           setPosX(x);
-//           setPosY(y);
-//         } else {
-//           clearInterval(intervalId);
-//           console.log('끝');
-//         }
-//       };
-
-//       update();
-
-//       const intervalId = setInterval(() => {
-//         update();
-//       }, 10);
-//     };
-
-//     animate();
-//   }, []);
-
-//   return (
-//     <div
-//       ref={bubbleRef}
-//       className={cx('bubble')}
-//       style={{
-//         transform: `translate(${posX}px, ${posY}px)`,
-//         width: `${bubbleData.radius * 5}px`,
-//         height: `${bubbleData.radius * 5}px`,
-//         fontSize: `${10 + bubbleData.radius * 1}px`,
-//       }}
-//     >
-//       <span>{bubbleData.keyword}</span>
-//     </div>
-//   );
-// };
-
-// ref로 구현한 버블차트
-
-// const KeywordBubble = ({ bubbleData }: KeywordBubbleProps) => {
-//   const bubbleRef = useRef<HTMLDivElement | null>(null);
-//   const [posX, setPosX] = useState<number>(0);
-//   const [posY, setPosY] = useState<number>(0);
-
-//   useEffect(() => {
-//     console.log('시작');
-
-//     const circle = new Circle(3, 3, 5, { x: 100, y: 100 }, 3);
-//     const intervalId = setInterval(() => {
-//       if (circle.isMoving) {
-//         const { x, y } = circle.move();
-//         if (bubbleRef.current) {
-//           bubbleRef.current.style.transform = `translate(${x}px, ${y}px)`;
-//         }
-//       } else {
-//         clearInterval(intervalId);
-//         console.log('끝');
-//       }
-//     }, 10);
-//   }, []);
-
-//   return (
-//     <div
-//       ref={bubbleRef}
-//       className={cx('bubble')}
-//       style={{
-//         // transform: `translate(${posX}px, ${posY}px)`,
-//         width: `${bubbleData.radius * 5}px`,
-//         height: `${bubbleData.radius * 5}px`,
-//         fontSize: `${10 + bubbleData.radius * 1}px`,
-//       }}
-//     >
-//       <span>{bubbleData.keyword}</span>
-//     </div>
-//   );
-// };
-
-// export default KeywordBubble;
 
 export default KeywordBubble;
