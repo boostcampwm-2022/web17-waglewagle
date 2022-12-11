@@ -1,6 +1,5 @@
 import { ThreadData } from '#types/types';
-import useDeleteThreadMutation from '@hooks/thread/useDeleteThreadMutation';
-import useThreadListQuery from '@hooks/thread/useThreadListQuery';
+import { useDeleteThreadMutation, useThreadListQuery } from '@hooks/thread';
 import useUserMe from '@hooks/useUserMe';
 import CloseIcon from '@public/images/close.svg';
 import DeleteIcon from '@public/images/delete.svg';

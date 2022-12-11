@@ -1,5 +1,5 @@
 import KeywordGroupSidebar from '@components/community/keyword-group/KeywordGroupSidebar';
-import useKeywordUserListQuery from '@hooks/useKeywordUserListQuery';
+import { useKeywordUserListQuery } from '@hooks/keyword';
 import styles from '@sass/components/community/keyword/KeywordMain.module.scss';
 import classnames from 'classnames/bind';
 import { useState } from 'react';

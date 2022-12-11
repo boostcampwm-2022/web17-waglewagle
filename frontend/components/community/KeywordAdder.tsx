@@ -1,23 +1,25 @@
+import { MyKeywordData } from '#types/types';
 import {
-  MouseEventHandler,
+  AutoCompleteFormLayout,
+  SearchResultListLayout,
+} from '@components/community';
+import {
+  useAddKeywordMutation,
+  useJoinKeywordMutation,
+  useKeywordListQuery,
+} from '@hooks/keyword';
+import useAutoComplete from '@hooks/useAutoComplete';
+import styles from '@sass/components/community/KeywordAdderLayout.module.scss';
+import checkIsExistKeyword from '@utils/checkIsExistKeyword';
+import classnames from 'classnames/bind';
+import { useRouter } from 'next/router';
+import {
   ChangeEventHandler,
   FormEventHandler,
-  useState,
+  MouseEventHandler,
   useEffect,
+  useState,
 } from 'react';
-import { useRouter } from 'next/router';
-import useAutoComplete from '@hooks/useAutoComplete';
-import {
-  SearchResultListLayout,
-  AutoCompleteFormLayout,
-} from '@components/community';
-import styles from '@sass/components/community/KeywordAdderLayout.module.scss';
-import classnames from 'classnames/bind';
-import useKeywordListQuery from '@hooks/useKeywordListQuery';
-import checkIsExistKeyword from '@utils/checkIsExistKeyword';
-import useAddKeywordMutation from '@hooks/useAddKeywordMutation';
-import { MyKeywordData } from '#types/types';
-import useJoinKeywordMutation from '@hooks/useJoinKeywordMutation';
 const cx = classnames.bind(styles);
 
 interface KeywordAdderProps {

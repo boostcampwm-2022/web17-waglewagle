@@ -1,4 +1,4 @@
-import useAddThreadMutation from '@hooks/thread/useAddThreadMutation';
+import { useAddThreadMutation } from '@hooks/thread';
 import styles from '@sass/components/community/keyword/ThreadForm.module.scss';
 import classnames from 'classnames/bind';
 import { ChangeEventHandler, FormEventHandler, useState } from 'react';

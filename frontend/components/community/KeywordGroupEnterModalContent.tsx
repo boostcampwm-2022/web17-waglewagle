@@ -1,7 +1,9 @@
 import { KeywordGroupData, KeywordRelatedData } from '#types/types';
 import { DefaultButton } from '@components/common';
-import useDisjoinKeywordMutation from '@hooks/useDisjoinKeywordMutation';
-import useRelatedKeywordList from '@hooks/useRelatedKeywordList';
+import {
+  useDisjoinKeywordMutation,
+  useRelatedKeywordList,
+} from '@hooks/keyword';
 import styles from '@sass/components/community/KeywordGroupEnterModalContent.module.scss';
 import classnames from 'classnames/bind';
 import { useRouter } from 'next/router';

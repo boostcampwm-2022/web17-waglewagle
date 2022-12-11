@@ -1,4 +1,4 @@
-import useKeywordUserListQuery from '@hooks/useKeywordUserListQuery';
+import { useKeywordUserListQuery } from '@hooks/keyword';
 import styles from '@sass/components/community/keyword/KeywordUserList.module.scss';
 import calculateTimeGap from '@utils/calculateTimeGap';
 import classnames from 'classnames/bind';

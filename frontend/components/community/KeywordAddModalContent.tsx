@@ -1,16 +1,16 @@
-import React from 'react';
-import MyKeywordList from './MyKeywordList';
-import KeywordAssociated from './KeywordAssociated';
+import { MyKeywordData } from '#types/types';
+import { KEYWORD_ADDER_THEME } from '@constants/constants';
+import { useMyKeywordQuery } from '@hooks/keyword';
+import useUserMe from '@hooks/useUserMe';
 import styles from '@sass/components/community/KeywordAddModal.module.scss';
 import classnames from 'classnames/bind';
-import KeywordAdder from './KeywordAdder';
-import { KEYWORD_ADDER_THEME } from '@constants/constants';
-const cx = classnames.bind(styles);
-import { MyKeywordData } from '../../types/types';
-import useUserMe from '@hooks/useUserMe';
 import { useRouter } from 'next/router';
+import React from 'react';
 import apis from '../../apis/apis';
-import useMyKeywordQuery from '@hooks/useMyKeywordQuery';
+import KeywordAdder from './KeywordAdder';
+import KeywordAssociated from './KeywordAssociated';
+import MyKeywordList from './MyKeywordList';
+const cx = classnames.bind(styles);
 
 interface KeywordAddModalContent {
   prevKeyword?: MyKeywordData;
