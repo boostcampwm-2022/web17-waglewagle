@@ -1,6 +1,6 @@
 import classnames from 'classnames/bind';
 import styles from '@sass/components/home/HomeDescription.module.scss';
-import { useEffect, useRef } from 'react';
+import { MouseEventHandler, useEffect, useRef } from 'react';
 import useScrollDrawSvg from '@hooks/useScrollDrawSvg';
 import useScrollChangeColor from '@hooks/useScrollChangeColor';
 import useSectionScroll from '@hooks/useSectionScroll';
@@ -11,7 +11,7 @@ import IntroduceTeam from '@components/common/svg/IntroduceTeam';
 const cx = classnames.bind(styles);
 
 const HomeDescription = () => {
-  useSectionScroll(4); // 최대 페이지를 넣어주면 섹션별로 움직이도록
+  const pageRef = useSectionScroll(4); // 최대 페이지를 넣어주면 섹션별로 움직이도록
   const colorObserver = useScrollChangeColor(); // TODO : intersectionObserver 완전 추상화도 가능하겠는데? 현재는 추가하면 작업해줄 것이 많다.
   const svgObserver = useScrollDrawSvg();
 
@@ -24,6 +24,11 @@ const HomeDescription = () => {
   const solutionSvgRef = useRef<SVGSVGElement>(null);
   const productSvgRef = useRef<SVGSVGElement>(null);
   const teamSvgRef = useRef<SVGSVGElement>(null);
+
+  const handleClickUp: MouseEventHandler = () => {
+    pageRef.current = 0;
+    window.scrollTo(0, pageRef.current * window.innerHeight);
+  };
 
   useEffect(() => {
     if (colorObserver) {
@@ -130,6 +135,9 @@ const HomeDescription = () => {
           ☎팀 언ㄷㅣ❉ㅍr인드★ ⚀성황zㅣ 상영중! <br />
           우ㅣㅋㅣ 방문 □ㅐ우 환영!♚
         </p>
+        <button className={cx('go-back-button')} onClick={handleClickUp}>
+          처음으로 돌아가기
+        </button>
       </article>
     </section>
   );
