@@ -83,6 +83,7 @@ const KeywordBubble = ({
             keywordId={keywordId}
             keyword={keyword}
             memberCount={memberCount}
+            closeKeywordModal={closeKeywordModal}
           />
         )}
       </MouseModal>
