@@ -1,11 +1,12 @@
-import { KeywordRelatedData, MyKeywordData } from '#types/types';
-import { Loading } from '@components/common';
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import classnames from 'classnames/bind';
+import styles from '@sass/components/community/KeywordAssociated.module.scss';
 import { RELATED_KEYWORD_NUMBERS } from '@constants/constants';
 import { useRelatedKeywordList } from '@hooks/keyword';
-import styles from '@sass/components/community/KeywordAssociated.module.scss';
-import classnames from 'classnames/bind';
-import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { KeywordRelatedData, MyKeywordData } from '#types/types';
+import { Loading } from '@components/common';
+
 const cx = classnames.bind(styles);
 
 interface KeywordAssociatedProps {
@@ -14,9 +15,9 @@ interface KeywordAssociatedProps {
 
 // 나중에 common으로 분리될 수 있다.
 const KeywordAssociated = ({ prevKeyword }: KeywordAssociatedProps) => {
+  const [slicedRelated, setSliceRelated] = useState<KeywordRelatedData[]>([]);
   const { data: relatedKeywordList, isLoading } =
     useRelatedKeywordList(prevKeyword);
-  const [slicedRelated, setSliceRelated] = useState<KeywordRelatedData[]>([]);
 
   useEffect(() => {
     setSliceRelated(

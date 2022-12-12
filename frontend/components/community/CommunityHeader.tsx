@@ -1,7 +1,8 @@
-import useUserMe from '@hooks/useUserMe';
-import styles from '@sass/components/community/CommunityHeader.module.scss';
-import classnames from 'classnames/bind';
 import Image from 'next/image';
+import classnames from 'classnames/bind';
+import styles from '@sass/components/community/CommunityHeader.module.scss';
+import useUserMe from '@hooks/useUserMe';
+
 const cx = classnames.bind(styles);
 
 interface CommunityHeaderProps {

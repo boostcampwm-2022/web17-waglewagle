@@ -1,17 +1,18 @@
-import { BubbleData, KeywordData, KeywordGroupData } from '#types/types';
-import { Loading } from '@components/common';
-import { KEYWORD_BUBBLE_MAX_NUMBER } from '@constants/constants';
-import { useKeywordListQuery, useMyKeywordQuery } from '@hooks/keyword';
-import styles from '@sass/components/community/KeywordBubbleChart.module.scss';
-import { dehydrate, QueryClient } from '@tanstack/react-query';
-import debounce from '@utils/debounce';
-import classnames from 'classnames/bind';
+import { useEffect, useRef, useState } from 'react';
 import { NextPageContext } from 'next';
 import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
-import Circle from '../../utils/circlepacker/Circle';
-import CircleContainer from '../../utils/circlepacker/CircleContainer';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
+import classnames from 'classnames/bind';
+import styles from '@sass/components/community/KeywordBubbleChart.module.scss';
+import { useKeywordListQuery, useMyKeywordQuery } from '@hooks/keyword';
+import Circle from '@utils/circlepacker/Circle';
+import debounce from '@utils/debounce';
+import CircleContainer from '@utils/circlepacker/CircleContainer';
+import { KEYWORD_BUBBLE_MAX_NUMBER } from '@constants/constants';
+import { BubbleData, KeywordData, KeywordGroupData } from '#types/types';
+import { Loading } from '@components/common';
 import KeywordBubble from './KeywordBubble';
+
 const cx = classnames.bind(styles);
 
 interface KeywordBubbleChartProps {
@@ -25,17 +26,20 @@ const KeywordBubbleChart = ({
 }: KeywordBubbleChartProps) => {
   const router = useRouter();
   const communityId: string = router.query.id as string;
+
   const [bubbleDataList, setBubbleDataList] = useState<BubbleData[]>([]);
   const [_, setIsMove] = useState<boolean>(false);
+  const [slicedCommunityKeywordData, setSlicedCommunityKeywordData] = useState<
+    KeywordData[]
+  >([]);
+
   const requestAnimationId = useRef<NodeJS.Timer | null>(null);
   const circleContainerRef = useRef<CircleContainer | null>(null);
+
   const { data: myKeywordList } = useMyKeywordQuery(communityId);
   const { data: fetchedKeywordData, isLoading } =
     useKeywordListQuery(communityId);
   // 여기에서는 slice된 keywordData를 가지고 있기 때문에 fetched와 별도의 상태로 관리됨.
-  const [slicedCommunityKeywordData, setSlicedCommunityKeywordData] = useState<
-    KeywordData[]
-  >([]);
 
   const getBubbleData = (keywordData: KeywordData, circleData: Circle) => {
     const isJoined = myKeywordList.some(

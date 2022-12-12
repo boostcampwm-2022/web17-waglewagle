@@ -1,13 +1,14 @@
-import { KeywordGroupData, KeywordRelatedData } from '#types/types';
-import { DefaultButton } from '@components/common';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import classnames from 'classnames/bind';
+import styles from '@sass/components/community/KeywordGroupEnterModalContent.module.scss';
 import {
   useDisjoinKeywordMutation,
   useRelatedKeywordList,
 } from '@hooks/keyword';
-import styles from '@sass/components/community/KeywordGroupEnterModalContent.module.scss';
-import classnames from 'classnames/bind';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { KeywordGroupData, KeywordRelatedData } from '#types/types';
+import { DefaultButton } from '@components/common';
+
 const cx = classnames.bind(styles);
 
 interface KeywordGroupEnterModalContentProps {
@@ -27,13 +28,13 @@ const KeywordGroupEnterModalContent = ({
 }: KeywordGroupEnterModalContentProps) => {
   const router = useRouter();
   const communityId = router.query.id as string;
+  const [slicedRelatedKeyword, setSlicedRelatedKeyword] = useState<
+    KeywordRelatedData[]
+  >([]);
   const { data: relatedKeywordList } = useRelatedKeywordList({
     keywordId,
     keywordName: keyword,
   });
-  const [slicedRelatedKeyword, setSlicedRelatedKeyword] = useState<
-    KeywordRelatedData[]
-  >([]);
   const { mutate: mutateDisjoinKeyword } = useDisjoinKeywordMutation();
 
   const handleClickDisjoin = async () => {

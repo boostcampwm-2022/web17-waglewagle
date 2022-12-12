@@ -1,12 +1,13 @@
-import useUserMe from '@hooks/useUserMe';
-import { useRouter } from 'next/router';
 import { useState, MouseEventHandler } from 'react';
-import styles from '@sass/components/community/KeywordBubble.module.scss';
+import { useRouter } from 'next/router';
 import classnames from 'classnames/bind';
+import styles from '@sass/components/community/KeywordBubble.module.scss';
+import useUserMe from '@hooks/useUserMe';
 import { ClickPosData, KeywordGroupData } from '#types/types';
-import KeywordGroupEnterModalContent from './KeywordGroupEnterModalContent';
 import MouseModal from '@components/common/MouseModal';
+import KeywordGroupEnterModalContent from './KeywordGroupEnterModalContent';
 import KeywordGroupInfoModalContent from './KeywordGroupInfoModalContent';
+
 const cx = classnames.bind(styles);
 
 interface KeywordBubbleProps {
@@ -35,9 +36,9 @@ const KeywordBubble = ({
 }: KeywordBubbleProps) => {
   const router = useRouter();
   const communityId: string = router.query.id as string;
-  const userData = useUserMe(communityId);
-  const [modalPosData, setModalPosData] = useState<ClickPosData>();
   const [isOpenKeywordModal, setIsOpenKeywordModal] = useState<boolean>(false);
+  const [modalPosData, setModalPosData] = useState<ClickPosData>();
+  const userData = useUserMe(communityId);
 
   const closeKeywordModal = () => {
     setTimeout(() => {
