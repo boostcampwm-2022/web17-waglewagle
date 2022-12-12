@@ -6,7 +6,7 @@ import axios from 'axios';
 
 const useDeleteThreadMutation = () => {
   const { mutate } = useMutation<ThreadData, AxiosError, string>({
-    mutationFn: async (threadId: string) => {
+    mutationFn: async (threadId) => {
       const { data } = await apis.thread.deleteThread({ threadId });
       return data;
     },
