@@ -9,6 +9,7 @@ const useKeywordListQuery = (communityId: string) => {
     [REACT_QUERY_KEY.KEYWORD, communityId],
     async () => {
       const { data } = await apis.keyword.getKeywords(communityId);
+      data.sort((a, b) => b.memberCount - a.memberCount);
       return data;
     },
     {
