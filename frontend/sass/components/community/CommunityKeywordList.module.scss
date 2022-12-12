@@ -1,0 +1,28 @@
+.list-container {
+  position: absolute;
+  height: 50vh;
+  width: 150px;
+  overflow: scroll;
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+  margin-top: 40px;
+  transition: 0.3s all ease-in-out;
+  z-index: 9;
+
+  &:hover {
+    height: 80vh;
+  }
+}
+
+.list-title {
+  position: fixed;
+  margin-left: 20px;
+  font-size: 1.5rem;
+  font-family: 'NanumBugGeugSeong';
+}
+
+.list-item {
+  font-size: 1.3rem;
+  font-family: 'NanumBugGeugSeong';
+}

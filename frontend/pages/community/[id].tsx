@@ -15,6 +15,7 @@ import { KeywordAdderContent } from '@components/community/keyword-adder';
 import { MainKeywordHandlerLayout } from '@components/community';
 import { KeywordBubbleChart } from '@components/community/keyword-bubble-chart';
 import MyKeywordHighlight from '@components/community/MyKeywordHighlight';
+import CommunityKeywordList from '@components/community/CommunityKeywordList';
 
 const LoginModalContent = dynamic(
   () => import('@components/common/LoginModalContent'),
@@ -106,6 +107,7 @@ const Community = () => {
         handleClickKeywordModal={handleClickKeywordModal}
         handleClickEnter={handleClickEnter}
       />
+      <CommunityKeywordList />
       <KeywordBubbleChart
         isMyKeywordHighlight={isMyKeywordHighlight}
         handleChangeKeywordGroupData={handleChangeKeywordGroupData}
