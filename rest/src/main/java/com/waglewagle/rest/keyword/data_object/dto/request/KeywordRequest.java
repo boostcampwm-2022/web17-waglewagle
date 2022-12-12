@@ -14,10 +14,6 @@ public class KeywordRequest {
 
         private Long keywordId;
         private Long communityId;
-
-        public boolean isValid() {
-            return keywordId != null && communityId != null;
-        }
     }
 
     @Getter
