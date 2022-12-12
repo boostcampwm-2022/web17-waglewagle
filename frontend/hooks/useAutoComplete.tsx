@@ -1,4 +1,4 @@
-import TrieSearchEngine from '@utils/TrieSearchEngine';
+import TrieSearchEngine from '@utils/searchEngine/TrieSearchEngine';
 import { KeywordData } from '../types/types';
 import { useEffect, useState } from 'react';
 

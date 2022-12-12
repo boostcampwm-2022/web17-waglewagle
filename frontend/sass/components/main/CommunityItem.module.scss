@@ -1,3 +1,5 @@
+@import '@sass/variables.scss';
+
 .community-item {
   transition: all 0.1s linear;
 
@@ -16,6 +18,7 @@
   overflow: hidden;
   width: 100%;
   margin-bottom: 5%;
+  border: 1px solid $charcoal-color;
   border-radius: 10%;
 
   &::after {

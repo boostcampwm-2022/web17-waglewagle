@@ -9,6 +9,7 @@
 .content {
   display: flex;
   height: calc(100% - 80px);
+  gap: 10px;
 
   div:first-child {
     flex: 1;
@@ -19,7 +20,7 @@
   display: flex;
   align-items: baseline;
   margin-bottom: 24px;
-  font-family: 'Nanum BugGeugSeong';
+  font-family: 'NanumBugGeugSeong';
   gap: 18px;
 }
 
