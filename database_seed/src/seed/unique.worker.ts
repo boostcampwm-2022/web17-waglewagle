@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { parentPort } from 'worker_threads';
-faker.locale = 'ko';
+
 if (parentPort)
   parentPort.on('message', (value) => {
     if (value === 1) {

@@ -1,5 +1,4 @@
 import { Worker } from 'worker_threads';
-import { faker } from '@faker-js/faker';
 import { join } from 'path';
 import fs from 'fs';
 
@@ -18,20 +17,14 @@ phraseWorker.postMessage(3);
 urlWorker.postMessage(4);
 
 nameWorker.on('message', (nameArray: string[]) => {
-  fs.writeFile(join(curDir, 'names.json'), JSON.stringify(nameArray), () => {});
+  fs.writeFile(join(curDir, '..', 'repository', 'names.json'), JSON.stringify(nameArray), () => {});
 });
 wordWorker.on('message', (wordArray: string[]) => {
-  fs.writeFile(join(curDir, 'words.json'), JSON.stringify(wordArray), () => {});
+  fs.writeFile(join(curDir, '..', 'repository', 'words.json'), JSON.stringify(wordArray), () => {});
 });
 phraseWorker.on('message', (phraseArray: string[]) => {
-  fs.writeFile(join(curDir, 'phrases.json'), JSON.stringify(phraseArray), () => {});
+  fs.writeFile(join(curDir,'..', 'repository',  'phrases.json'), JSON.stringify(phraseArray), () => {});
 });
 urlWorker.on('message', (urlArray: string[]) => {
-  fs.writeFile(join(curDir, 'urls.json'), JSON.stringify(urlArray), () => {});
+  fs.writeFile(join(curDir, '..', 'repository', 'urls.json'), JSON.stringify(urlArray), () => {});
 });
-
-const emails = new Set();
-for (let i = 0; i < 1000; i++) {
-  emails.add(faker.internet.email());
-}
-fs.writeFileSync(join(curDir, 'emails.json'), JSON.stringify(Array.from(emails)));

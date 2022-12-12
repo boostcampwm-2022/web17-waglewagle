@@ -1,20 +1,19 @@
 package com.waglewagle.rest.user;
 
-import com.waglewagle.rest.user.entity.User;
-import com.waglewagle.rest.user.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
-import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class UserRepositoryTest {
 
-    @Autowired
-    private UserRepository userRepository;
+    @Autowired private UserRepository userRepository;
 
     @Test
     @Transactional
@@ -38,23 +37,16 @@ class UserRepositoryTest {
     @Transactional
     void findById() {
         // given
-        Long userId = userRepository.findOrSaveUsername("asdf");
+        Long userId =userRepository.findOrSaveUsername("asdf");
         Long wrongUserId = 1000000L;
 
         // when
-        User findUser = null;
-        Optional<User> optFindUser = userRepository.findById(userId);
-        if (optFindUser.isPresent())
-            findUser = optFindUser.get();
-
-        User notFindUser = null;
-        Optional<User> optNotFindUser = userRepository.findById(wrongUserId);
-        if (optNotFindUser.isPresent())
-            notFindUser = optNotFindUser.get();
+        User userFoundById = userRepository.findById(userId);
+        User userNotFound = userRepository.findById(wrongUserId);
 
         // then
-        Assertions.assertThat(findUser.getId()).isEqualTo(userId);
-        Assertions.assertThat(notFindUser).isNull();
+        Assertions.assertThat(userFoundById.getId()).isEqualTo(userId);
+        Assertions.assertThat(userNotFound).isNull();
 
 
     }

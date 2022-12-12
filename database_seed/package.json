@@ -5,14 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "seed": "rm -rf dist && tsc && node dist/seed/unique && node dist/seed/seeds"
+    "seed": "rm -rf dist && tsc && node dist/seed/unique && node dist/repository/seeds"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
-    "@types/node": "^18.11.10",
     "typescript": "^4.9.3"
   },
   "dependencies": {
