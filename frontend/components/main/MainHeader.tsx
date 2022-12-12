@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Modal } from '@components/common';
 import DefaultProfile from './DefaultProfile';
 import Image from 'next/image';
-import UserIcon from '@public/images/user.svg';
+import UserIcon from '@public/images/icons/user.svg';
 import styles from '@sass/components/main/MainHeader.module.scss';
 import classnames from 'classnames/bind';
 const cx = classnames.bind(styles);

@@ -12,7 +12,7 @@ import MainKeywordHandlerLayout from '@components/community/MainKeywordHandlerLa
 import MyKeywordHighlight from '@components/community/MyKeywordHighlight';
 import { KEYWORD_ADDER_THEME, MVP_DEFAULT } from '@constants/constants';
 import useUserMe from '@hooks/useUserMe';
-import AddCircleIcon from '@public/images/add-circle.svg';
+import AddCircleIcon from '@public/images/icons/add-circle.svg';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
