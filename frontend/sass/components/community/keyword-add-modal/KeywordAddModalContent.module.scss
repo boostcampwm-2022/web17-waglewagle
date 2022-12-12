@@ -1,19 +1,5 @@
 @import '@sass/variables.scss';
-
-@mixin flex-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-@mixin button-interaction {
-  &:hover {
-    cursor: pointer;
-  }
-  &:active {
-    transform: scale(0.98);
-  }
-}
+@import '@sass/mixins.scss';
 
 .container {
   width: 80vw;

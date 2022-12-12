@@ -1,21 +1,5 @@
 @import '@sass/variables.scss';
-
-$border-radius: 10px;
-
-@mixin flex-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-@mixin button-interaction {
-  &:hover {
-    cursor: pointer;
-  }
-  &:active {
-    transform: scale(0.98);
-  }
-}
+@import '@sass/mixins.scss';
 
 .container {
   width: 400px;
@@ -43,7 +27,7 @@ $border-radius: 10px;
   height: 50px;
   @include flex-center;
   border: 1px solid black;
-  border-radius: $border-radius;
+  border-radius: 10px;
   background-color: $off-white-color;
   font-size: 1.5rem;
   font-family: 'NanumBugGeugSeong';

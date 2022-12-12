@@ -1,3 +1,5 @@
+@import '@sass/mixins.scss';
+
 .wrapper {
   display: flex;
   align-items: center;
@@ -34,15 +36,7 @@
   border-radius: 5px;
   background: none;
   font-size: 14px;
-
-  &:hover {
-    cursor: pointer;
-    transform: scale(1.01);
-  }
-
-  &:active {
-    transform: scale(0.98);
-  }
+  @include enlarge-button-interaction;
 }
 
 .withdrawal-button {
@@ -50,13 +44,5 @@
   background: none;
   font-size: 10px;
   text-decoration: underline;
-
-  &:hover {
-    cursor: pointer;
-    transform: scale(1.01);
-  }
-
-  &:active {
-    transform: scale(0.98);
-  }
+  @include enlarge-button-interaction;
 }

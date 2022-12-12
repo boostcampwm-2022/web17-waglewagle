@@ -1,3 +1,5 @@
+@import '@sass/mixins.scss';
+
 .header {
   display: flex;
   justify-content: space-between;
@@ -11,14 +13,10 @@
     border: none;
     background: none;
     transition: all 0.2s;
+    @include button-interaction;
 
     &:hover {
-      cursor: pointer;
       transform: scale(1.05);
-    }
-
-    &:active {
-      transform: scale(0.98);
     }
   }
 }
