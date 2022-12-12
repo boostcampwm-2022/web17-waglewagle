@@ -4,9 +4,8 @@ import type {
   KeywordUser,
   MyKeywordData,
 } from '#types/types';
-import { apiInstance } from '@apis/apis';
 import { instance } from '@apis/instance';
-import { AxiosResponse } from 'axios';
+import type { AxiosResponse } from 'axios';
 
 const getKeywords = (
   keywordId: string,
@@ -30,7 +29,7 @@ const getMyKeywordList = (
 const getKeywordUsers = (
   keywordId: string,
 ): Promise<AxiosResponse<KeywordUser[]>> =>
-  apiInstance.get('/v1/user/keyword', {
+  instance.get('/v1/user/keyword', {
     params: { 'keyword-id': keywordId },
   });
 
@@ -42,7 +41,7 @@ type AddKeywordRequestBody = {
 const addKeyword = (
   addKeywordRequestBody: AddKeywordRequestBody,
 ): Promise<AxiosResponse<MyKeywordData>> =>
-  apiInstance.post('/v1/keyword', addKeywordRequestBody);
+  instance.post('/v1/keyword', addKeywordRequestBody);
 
 type JoinKeywordRequestBody = {
   keywordId: string;
