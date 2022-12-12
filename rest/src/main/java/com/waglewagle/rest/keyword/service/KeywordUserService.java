@@ -1,6 +1,7 @@
 package com.waglewagle.rest.keyword.service;
 
 
+import com.waglewagle.rest.common.exception.InvalidInputException;
 import com.waglewagle.rest.community.entity.Community;
 import com.waglewagle.rest.community.repository.CommunityRepository;
 import com.waglewagle.rest.keyword.data_object.dto.request.KeywordRequest;
@@ -30,14 +31,20 @@ public class KeywordUserService {
     disjoinKeyword(final KeywordRequest.DisjoinDTO disjoinDTO,
                    final Long userId) {
 
+        Long keywordId = Optional
+                .ofNullable(disjoinDTO.getKeywordId())
+                .orElseThrow(InvalidInputException::new);
+        Long communityId = Optional
+                .ofNullable(disjoinDTO.getCommunityId())
+                .orElseThrow(InvalidInputException::new);
         Keyword keyword = keywordRepository
-                .findById(disjoinDTO.getKeywordId())
+                .findById(keywordId)
                 .orElseThrow(NoSuchKeywordException::new);
         User user = userRepository
                 .findById(userId)
                 .orElseThrow(IllegalArgumentException::new);
         Community community = communityRepository
-                .findById(disjoinDTO.getCommunityId())
+                .findById(communityId)
                 .orElseThrow(IllegalArgumentException::new);
 
         keywordUserRepository.deleteByKeywordAndCommunityAndUser(keyword, community, user);
