@@ -23,6 +23,9 @@ const KeywordControl = () => {
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
 
   useEffect(() => {
+    if (!id) {
+      return;
+    }
     apis.keyword.getKeywords(id as string).then(({ data }) => {
       setKeywordList(
         data

@@ -1,7 +1,6 @@
 import type { ThreadData } from '#types/types';
 import { apis } from '@apis/index';
-import { REACT_QUERY_KEY } from '@constants/constants';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
 import axios from 'axios';
 
@@ -16,7 +15,6 @@ const useKeywordDeleteMutation = ({
   keywordIdList,
   handleSuccess,
 }: UseKeywordDeleteMutationProps) => {
-  const queryClient = useQueryClient();
   const { mutate } = useMutation<ThreadData, AxiosError>({
     mutationFn: async () => {
       const { data } = await apis.keyword.deleteKeyword({
@@ -26,8 +24,9 @@ const useKeywordDeleteMutation = ({
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries([REACT_QUERY_KEY.KEYWORD, communityId]);
       handleSuccess();
+      alert('키워드가 삭제되었습니다.');
+      location.reload();
     },
     onError: (error) => {
       const message = axios.isAxiosError(error)
