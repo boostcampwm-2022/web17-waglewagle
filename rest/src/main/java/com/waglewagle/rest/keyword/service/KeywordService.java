@@ -213,11 +213,12 @@ public class KeywordService {
 
         userRepository
                 .findById(userId)
-                .map(user -> {
-                    if (Role.ADMIN.equals(user.getRole()))
-                        throw new UnauthorizedException();
-                    return user;
-                }).orElseThrow(NoSuchUserException::new);
+                .ifPresentOrElse(user -> {
+                            if (!Role.ADMIN.equals(user.getRole()))
+                                throw new UnauthorizedException();
+                        },
+                        NoSuchUserException::new
+                );
 
         //keywordUser.keywordId 수정
         keywordUserRepository
