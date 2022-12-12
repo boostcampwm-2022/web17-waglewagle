@@ -2,6 +2,7 @@ package com.waglewagle.rest.thread.repository;
 
 
 import com.waglewagle.rest.thread.entity.Thread;
+import com.waglewagle.rest.thread.repository.custom.ThreadCustomRepository;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -12,7 +13,7 @@ import java.util.List;
 
 
 @Repository
-public interface ThreadRepository extends JpaRepository<Thread, Long>, com.waglewagle.rest.thread.repository.custom.ThreadCustomRepository {
+public interface ThreadRepository extends JpaRepository<Thread, Long>, ThreadCustomRepository {
 
     void deleteAllByParentThreadId(Long parentThreadId);
 

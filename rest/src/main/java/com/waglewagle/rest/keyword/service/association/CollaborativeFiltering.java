@@ -7,7 +7,9 @@ import java.util.List;
 
 public class CollaborativeFiltering implements AssociationCalculator {
     @Override
-    public List<AssociationDTO> getSortedKeywordList(Keyword baseKeyword, List<Keyword> associatedKeywords) {
+    public List<AssociationDTO>
+    getSortedKeywordList(final Keyword baseKeyword,
+                         final List<Keyword> associatedKeywords) {
         return null;
     }
 }

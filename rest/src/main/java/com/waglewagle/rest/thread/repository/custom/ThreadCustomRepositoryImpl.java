@@ -14,18 +14,21 @@ public class ThreadCustomRepositoryImpl implements ThreadCustomRepository {
 
     private final JPQLQueryFactory jpqlQueryFactory;
 
-    public List<Thread> findParentThreadsInKeyword(Long keywordId) {
+    public List<Thread>
+    findParentThreadsInKeyword(Long keywordId) {
         return jpqlQueryFactory
                 .selectFrom(QThread.thread)
                 .leftJoin(QThread.thread.author)
                 .fetchJoin()
                 .where(QThread.thread.parentThread.isNull())
                 .where(QThread.thread.keyword.id.eq(keywordId))
+                .orderBy(QThread.thread.id.asc())
                 .fetch();
 
     }
 
-    public List<Thread> findChildThreads(List<Long> threadIds) {
+    public List<Thread>
+    findChildThreads(List<Long> threadIds) {
         return jpqlQueryFactory
                 .selectFrom(QThread.thread)
                 .leftJoin(QThread.thread.author)
@@ -33,6 +36,7 @@ public class ThreadCustomRepositoryImpl implements ThreadCustomRepository {
                 .leftJoin(QThread.thread.parentThread)
                 .fetchJoin()
                 .where(QThread.thread.parentThread.id.in(threadIds))
+                .orderBy(QThread.thread.id.asc())
                 .fetch();
     }
 }

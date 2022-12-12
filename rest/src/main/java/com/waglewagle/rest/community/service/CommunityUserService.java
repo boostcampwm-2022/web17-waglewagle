@@ -1,15 +1,24 @@
 package com.waglewagle.rest.community.service;
 
-import com.waglewagle.rest.community.data_object.dto.CommunityUserDTO.UpdateCommunityProfileInputDTO;
+
+import com.waglewagle.rest.common.PreResponseDTO;
+import com.waglewagle.rest.community.data_object.dto.request.CommunityUserRequest;
 import com.waglewagle.rest.community.entity.Community;
 import com.waglewagle.rest.community.entity.CommunityUser;
+import com.waglewagle.rest.community.exception.AlreadyJoinedCommunityException;
+import com.waglewagle.rest.community.exception.NoSuchCommunityException;
+import com.waglewagle.rest.community.exception.UnSubscribedCommunityException;
 import com.waglewagle.rest.community.repository.CommunityRepository;
 import com.waglewagle.rest.community.repository.CommunityUserRepository;
 import com.waglewagle.rest.user.entity.User;
+import com.waglewagle.rest.user.exception.NoSuchUserException;
 import com.waglewagle.rest.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,36 +29,63 @@ public class CommunityUserService {
     private final UserRepository userRepository;
 
 
+    public boolean
+    isJoinedCommunity(final Long userId,
+                      final Long communityId) {
+        return Optional
+                .ofNullable(communityUserRepository
+                        .findByUserIdAndCommunityId(userId, communityId))
+                .isPresent();
+    }
+
     @Transactional
-    public boolean isJoined(Long userId, Long communityId) {
-        return communityUserRepository.findByUserIdAndCommunityId(userId, communityId) != null;
+    public PreResponseDTO
+    joinCommunity(final Long userId,
+                  final Long communityId)
+            throws
+            NoSuchUserException,
+            NoSuchCommunityException {
+
+        
+        if (isJoinedCommunity(userId, communityId))
+            throw new AlreadyJoinedCommunityException();
+
+        User user = userRepository
+                .findById(userId)
+                .orElseThrow(NoSuchUserException::new);
+        Community community = communityRepository
+                .findById(communityId)
+                .orElseThrow(NoSuchCommunityException::new);
+
+        communityUserRepository.save(CommunityUser.from(user, community));
+        return new PreResponseDTO<>(null, HttpStatus.CREATED);
     }
 
 
     @Transactional
-    public void joinCommunity(Long userId, Long communityId) throws IllegalArgumentException {
+    public void
+    updateCommunityUserProfile(final CommunityUserRequest.UpdateProfileDTO updateProfileDTO,
+                               final Long communityId,
+                               final Long userId) {
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-        Community community = communityRepository.findById(communityId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 커뮤니티입니다."));
-        CommunityUser communityUser = new CommunityUser(user, community);
+        if (!isJoinedCommunity(userId, communityId))
+            throw new UnSubscribedCommunityException();
 
-        communityUserRepository.save(communityUser);
+        communityUserRepository
+                .findByUserIdAndCommunityId(userId, communityId)
+                .updateProfile(updateProfileDTO);
     }
 
     @Transactional
-    public void updateCommunityUserProfile(UpdateCommunityProfileInputDTO updateCommunityProfileInputDTO, Long communityId, Long userId) {
-        CommunityUser communityUser = communityUserRepository.findByUserIdAndCommunityId(userId, communityId);
-        communityUser.updateProfile(updateCommunityProfileInputDTO);
-    }
+    public void
+    updateIsFirstVisit(final Long userId,
+                       final Long communityId) {
+        if (!isJoinedCommunity(userId, communityId))
+            throw new UnSubscribedCommunityException();
 
-    @Transactional
-    public boolean isFirstVisit(Long userId, Long communityId) {
-        return communityUserRepository.findByUserIdAndCommunityId(userId, communityId).getIsFirstVisit();
-    }
+        communityUserRepository
+                .findByUserIdAndCommunityId(userId, communityId)
+                .updateIsFirstVisit();
 
-    @Transactional
-    public void updateIsFirstVisit(Long userId, Long communityId) {
-        CommunityUser communityUser = communityUserRepository.findByUserIdAndCommunityId(userId, communityId);
-        communityUser.updateIsFirstVisit();
     }
 }

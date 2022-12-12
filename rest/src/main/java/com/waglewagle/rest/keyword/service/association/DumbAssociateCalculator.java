@@ -8,7 +8,9 @@ import java.util.*;
 public class DumbAssociateCalculator implements AssociationCalculator {
 
     @Override
-    public List<AssociationDTO> getSortedKeywordList(Keyword baseKeyword, List<Keyword> associatedKeywords) {
+    public List<AssociationDTO>
+    getSortedKeywordList(final Keyword baseKeyword,
+                         final List<Keyword> associatedKeywords) {
 
         Map<String, AssociationDTO> tempMap = new HashMap<>();
         List<AssociationDTO> returnList = new ArrayList<>();

@@ -1,6 +1,6 @@
 package com.waglewagle.rest.community.entity;
 
-import com.waglewagle.rest.community.data_object.dto.CommunityUserDTO.UpdateCommunityProfileInputDTO;
+import com.waglewagle.rest.community.data_object.dto.request.CommunityUserRequest;
 import com.waglewagle.rest.user.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,15 +38,20 @@ public class CommunityUser {
     private String communityUsername;
     private Boolean isFirstVisit;
 
-    public CommunityUser(User user, Community community) {
-        this.user = user;
-        this.community = community;
-        isFirstVisit = true;
+    public static CommunityUser from(final User user,
+                                     final Community community) {
+
+        CommunityUser communityUser = new CommunityUser();
+        communityUser.user = user;
+        communityUser.community = community;
+        return communityUser;
     }
 
-    public void updateProfile(UpdateCommunityProfileInputDTO updateCommunityProfileInputDTO) {
-        communityUsername = updateCommunityProfileInputDTO.getUsername();
-        profileImageUrl = updateCommunityProfileInputDTO.getProfileImageUrl();
+    public void
+    updateProfile(final CommunityUserRequest.UpdateProfileDTO updateProfileDTO) {
+        
+        communityUsername = updateProfileDTO.getUsername();
+        profileImageUrl = updateProfileDTO.getProfileImageUrl();
     }
 
     public void updateIsFirstVisit() {

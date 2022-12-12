@@ -1,23 +1,37 @@
 package com.waglewagle.rest.keyword.service;
 
+import com.waglewagle.rest.common.PreResponseDTO;
+import com.waglewagle.rest.common.exception.InvalidInputException;
 import com.waglewagle.rest.community.entity.Community;
+import com.waglewagle.rest.community.exception.NoSuchCommunityException;
+import com.waglewagle.rest.community.exception.UnSubscribedCommunityException;
 import com.waglewagle.rest.community.repository.CommunityRepository;
+import com.waglewagle.rest.community.repository.CommunityUserRepository;
+import com.waglewagle.rest.keyword.data_object.KeywordVO;
 import com.waglewagle.rest.keyword.data_object.dto.AssociationDTO;
-import com.waglewagle.rest.keyword.data_object.dto.KeywordDTO;
-import com.waglewagle.rest.keyword.data_object.dto.KeywordDTO.*;
+import com.waglewagle.rest.keyword.data_object.dto.request.KeywordRequest;
+import com.waglewagle.rest.keyword.data_object.dto.response.KeywordResponse;
 import com.waglewagle.rest.keyword.entity.Keyword;
 import com.waglewagle.rest.keyword.entity.KeywordUser;
+import com.waglewagle.rest.keyword.exception.AlreadyJoinedKeywordException;
+import com.waglewagle.rest.keyword.exception.DuplicatedKeywordException;
+import com.waglewagle.rest.keyword.exception.NoSuchKeywordException;
 import com.waglewagle.rest.keyword.repository.KeywordRepository;
 import com.waglewagle.rest.keyword.repository.KeywordUserRepository;
 import com.waglewagle.rest.keyword.service.association.AssociationCalculator;
 import com.waglewagle.rest.thread.repository.ThreadRepository;
 import com.waglewagle.rest.user.entity.User;
+import com.waglewagle.rest.user.enums.Role;
+import com.waglewagle.rest.user.exception.NoSuchUserException;
+import com.waglewagle.rest.user.exception.UnauthorizedException;
 import com.waglewagle.rest.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -29,131 +43,231 @@ public class KeywordService {
     private final KeywordUserRepository keywordUserRepository;
     private final UserRepository userRepository;
     private final CommunityRepository communityRepository;
+    private final CommunityUserRepository communityUserRepository;
     private final ThreadRepository threadRepository;
 
     private final AssociationCalculator associationCalculator;
 
     //1. base키워드(선택된 키워드)기반
     @Transactional(readOnly = true)
-    public List<AssociationDTO> calcAssociatedKeywordsByKeyword(Long baseKeywordId) {
+    public PreResponseDTO<List<AssociationDTO>>
+    calcAssociatedKeywordsByKeyword(final Long baseKeywordId) {
 
-        Keyword baseKeyword = keywordRepository.findOne(baseKeywordId);
+        Keyword baseKeyword = keywordRepository
+                .findById(baseKeywordId)
+                .orElseThrow(NoSuchElementException::new);
         List<Keyword> associatedKeywords = keywordRepository.findAssociatedKeywords(baseKeyword);
 
-        return associationCalculator.getSortedKeywordList(baseKeyword, associatedKeywords);
+        return new PreResponseDTO<>(
+                associationCalculator.getSortedKeywordList(baseKeyword, associatedKeywords),
+                HttpStatus.OK);
     }
 
     //2. 유저기반(유저가 선택한 키워드들에 연관된)
-    public List<Keyword> calcAssociatedKeywordsByUser(Long userId) {
+    public List<Keyword>
+    calcAssociatedKeywordsByUser(final Long userId) {
 
         return null;
     }
 
     @Transactional(readOnly = true)
-    public List<KeywordDTO> getKeywordListInCommunity(Long communityId) {
+    public PreResponseDTO<List<KeywordResponse.KeywordMemberCountDTO>>
+    getKeywordListInCommunity(final Long communityId)
+            throws NoSuchCommunityException {
 
-        List<Keyword> allKeywordInCommunity = keywordRepository.findAllByCommunityId(communityId);
+        communityRepository
+                .findById(communityId)
+                .orElseThrow(NoSuchCommunityException::new);
 
-        return allKeywordInCommunity
+        List<KeywordResponse.KeywordMemberCountDTO>
+                keywordMemberCountDTOS = keywordRepository
+                .findAllByCommunityIdJoinKeywordUser(communityId)
                 .stream()
-                .map(keyword -> new KeywordDTO(
-                        keyword.getId().toString(),
-                        keyword.getKeyword(),
-                        keyword.getKeywordUsers().size()))
+                .map(KeywordResponse.KeywordMemberCountDTO::of)
                 .collect(Collectors.toList());
+
+        return new PreResponseDTO(
+                keywordMemberCountDTOS,
+                keywordMemberCountDTOS.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean
+    isDuplicated(final KeywordRequest.CreateDTO createDTO) {
+
+        return keywordRepository
+                .findByKeywordNameAndCommunityId(createDTO.getKeywordName(), createDTO.getCommunityId())
+                .isPresent();
     }
 
     @Transactional
-    public boolean isDuplicated(KeywordDTO.CreateKeywordInputDTO createKeywordInputDTO) {
-        return keywordRepository.isKeywordDuplicated(createKeywordInputDTO);
-    }
+    public PreResponseDTO<KeywordResponse.KeywordDTO>
+    createKeyword(final Long userId,
+                  final Long communityId,
+                  final String keywordName)
+            throws
+            DuplicatedKeywordException,
+            NoSuchUserException,
+            NoSuchCommunityException {
 
-    @Transactional
-    public Keyword createKeyword(Long userId, Long communityId, String keywordName) {
+        Optional
+                .ofNullable(
+                        keywordRepository
+                                .findByKeywordNameAndCommunityId(keywordName, communityId))
+                .ifPresent((__) -> {
+                    throw new DuplicatedKeywordException();
+                });
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-        Community community = communityRepository.findById(communityId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 커뮤니티입니다."));
 
-        CreateKeywordDTO createKeywordDTO = CreateKeywordDTO.createCreateKeywordDTO(user, community, keywordName);
-        Keyword keyword = new Keyword(createKeywordDTO);
+        User user = userRepository
+                .findById(userId)
+                .orElseThrow(NoSuchUserException::new);
+        Community community = communityRepository
+                .findById(communityId)
+                .orElseThrow(NoSuchCommunityException::new);
 
-        // TODO: 이렇게 암시적으로 비즈니스 로직이 실행되어도 되는 지 모르겠다.
-        JoinKeywordDTO joinKeywordDTO = JoinKeywordDTO.createJoinKeywordDTO(user, community, keyword);
-        KeywordUser keywordUser = new KeywordUser(joinKeywordDTO);
+        KeywordVO.CreateVO createVO = KeywordVO.CreateVO.from(user, community, keywordName);
+        Keyword keyword = Keyword.of(createVO);
+
+        KeywordVO.JoinVO joinVO = KeywordVO.JoinVO.from(user, community, keyword);
+        KeywordUser keywordUser = KeywordUser.of(joinVO);
 
         keyword.addKeywordUser(keywordUser);
-        keywordRepository.saveKeyword(keyword);
-//        keywordUserRepository.joinKeyword(joinKeywordDTO);
 
-        return keyword;
+        keywordRepository.save(keyword);
+
+
+        return new PreResponseDTO<>(
+                KeywordResponse.KeywordDTO.of(keyword),
+                HttpStatus.CREATED);
     }
 
     @Transactional
-    public void joinKeyword(JoinKeywordInputDTO joinKeywordInputDTO, Long userId) throws IllegalArgumentException {
+    public void
+    joinKeyword(final KeywordRequest.JoinDTO joinDTO,
+                final Long userId)
+            throws
+            InvalidInputException,
+            NoSuchKeywordException,
+            NoSuchCommunityException,
+            NoSuchUserException,
+            AlreadyJoinedKeywordException {
 
-        Keyword keyword = keywordRepository.findOne(joinKeywordInputDTO.getKeywordId());
-        if (keyword == null) { //TODO: KeywordRepository Data JPA로 변경 및 Optional 처리
-            throw new IllegalArgumentException("존재하지 않는 키워드입니다.");
-        }
-        Community community = communityRepository.findById(joinKeywordInputDTO.getCommunityId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 커뮤니티입니다."));
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        Long keywordId = Optional
+                .ofNullable(joinDTO.getKeywordId())
+                .orElseThrow(InvalidInputException::new);
+        Long communityId = Optional
+                .ofNullable(joinDTO.getCommunityId())
+                .orElseThrow(InvalidInputException::new);
+        Keyword keyword = keywordRepository
+                .findById(keywordId)
+                .orElseThrow(NoSuchKeywordException::new);
+        Community community = communityRepository
+                .findById(communityId)
+                .orElseThrow(NoSuchCommunityException::new);
+        User user = userRepository
+                .findById(userId)
+                .orElseThrow(NoSuchUserException::new);
+        keywordUserRepository
+                .findByUserAndCommunityAndKeyword(user, community, keyword)
+                .ifPresent((__) -> {
+                    throw new AlreadyJoinedKeywordException();
+                });
 
-        Optional<KeywordUser> byUserAndCommunityAndKeyword = keywordUserRepository.findByUserAndCommunityAndKeyword(user, community, keyword);
-        if(byUserAndCommunityAndKeyword.isPresent()) {
-            throw new IllegalArgumentException("이미 가입된 키워드입니다."); //TODO: customException or customExceptionMessage로 변경
-        }
+        KeywordVO.JoinVO joinVO = KeywordVO.JoinVO.from(user, community, keyword);
 
-        JoinKeywordDTO joinKeywordDTO = JoinKeywordDTO.createJoinKeywordDTO(user, community, keyword);
+        keyword.addKeywordUser(KeywordUser.of(joinVO));
+    }
 
-        keyword.addKeywordUser(new KeywordUser(joinKeywordDTO));
+    @Transactional(readOnly = true)
+    public PreResponseDTO<List<KeywordResponse.KeywordDTO>>
+    getJoinedKeywords(final Long userId,
+                      final Long communityId)
+            throws
+            UnSubscribedCommunityException {
+
+        communityUserRepository
+                .findOptionalByUserIdAndCommunityId(userId, communityId)
+                .orElseThrow(UnSubscribedCommunityException::new);
+
+        List<KeywordResponse.KeywordDTO>
+                keywordDTOS = keywordRepository
+                .findAllFromKeywordUserByUserIdAndCommunityId(userId, communityId)
+                .stream()
+                .map(KeywordResponse.KeywordDTO::of)
+                .collect(Collectors.toList());
+
+        return new PreResponseDTO<>(
+                keywordDTOS,
+                keywordDTOS.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK
+        );
     }
 
     @Transactional
-    public List<KeywordResponseDTO> getJoinedKeywords(Long userId, Long communityId) {
+    public void
+    keywordMerge(final KeywordRequest.MergeDTO mergeDTO,
+                 final Long userId)
+            throws
+            UnauthorizedException,
+            NoSuchUserException {
 
-        List<Keyword> keywords = keywordRepository.getJoinedKeywords(userId, communityId);
-        return KeywordResponseDTO.of(keywords);
-    }
-
-    @Transactional
-    public void keywordMerge(KeywordMergeReq keywordMergeReq) {
+        userRepository
+                .findById(userId)
+                .ifPresentOrElse(user -> {
+                            if (!Role.ADMIN.equals(user.getRole()))
+                                throw new UnauthorizedException();
+                        },
+                        NoSuchUserException::new
+                );
 
         //keywordUser.keywordId 수정
-        int updatedKeywordUserNum = keywordUserRepository.updateAllKeywordIdByIdInBulk(keywordMergeReq.getSourceKeywordIdList(),
-                keywordMergeReq.getDestinationKeywordId());
-
+        keywordUserRepository
+                .updateAllKeywordIdByIdInBulk(
+                        mergeDTO.getSourceKeywordIdList(),
+                        mergeDTO.getDestinationKeywordId());
         //thread.keywordId 수정
-        int updatedThreadNum = threadRepository.updateAllKeywordIdByIdInBulk(keywordMergeReq.getSourceKeywordIdList(),
-                keywordMergeReq.getDestinationKeywordId());
-
+        threadRepository
+                .updateAllKeywordIdByIdInBulk(
+                        mergeDTO.getSourceKeywordIdList(),
+                        mergeDTO.getDestinationKeywordId());
         //keyword 삭제
-        int deletedKeywordNum = keywordRepository.deleteAllByIdInBulk(keywordMergeReq.getSourceKeywordIdList());
+        keywordRepository
+                .deleteAllByIdInBulk(
+                        mergeDTO.getSourceKeywordIdList());
     }
-    //1. 병합/삭제 진행중인 키워드 그룹에 인터랙션을 진행함(참여, 페이지 이동) >> test?
-    //2. 병합/삭제 대상의 키워드 그룹 페이지에 있던 있던 유저(그리고 글을 쓰고있었다?) >> short polling으로
 
     //키워드 삭제(선택한 복수개)
     @Transactional
-    public void keywordDelete(DeleteReq deleteReq) {
+    public void
+    deleteKeyword(final KeywordRequest.DeleteDTO deleteDTO,
+                  final Long userId)
+            throws
+            UnauthorizedException,
+            NoSuchUserException {
 
-        //keywordUser 삭제
-        int deletedKeywordUserNum = keywordUserRepository.deleteAllByKeywordIdInBulk(deleteReq.getKeywordIdList());
-        System.out.println(deletedKeywordUserNum);
+        userRepository
+                .findById(userId)
+                .ifPresentOrElse(user -> {
+                            if (!Role.ADMIN.equals(user.getRole()))
+                                throw new UnauthorizedException();
+                        },
+                        NoSuchUserException::new
+                );
 
         //thread 삭제
-        int deletedChildThreadNum = threadRepository.deleteAllChildThreadByKeywordIdInBulk(deleteReq.getKeywordIdList());
-        int deletedParentThreadNum = threadRepository.deleteAllParentThreadByKeywordIdInBulk(deleteReq.getKeywordIdList());
-        System.out.println(deletedParentThreadNum + deletedChildThreadNum);
-
+        threadRepository
+                .deleteAllChildThreadByKeywordIdInBulk(
+                        deleteDTO.getKeywordIdList());
+        threadRepository.
+                deleteAllParentThreadByKeywordIdInBulk(
+                        deleteDTO.getKeywordIdList());
+        //keywordUser 삭제
+        keywordUserRepository
+                .deleteAllByKeywordIdInBulk(
+                        deleteDTO.getKeywordIdList());
         //keyword 삭제
-        int deletedKeywordNum = keywordRepository.deleteAllByIdInBulk(deleteReq.getKeywordIdList());
-        System.out.println(deletedKeywordNum);
-    }
-
-    @Transactional
-    public boolean isKeywordExist(Long keywordId) {
-        return keywordRepository.findOne(keywordId) != null;
+        keywordRepository
+                .deleteAllByIdInBulk(
+                        deleteDTO.getKeywordIdList());
     }
 }

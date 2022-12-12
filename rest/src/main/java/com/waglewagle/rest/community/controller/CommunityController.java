@@ -1,7 +1,8 @@
 package com.waglewagle.rest.community.controller;
 
 import com.waglewagle.rest.common.PreResponseDTO;
-import com.waglewagle.rest.community.entity.Community;
+import com.waglewagle.rest.community.data_object.dto.request.CommunityRequest;
+import com.waglewagle.rest.community.data_object.dto.response.CommunityResponse;
 import com.waglewagle.rest.community.service.CommunityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -11,8 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.waglewagle.rest.community.data_object.dto.CommunityDTO.CommunityResponseDTO;
-import static com.waglewagle.rest.community.data_object.dto.CommunityDTO.CreateCommunityInputDTO;
 
 @Controller
 @RequestMapping("/api/v1/community")
@@ -26,21 +25,31 @@ public class CommunityController {
      * 12.02 03:06
      */
     @GetMapping("")
-    public ResponseEntity<List<CommunityResponseDTO>> getJoinedCommunities(@CookieValue("user_id") Long userId) {
-        List<Community> communities = communityService.getJoinedCommunities(userId);
+    public ResponseEntity<List<CommunityResponse.CommunityDTO>>
+    getJoinedCommunities(@CookieValue("user_id") final Long userId) {
 
-        List<CommunityResponseDTO> communityResponseDTOs = CommunityResponseDTO.createCommunityResponseDTOs(communities);
-        return new ResponseEntity<>(communityResponseDTOs, HttpStatus.OK);
+        PreResponseDTO<List<CommunityResponse.CommunityDTO>>
+                preResponseDTO = communityService.getJoinedCommunities(userId);
+
+        return new ResponseEntity<>(
+                preResponseDTO.getData(),
+                preResponseDTO.getHttpStatus());
     }
 
 
     @PostMapping("")
-    public ResponseEntity createCommunity(@RequestBody CreateCommunityInputDTO createCommunityInputDTO,
-                                          @CookieValue("user_id") Long userId) {
+    public ResponseEntity<CommunityResponse.CommunityDTO>
+    createCommunity(@RequestBody final CommunityRequest.CreateDTO createDTO,
+                    @CookieValue("user_id") final Long userId) {
 
-        PreResponseDTO<CommunityResponseDTO> preResponseDTO = communityService.createCommunity(userId,
-                createCommunityInputDTO.getTitle(),
-                createCommunityInputDTO.getDescription());
+        if (!createDTO.isValid()) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
+        PreResponseDTO<CommunityResponse.CommunityDTO>
+                preResponseDTO = communityService.createCommunity(userId,
+                createDTO.getTitle(),
+                createDTO.getDescription());
 
         return new ResponseEntity(
                 preResponseDTO.getData(),

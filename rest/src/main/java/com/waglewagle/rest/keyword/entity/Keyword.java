@@ -1,9 +1,10 @@
 package com.waglewagle.rest.keyword.entity;
 
 import com.waglewagle.rest.community.entity.Community;
-import com.waglewagle.rest.keyword.data_object.dto.KeywordDTO.CreateKeywordDTO;
+import com.waglewagle.rest.keyword.data_object.KeywordVO.CreateVO;
 import com.waglewagle.rest.thread.entity.Thread;
 import com.waglewagle.rest.user.entity.User;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -23,7 +24,7 @@ import java.util.List;
         }
 )
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Keyword {
 
     @Id
@@ -52,13 +53,16 @@ public class Keyword {
     @OneToMany(mappedBy = "keyword", cascade = CascadeType.ALL)
     private List<KeywordUser> keywordUsers = new ArrayList<>();
 
-    public Keyword(CreateKeywordDTO createKeywordDTO) {
-        author = createKeywordDTO.getAuthor();
-        community = createKeywordDTO.getCommunity();
-        keyword = createKeywordDTO.getKeywordName();
+    public static Keyword of(final CreateVO createVO) {
+        Keyword keyword = new Keyword();
+        keyword.author = createVO.getAuthor();
+        keyword.community = createVO.getCommunity();
+        keyword.keyword = createVO.getKeywordName();
+        return keyword;
     }
 
-    public void addKeywordUser(KeywordUser keywordUser) {
+    public void
+    addKeywordUser(final KeywordUser keywordUser) {
         keywordUsers.add(keywordUser);
     }
 }

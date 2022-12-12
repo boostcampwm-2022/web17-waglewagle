@@ -1,10 +1,10 @@
 package com.waglewagle.rest.thread.controller;
 
+import com.waglewagle.rest.common.PreResponseDTO;
 import com.waglewagle.rest.keyword.service.KeywordService;
-import com.waglewagle.rest.thread.ThreadService;
-import com.waglewagle.rest.thread.data_object.dto.ThreadDTO.CreateThreadInputDTO;
-import com.waglewagle.rest.thread.data_object.dto.ThreadDTO.DeleteThreadDTO;
-import com.waglewagle.rest.thread.data_object.dto.ThreadDTO.ThreadResponseDTO;
+import com.waglewagle.rest.thread.data_object.dto.request.ThreadRequest;
+import com.waglewagle.rest.thread.data_object.dto.response.ThreadResponse;
+import com.waglewagle.rest.thread.service.ThreadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,14 +27,19 @@ public class ThreadController {
      */
     @PostMapping("")
     @ResponseBody
-    public ResponseEntity<String> createThread(@CookieValue("user_id") Long userId, @RequestBody CreateThreadInputDTO createThreadInputDTO) {
+    public ResponseEntity<ThreadResponse.ThreadDTO>
+    createThread(@CookieValue("user_id") final Long userId,
+                 @RequestBody final ThreadRequest.CreateDTO createDTO) {
+        if (!createDTO.isValid())
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 
-        try {
-            threadService.creatThread(userId, createThreadInputDTO);
-            return new ResponseEntity<>(null, HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+        PreResponseDTO<ThreadResponse.ThreadDTO>
+                preResponseDTO = threadService.creatThread(userId, createDTO);
+
+        return new ResponseEntity<>(
+                preResponseDTO.getData(),
+                preResponseDTO.getHttpStatus());
+
     }
 
     /**
@@ -43,11 +48,11 @@ public class ThreadController {
      */
     @DeleteMapping("")
     @ResponseBody
-    public ResponseEntity<Boolean> deleteThread(@CookieValue("user_id") Long userId,
-                                                @RequestBody DeleteThreadDTO deleteThreadDTO) {
+    public ResponseEntity<Boolean>
+    deleteThread(@CookieValue("user_id") final Long userId,
+                 @RequestBody final ThreadRequest.DeleteDTO deleteDTO) {
 
-        threadService.deleteThread(userId, deleteThreadDTO.getThreadId());
-
+        threadService.deleteThread(userId, deleteDTO.getThreadId());
         return new ResponseEntity<>(true, HttpStatus.ACCEPTED);
     }
 
@@ -68,19 +73,15 @@ public class ThreadController {
      * }
      */
     @GetMapping("/keyword")
-    public ResponseEntity getThreadsInKeyword(@RequestParam("keyword-id") Long keywordId) {
+    public ResponseEntity<List<ThreadResponse.ThreadDTO>>
+    getThreadsInKeyword(@RequestParam("keyword-id") final Long keywordId) {
 
-        if (!keywordService.isKeywordExist(keywordId)) {
-            // TODO : Error code
-            return new ResponseEntity(null, HttpStatus.NOT_FOUND);
-        }
+        PreResponseDTO<List<ThreadResponse.ThreadDTO>>
+                preResponseDTO = threadService.getThreadsInKeyword(keywordId);
 
-        List<ThreadResponseDTO> threadResponseDTOS = threadService.getThreadsInKeyword(keywordId);
 
-        if (threadResponseDTOS.isEmpty()) {
-            return new ResponseEntity(null, HttpStatus.NO_CONTENT);
-        }
-
-        return new ResponseEntity(threadResponseDTOS, HttpStatus.OK);
+        return new ResponseEntity(
+                preResponseDTO.getData(),
+                preResponseDTO.getHttpStatus());
     }
 }
