@@ -6,7 +6,7 @@ import {
 } from 'react';
 import { useRouter } from 'next/router';
 import classnames from 'classnames/bind';
-import styles from '@sass/components/community/KeywordAdderLayout.module.scss';
+import styles from '@sass/components/community/keyword-adder/KeywordAdderLayout.module.scss';
 import {
   useAddKeywordMutation,
   useJoinKeywordMutation,

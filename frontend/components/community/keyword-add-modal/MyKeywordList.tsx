@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import classnames from 'classnames/bind';
-import styles from '@sass/components/community/MyKeywordList.module.scss';
+import styles from '@sass/components/community/keyword-add-modal/MyKeywordList.module.scss';
 import { useMyKeywordQuery } from '@hooks/keyword';
 import MyKeyword from './MyKeyword';
 

@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import classnames from 'classnames/bind';
-import styles from '@sass/components/community/KeywordAddModal.module.scss';
+import styles from '@sass/components/community/keyword-add-modal/ModalKeywordAdderLayout.module.scss';
 
 const cx = classnames.bind(styles);
 

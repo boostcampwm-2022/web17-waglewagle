@@ -3,7 +3,7 @@ import { NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import classnames from 'classnames/bind';
-import styles from '@sass/components/community/KeywordBubbleChart.module.scss';
+import styles from '@sass/components/community/keyword-bubble-chart/KeywordBubbleChart.module.scss';
 import { useKeywordListQuery, useMyKeywordQuery } from '@hooks/keyword';
 import Circle from '@utils/circlepacker/Circle';
 import debounce from '@utils/debounce';

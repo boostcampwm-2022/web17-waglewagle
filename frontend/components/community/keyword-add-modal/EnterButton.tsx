@@ -1,5 +1,5 @@
 import classnames from 'classnames/bind';
-import styles from '@sass/components/community/KeywordAddModal.module.scss';
+import styles from '@sass/components/community/keyword-add-modal/EnterButton.module.scss';
 import apis from '@apis/apis';
 import { useMyKeywordQuery } from '@hooks/keyword';
 import useUserMe from '@hooks/useUserMe';

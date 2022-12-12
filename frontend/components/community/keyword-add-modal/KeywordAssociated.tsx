@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import classnames from 'classnames/bind';
-import styles from '@sass/components/community/KeywordAssociated.module.scss';
+import styles from '@sass/components/community/keyword-add-modal/KeywordAssociated.module.scss';
 import { RELATED_KEYWORD_NUMBERS } from '@constants/constants';
 import { useRelatedKeywordList } from '@hooks/keyword';
 import { KeywordRelatedData, MyKeywordData } from '#types/types';
