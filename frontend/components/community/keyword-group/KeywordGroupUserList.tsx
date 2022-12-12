@@ -1,5 +1,5 @@
 import { useKeywordUserListQuery } from '@hooks/keyword';
-import styles from '@sass/components/community/keyword/KeywordUserList.module.scss';
+import styles from '@sass/components/community/keyword-group/KeywordUserList.module.scss';
 import calculateTimeGap from '@utils/calculateTimeGap';
 import classnames from 'classnames/bind';
 import { useMemo } from 'react';

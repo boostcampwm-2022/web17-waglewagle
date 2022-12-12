@@ -1,3 +1,3 @@
-import KeywordAdder from './KeywordAdder';
+import KeywordAdderContent from './KeywordAdderContent';
 
-export { KeywordAdder };
+export { KeywordAdderContent };

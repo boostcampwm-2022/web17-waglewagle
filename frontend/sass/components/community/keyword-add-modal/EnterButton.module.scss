@@ -1,0 +1,19 @@
+@import '@sass/variables.scss';
+
+@mixin button-interaction {
+  &:hover {
+    cursor: pointer;
+  }
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.enter-button {
+  width: 120px;
+  height: 30px;
+  border-radius: 10px;
+  border: 1px solid $charcoal-color;
+  background-color: $off-white-color;
+  @include button-interaction;
+}

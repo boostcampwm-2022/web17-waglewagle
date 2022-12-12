@@ -1,5 +1,4 @@
 import {
-  ChangeEventHandler,
   FormEventHandler,
   MouseEventHandler,
   useEffect,
@@ -7,7 +6,7 @@ import {
 } from 'react';
 import { useRouter } from 'next/router';
 import classnames from 'classnames/bind';
-import styles from '@sass/components/community/KeywordAdderLayout.module.scss';
+import styles from '@sass/components/community/keyword-adder/KeywordAdderLayout.module.scss';
 import {
   useAddKeywordMutation,
   useJoinKeywordMutation,
@@ -18,6 +17,8 @@ import checkIsExistKeyword from '@utils/checkIsExistKeyword';
 import { MyKeywordData } from '#types/types';
 import AutoCompleteFormLayout from './AutoCompleteFormLayout';
 import SearchResultListLayout from './SearchResultListLayout';
+import AutoCompleteFormContent from './AutoCompleteForm';
+import SearchResultList from './SearchResultList';
 
 const cx = classnames.bind(styles);
 
@@ -27,7 +28,7 @@ interface KeywordAdderProps {
   handleChangePrevKeyword: (prevKeyword: MyKeywordData) => void;
 }
 
-const KeywordAdder = ({
+const KeywordAdderContent = ({
   theme,
   addButtonValue,
   handleChangePrevKeyword,
@@ -71,11 +72,8 @@ const KeywordAdder = ({
     changeSearchKeyword('');
   };
 
-  const handleChangeSearchKeyword: ChangeEventHandler<HTMLInputElement> = (
-    e,
-  ) => {
-    setIsOpenDropDown(true);
-    changeSearchKeyword(e.target.value);
+  const handleIsOpenDropDown = (state: boolean) => {
+    setIsOpenDropDown(state);
   };
 
   const handleMouseDownResultItem: MouseEventHandler<HTMLLIElement> = (e) => {
@@ -98,27 +96,22 @@ const KeywordAdder = ({
     >
       {isOpenDropdown && (
         <SearchResultListLayout layoutTheme={theme}>
-          {searchResult.map((word, index) => (
-            <li onMouseDown={handleMouseDownResultItem} key={index}>
-              {word}
-            </li>
-          ))}
+          <SearchResultList
+            searchResult={searchResult}
+            handleMouseDownResultItem={handleMouseDownResultItem}
+          />
         </SearchResultListLayout>
       )}
       <AutoCompleteFormLayout layoutTheme={theme} handleSubmit={handleSubmit}>
-        <input
-          type='text'
-          value={searchKeyword}
-          onChange={handleChangeSearchKeyword}
-          aria-label='관심사 키워드 입력 영역'
-          placeholder='키워드를 입력해주세요.'
+        <AutoCompleteFormContent
+          addButtonValue={addButtonValue}
+          searchKeyword={searchKeyword}
+          handleIsOpenDropDown={handleIsOpenDropDown}
+          changeSearchKeyword={changeSearchKeyword}
         />
-        <button type='submit' aria-label='관심사 키워드 추가 버튼'>
-          {addButtonValue}
-        </button>
       </AutoCompleteFormLayout>
     </div>
   );
 };
 
-export default KeywordAdder;
+export default KeywordAdderContent;
