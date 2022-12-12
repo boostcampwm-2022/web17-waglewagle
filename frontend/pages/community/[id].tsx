@@ -1,4 +1,5 @@
 import { KeywordGroupData, MyKeywordData } from '#types/types';
+import { apis } from '@apis/index';
 import { Loading, Modal } from '@components/common';
 import SeoHead from '@components/common/Head';
 import {
@@ -16,7 +17,6 @@ import AddCircleIcon from '@public/images/icons/add-circle.svg';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import apis from '../../apis/apis';
 import config from '../../config';
 
 const LoginModalContent = dynamic(
@@ -60,9 +60,9 @@ const Community = () => {
   useEffect(() => {
     let interval: NodeJS.Timer;
     if (userData) {
-      apis.joinCommunity(MVP_DEFAULT.COMMUNITY_ID);
+      apis.user.joinCommunity(MVP_DEFAULT.COMMUNITY_ID);
       interval = setInterval(() => {
-        apis.updateLastActivity();
+        apis.user.updateLastActivity();
       }, 60000);
     }
     return () => {
