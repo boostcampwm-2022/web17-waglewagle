@@ -1,11 +1,4 @@
-@mixin button-interaction {
-  &:hover {
-    cursor: pointer;
-  }
-  &:active {
-    transform: scale(0.98);
-  }
-}
+@import '@sass/mixins.scss';
 
 // layoutTheme 추가가 필요한 경우, 새로운 class를 만들어서 input과 button 스타일을 지정해주면 됨.
 .main {

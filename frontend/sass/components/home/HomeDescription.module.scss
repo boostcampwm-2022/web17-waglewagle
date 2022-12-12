@@ -1,3 +1,5 @@
+@import '@sass/animations.scss';
+
 .description {
   height: 400vh;
   width: 100%;
@@ -73,7 +75,7 @@
   }
 
   .doodle-by-man {
-    animation: 0.5s linear 1s forwards fade-in;
+    animation: 0.5s linear 1s forwards fadeIn;
   }
 }
 
@@ -142,14 +144,4 @@
 .showing {
   opacity: 1;
   transform: translateY(-10px);
-}
-
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
 }

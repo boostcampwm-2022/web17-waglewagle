@@ -1,13 +1,5 @@
 @import '@sass/variables.scss';
-
-@mixin button-interaction {
-  &:hover {
-    cursor: pointer;
-  }
-  &:active {
-    transform: scale(0.98);
-  }
-}
+@import '@sass/mixins.scss';
 
 .keyword-item {
   position: relative;

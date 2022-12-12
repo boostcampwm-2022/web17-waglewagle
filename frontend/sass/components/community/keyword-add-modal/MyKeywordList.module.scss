@@ -1,11 +1,4 @@
-@mixin button-interaction {
-  &:hover {
-    cursor: pointer;
-  }
-  &:active {
-    transform: scale(0.98);
-  }
-}
+@import '@sass/mixins.scss';
 
 .list-container {
   width: 100%;
