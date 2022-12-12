@@ -1,3 +1,4 @@
+import { apis } from '@apis/index';
 import { Loading } from '@components/common';
 import SeoHead from '@components/common/Head';
 import {
@@ -6,12 +7,11 @@ import {
   MainLayout,
   MainTitle,
 } from '@components/main';
-import { useEffect } from 'react';
+import { MVP_DEFAULT } from '@constants/constants';
 import useUserMe from '@hooks/useUserMe';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import config from '../config';
-import apis from '../apis/apis';
-import { MVP_DEFAULT } from '@constants/constants';
 
 const Main = () => {
   const router = useRouter();
@@ -19,7 +19,7 @@ const Main = () => {
 
   useEffect(() => {
     if (userData) {
-      apis.joinCommunity(MVP_DEFAULT.COMMUNITY_ID);
+      apis.user.joinCommunity(MVP_DEFAULT.COMMUNITY_ID);
     } else {
       router.push('/');
     }

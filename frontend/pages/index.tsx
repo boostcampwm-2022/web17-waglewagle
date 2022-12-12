@@ -1,20 +1,20 @@
+import { apis } from '@apis/index';
+import { LoginModalContent, Modal } from '@components/common';
+import SeoHead from '@components/common/Head';
 import {
+  HomeChevronDown,
   HomeHero,
   HomeLayout,
   HomeMainLayout,
   HomeTitle,
-  HomeChevronDown,
 } from '@components/home';
-import StartButton from '@components/home/StartButton';
 import HomeDescription from '@components/home/HomeDescription';
-import SeoHead from '@components/common/Head';
-import { useRouter } from 'next/router';
-import config from '../config';
-import { useState, useEffect } from 'react';
-import { LoginModalContent, Modal } from '@components/common';
-import useUserMe from '@hooks/useUserMe';
-import apis from '../apis/apis';
+import StartButton from '@components/home/StartButton';
 import { MVP_DEFAULT } from '@constants/constants';
+import useUserMe from '@hooks/useUserMe';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import config from '../config';
 
 const Home = () => {
   const router = useRouter();
@@ -27,7 +27,7 @@ const Home = () => {
 
   useEffect(() => {
     if (userData && router.isReady) {
-      apis.joinCommunity(MVP_DEFAULT.COMMUNITY_ID);
+      apis.user.joinCommunity(MVP_DEFAULT.COMMUNITY_ID);
       router.push('/main');
     }
   }, [userData, router]);

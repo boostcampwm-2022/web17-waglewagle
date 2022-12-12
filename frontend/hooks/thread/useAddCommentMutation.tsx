@@ -1,25 +1,34 @@
+import type { ThreadData } from '#types/types';
 import { apis } from '@apis/index';
-import { QueryClient, useMutation } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
+import type { AxiosError } from 'axios';
+import axios from 'axios';
 
-const useAddCommentMutation = (
-  keywordId: string,
-  content: string,
-  parentThreadId: string,
-) => {
-  const queryClient = new QueryClient();
+interface UseAddCommentMutationProps {
+  keywordId: string;
+  content: string;
+  parentThreadId: string;
+}
 
-  const { mutate } = useMutation({
-    mutationFn: () =>
-      apis.thread.addComments({
+const useAddCommentMutation = ({
+  keywordId,
+  content,
+  parentThreadId,
+}: UseAddCommentMutationProps) => {
+  const { mutate } = useMutation<ThreadData, AxiosError>({
+    mutationFn: async () => {
+      const { data } = await apis.thread.addComments({
         keywordId,
         content,
         parentThreadId,
-      }),
-    onSuccess: () => {
-      return queryClient.resetQueries({
-        queryKey: ['keywordThreadList', keywordId],
-        exact: true,
       });
+      return data;
+    },
+    onError: (error) => {
+      const message = axios.isAxiosError(error)
+        ? error.response?.data.message
+        : '알 수 없는 에러가 발생했어요!🫢';
+      alert(message);
     },
   });
 

@@ -1,6 +1,6 @@
 import classnames from 'classnames/bind';
 import styles from '@sass/components/common/LoginModalContent.module.scss';
-import { AiFillGithub } from 'react-icons/ai';
+import GithubIcon from '@public/images/icons/github.svg';
 import config from '../../config';
 const cx = classnames.bind(styles);
 
@@ -12,7 +12,7 @@ const LoginModalContent = () => {
         href={`${config.HOST}/oauth2/login/github`}
         className={cx('github-login-button')}
       >
-        <AiFillGithub />
+        <GithubIcon />
         깃허브로 로그인하기
       </a>
     </div>

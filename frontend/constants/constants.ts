@@ -1,6 +1,6 @@
 export enum ADMIN_PAGE_TAB {
-  USER_CONTROL = 0,
-  KEYWORD_CONTROL = 1,
+  KEYWORD_CONTROL = 0,
+  USER_CONTROL = 1,
 }
 
 export enum KEYWORD_ADDER_THEME {

@@ -36,7 +36,6 @@
     "no-var": "error",
     "no-console": "error",
     "prettier/prettier": "warn",
-    "indent": ["warn", 2],
     "linebreak-style": ["error", "unix"],
     "quotes": ["error", "single"],
     "semi": ["error", "always"]

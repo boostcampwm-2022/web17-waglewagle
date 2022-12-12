@@ -1,14 +1,11 @@
-import { KeywordData } from '#types/types';
 import { apis } from '@apis/index';
 import KeywordDeleteModalContent from '@components/admin/KeywordDeleteModalContent';
 import KeywordMergeModalContent from '@components/admin/KeywordMergeModalContent';
 import { Modal } from '@components/common';
-import { REACT_QUERY_KEY } from '@constants/constants';
 import styles from '@sass/components/admin/KeywordControl.module.scss';
-import { useQuery } from '@tanstack/react-query';
 import classnames from 'classnames/bind';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 const cx = classnames.bind(styles);
 
 type Keyword = {
@@ -25,24 +22,21 @@ const KeywordControl = () => {
   const [isOpenMergeModal, setIsOpenMergeModal] = useState(false);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
 
-  const _ = useQuery<KeywordData[]>(
-    [REACT_QUERY_KEY.KEYWORD, id],
-    async () => {
-      const { data } = await apis.keyword.getKeywords(id as string);
-      return data;
-    },
-    {
-      enabled: !!id,
-      onSuccess: (data) => {
-        const newData = data.map((keyword) => ({
-          ...keyword,
-          isSelected: false,
-        }));
-        setKeywordList(newData);
-      },
-      refetchOnWindowFocus: false,
-    },
-  );
+  useEffect(() => {
+    if (!id) {
+      return;
+    }
+    apis.keyword.getKeywords(id as string).then(({ data }) => {
+      setKeywordList(
+        data
+          ?.sort((a, b) => (a.memberCount < b.memberCount ? 1 : -1))
+          .map((keyword) => ({
+            ...keyword,
+            isSelected: false,
+          })),
+      );
+    });
+  }, [id]);
 
   const selectKeyword = (id: string) => {
     setKeywordList(
@@ -61,7 +55,7 @@ const KeywordControl = () => {
     <>
       <h4>키워드 목록</h4>
       <ul className={cx('keyword-list')}>
-        {keywordList?.map((keyword) => (
+        {keywordList.map((keyword) => (
           <li
             key={keyword.keywordId}
             onClick={() => {

@@ -4,22 +4,29 @@ import { useMutation } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
 import axios from 'axios';
 
-interface UseAddThreadMutationProps {
-  keywordId: string;
-  content: string;
+interface UseKeywordDeleteMutationProps {
+  communityId: string;
+  keywordIdList: string[];
+  handleSuccess: () => void;
 }
 
-const useAddThreadMutation = ({
-  keywordId,
-  content,
-}: UseAddThreadMutationProps) => {
+const useKeywordDeleteMutation = ({
+  communityId,
+  keywordIdList,
+  handleSuccess,
+}: UseKeywordDeleteMutationProps) => {
   const { mutate } = useMutation<ThreadData, AxiosError>({
     mutationFn: async () => {
-      const { data } = await apis.thread.addThread({
-        keywordId,
-        content,
+      const { data } = await apis.keyword.deleteKeyword({
+        communityId,
+        keywordIdList,
       });
       return data;
+    },
+    onSuccess: () => {
+      handleSuccess();
+      alert('키워드가 삭제되었습니다.');
+      location.reload();
     },
     onError: (error) => {
       const message = axios.isAxiosError(error)
@@ -32,4 +39,4 @@ const useAddThreadMutation = ({
   return { mutate };
 };
 
-export default useAddThreadMutation;
+export default useKeywordDeleteMutation;

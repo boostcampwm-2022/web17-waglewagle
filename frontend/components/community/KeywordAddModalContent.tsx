@@ -1,12 +1,11 @@
 import { MyKeywordData } from '#types/types';
+import { apis } from '@apis/index';
 import { KEYWORD_ADDER_THEME } from '@constants/constants';
 import { useMyKeywordQuery } from '@hooks/keyword';
 import useUserMe from '@hooks/useUserMe';
 import styles from '@sass/components/community/KeywordAddModal.module.scss';
 import classnames from 'classnames/bind';
 import { useRouter } from 'next/router';
-import React from 'react';
-import apis from '../../apis/apis';
 import KeywordAdder from './KeywordAdder';
 import KeywordAssociated from './KeywordAssociated';
 import MyKeywordList from './MyKeywordList';
@@ -29,7 +28,7 @@ const KeywordAddModalContent = ({
   const { data: myKeywordList } = useMyKeywordQuery(communityId);
 
   const handleClickEnter = async () => {
-    await apis.updateFirstVisitInCommunity(communityId);
+    await apis.user.updateFirstVisitInCommunity(communityId);
     closeKeywordModal();
   };
 
@@ -57,7 +56,7 @@ const KeywordAddModalContent = ({
           <MyKeywordList />
           {userData?.isFirstInCommunity ? (
             <button
-              disabled={myKeywordList.length > 0 ? false : true}
+              disabled={myKeywordList.length <= 0}
               onClick={handleClickEnter}
               className={cx('enter-button')}
             >

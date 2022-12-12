@@ -1,12 +1,13 @@
-import { ADMIN_PAGE_TAB } from '../../constants/constants';
-import classnames from 'classnames/bind';
+import { ADMIN_PAGE_TAB } from '@constants/constants';
 import styles from '@sass/components/admin/AdminMain.module.scss';
+import classnames from 'classnames/bind';
+import { ReactNode } from 'react';
 const cx = classnames.bind(styles);
 
 interface AdminMainProps {
   title: string;
   tab: number;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 const AdminMain = ({ title, tab, children }: AdminMainProps) => {
@@ -14,7 +15,8 @@ const AdminMain = ({ title, tab, children }: AdminMainProps) => {
     <main className={cx('main')}>
       <header>
         <h3>
-          {title} {tab === ADMIN_PAGE_TAB.USER_CONTROL ? '유저' : '키워드'} 관리
+          {title} {tab === ADMIN_PAGE_TAB.KEYWORD_CONTROL ? '키워드' : '유저'}{' '}
+          관리
         </h3>
       </header>
       <section>{children}</section>

@@ -1,12 +1,11 @@
-import { ThreadData } from '#types/types';
-import { apiInstance } from '@apis/apis';
+import type { ThreadData } from '#types/types';
 import { instance } from '@apis/instance';
 import type { AxiosResponse } from 'axios';
 
 const getKeywordThreads = (
   keywordId: string,
 ): Promise<AxiosResponse<ThreadData[]>> =>
-  apiInstance.get('/v1/thread/keyword', {
+  instance.get('/v1/thread/keyword', {
     params: { 'keyword-id': keywordId },
   });
 

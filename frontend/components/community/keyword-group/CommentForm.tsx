@@ -12,11 +12,11 @@ interface CommentFormProps {
 const CommentForm = ({ threadId, keywordId }: CommentFormProps) => {
   const [contentInputData, setContentInputData] = useState('');
 
-  const { mutate: addComment } = useAddCommentMutation(
+  const { mutate: addComment } = useAddCommentMutation({
     keywordId,
-    contentInputData,
-    threadId,
-  );
+    content: contentInputData,
+    parentThreadId: threadId,
+  });
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     setContentInputData(e.target.value);

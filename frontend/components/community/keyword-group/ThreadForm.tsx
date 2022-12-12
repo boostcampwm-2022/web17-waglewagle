@@ -11,10 +11,10 @@ interface ThreadFormProps {
 const ThreadForm = ({ keywordId }: ThreadFormProps) => {
   const [contentInputData, setContentInputData] = useState('');
 
-  const { mutate: addThread } = useAddThreadMutation(
+  const { mutate: addThread } = useAddThreadMutation({
     keywordId,
-    contentInputData,
-  );
+    content: contentInputData,
+  });
 
   const handleChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     setContentInputData(e.target.value);
