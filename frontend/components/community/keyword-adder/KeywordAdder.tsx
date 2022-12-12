@@ -19,6 +19,7 @@ import { MyKeywordData } from '#types/types';
 import AutoCompleteFormLayout from './AutoCompleteFormLayout';
 import SearchResultListLayout from './SearchResultListLayout';
 import AutoCompleteFormContent from './AutoCompleteForm';
+import SearchResultList from './SearchResultList';
 
 const cx = classnames.bind(styles);
 
@@ -96,11 +97,10 @@ const KeywordAdder = ({
     >
       {isOpenDropdown && (
         <SearchResultListLayout layoutTheme={theme}>
-          {searchResult.map((word, index) => (
-            <li onMouseDown={handleMouseDownResultItem} key={index}>
-              {word}
-            </li>
-          ))}
+          <SearchResultList
+            searchResult={searchResult}
+            handleMouseDownResultItem={handleMouseDownResultItem}
+          />
         </SearchResultListLayout>
       )}
       <AutoCompleteFormLayout layoutTheme={theme} handleSubmit={handleSubmit}>
