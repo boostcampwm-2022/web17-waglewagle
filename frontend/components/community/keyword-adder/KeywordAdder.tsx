@@ -1,18 +1,3 @@
-import { MyKeywordData } from '#types/types';
-import {
-  AutoCompleteFormLayout,
-  SearchResultListLayout,
-} from '@components/community';
-import {
-  useAddKeywordMutation,
-  useJoinKeywordMutation,
-  useKeywordListQuery,
-} from '@hooks/keyword';
-import useAutoComplete from '@hooks/useAutoComplete';
-import styles from '@sass/components/community/KeywordAdderLayout.module.scss';
-import checkIsExistKeyword from '@utils/checkIsExistKeyword';
-import classnames from 'classnames/bind';
-import { useRouter } from 'next/router';
 import {
   ChangeEventHandler,
   FormEventHandler,
@@ -20,6 +5,20 @@ import {
   useEffect,
   useState,
 } from 'react';
+import { useRouter } from 'next/router';
+import classnames from 'classnames/bind';
+import styles from '@sass/components/community/KeywordAdderLayout.module.scss';
+import {
+  useAddKeywordMutation,
+  useJoinKeywordMutation,
+  useKeywordListQuery,
+} from '@hooks/keyword';
+import useAutoComplete from '@hooks/useAutoComplete';
+import checkIsExistKeyword from '@utils/checkIsExistKeyword';
+import { MyKeywordData } from '#types/types';
+import AutoCompleteFormLayout from './AutoCompleteFormLayout';
+import SearchResultListLayout from './SearchResultListLayout';
+
 const cx = classnames.bind(styles);
 
 interface KeywordAdderProps {
@@ -35,6 +34,7 @@ const KeywordAdder = ({
 }: KeywordAdderProps) => {
   const router = useRouter();
   const communityId: string = router.query.id as string;
+  const [isOpenDropdown, setIsOpenDropDown] = useState<boolean>(false);
 
   const { data: communityKeywordData } = useKeywordListQuery(communityId);
   const { mutate: addKeywordMutate } = useAddKeywordMutation(
@@ -42,10 +42,8 @@ const KeywordAdder = ({
   );
   const { mutate: joinKeywordMutate, isError: isJoinError } =
     useJoinKeywordMutation(handleChangePrevKeyword);
-
   const { searchKeyword, searchResult, changeSearchKeyword } =
     useAutoComplete(communityKeywordData);
-  const [isOpenDropdown, setIsOpenDropDown] = useState<boolean>(false);
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();

@@ -1,14 +1,15 @@
-import { MyKeywordData } from '#types/types';
+import { useRouter } from 'next/router';
+import classnames from 'classnames/bind';
+import styles from '@sass/components/community/KeywordAddModal.module.scss';
 import { apis } from '@apis/index';
-import { KEYWORD_ADDER_THEME } from '@constants/constants';
 import { useMyKeywordQuery } from '@hooks/keyword';
 import useUserMe from '@hooks/useUserMe';
-import styles from '@sass/components/community/KeywordAddModal.module.scss';
-import classnames from 'classnames/bind';
-import { useRouter } from 'next/router';
-import KeywordAdder from './KeywordAdder';
+import { MyKeywordData } from '#types/types';
+import { KEYWORD_ADDER_THEME } from '@constants/constants';
+import KeywordAdder from '../keyword-adder/KeywordAdder';
 import KeywordAssociated from './KeywordAssociated';
 import MyKeywordList from './MyKeywordList';
+
 const cx = classnames.bind(styles);
 
 interface KeywordAddModalContent {
