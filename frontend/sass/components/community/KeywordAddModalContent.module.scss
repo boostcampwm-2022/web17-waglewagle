@@ -6,15 +6,6 @@
   align-items: center;
 }
 
-@mixin button-interaction {
-  &:hover {
-    cursor: pointer;
-  }
-  &:active {
-    transform: scale(0.98);
-  }
-}
-
 .container {
   width: 80vw;
   height: 80vh;
@@ -60,11 +51,6 @@
   align-items: center;
 }
 
-.keyword-add-container {
-  display: flex;
-  flex-direction: column;
-}
-
 .my-keyword-section {
   display: flex;
   flex-direction: column;
@@ -78,13 +64,4 @@
 
 .my-keyword-title {
   font-size: 1.5rem;
-}
-
-.enter-button {
-  width: 120px;
-  height: 30px;
-  border-radius: 10px;
-  border: 1px solid $charcoal-color;
-  background-color: $off-white-color;
-  @include button-interaction;
 }

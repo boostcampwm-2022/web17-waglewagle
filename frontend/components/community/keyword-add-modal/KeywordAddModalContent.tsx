@@ -1,12 +1,13 @@
 import React from 'react';
 import classnames from 'classnames/bind';
-import styles from '@sass/components/community/KeywordAddModal.module.scss';
+import styles from '@sass/components/community/KeywordAddModalContent.module.scss';
 import { MyKeywordData } from '#types/types';
 import { KEYWORD_ADDER_THEME } from '@constants/constants';
-import KeywordAdder from '../keyword-adder/KeywordAdderContent';
+import { KeywordAdderContent } from '../keyword-adder';
 import KeywordAssociated from './KeywordAssociated';
 import MyKeywordList from './MyKeywordList';
 import EnterButton from './EnterButton';
+import ModalKeywordAdderLayout from './ModalKeywordAdderLayout';
 
 const cx = classnames.bind(styles);
 
@@ -28,13 +29,13 @@ const KeywordAddModalContent = ({
       </header>
       <main className={cx('main')}>
         <section className={cx('keyword-add-section')}>
-          <div className={cx('keyword-add-container')}>
-            <KeywordAdder
+          <ModalKeywordAdderLayout>
+            <KeywordAdderContent
               theme={KEYWORD_ADDER_THEME.MODAL}
               addButtonValue='추가하기'
               handleChangePrevKeyword={handleChangePrevKeyword}
             />
-          </div>
+          </ModalKeywordAdderLayout>
           <KeywordAssociated prevKeyword={prevKeyword} />
         </section>
         <section className={cx('my-keyword-section')}>
