@@ -29,7 +29,7 @@ interface KeywordAdderProps {
   handleChangePrevKeyword: (prevKeyword: MyKeywordData) => void;
 }
 
-const KeywordAdder = ({
+const KeywordAdderContent = ({
   theme,
   addButtonValue,
   handleChangePrevKeyword,
@@ -115,4 +115,4 @@ const KeywordAdder = ({
   );
 };
 
-export default KeywordAdder;
+export default KeywordAdderContent;

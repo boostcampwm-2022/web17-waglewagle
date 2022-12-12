@@ -11,8 +11,8 @@ import SeoHead from '@components/common/Head';
 import { Loading, Modal } from '@components/common';
 import { CommunityHeader, CommunityLayout } from '@components/community';
 import { KeywordGroupModalContent } from '@components/community/keyword-group';
-import KeywordAdder from '@components/community/keyword-adder/KeywordAdder';
-import MainKeywordHandlerLayout from '@components/community/MainKeywordAdderLayout';
+import { KeywordAdderContent } from '@components/community/keyword-adder';
+import { MainKeywordHandlerLayout } from '@components/community';
 import { KeywordBubbleChart } from '@components/community/keyword-bubble-chart';
 import MyKeywordHighlight from '@components/community/MyKeywordHighlight';
 
@@ -112,7 +112,7 @@ const Community = () => {
       />
       {userData && (
         <MainKeywordHandlerLayout>
-          <KeywordAdder
+          <KeywordAdderContent
             theme={KEYWORD_ADDER_THEME.MAIN}
             addButtonValue={<AddCircleIcon />}
             handleChangePrevKeyword={handleChangePrevKeyword}
