@@ -1,4 +1,3 @@
-import { RoleEnum } from './../enum/role.enum';
 import {
   BaseEntity,
   Column,
@@ -32,23 +31,11 @@ export class User extends BaseEntity {
 
   @Column('varchar', {
     name: 'username',
+    nullable: true,
     unique: true,
     length: 255,
   })
   username: string | null;
-
-  @Column('datetime', {
-    name: 'last_activity',
-    nullable: false,
-    default: () => 'CURRENT_TIMESTAMP',
-  })
-  lastActivity: Date;
-
-  @Column('varchar', { name: 'email' })
-  email: string;
-
-  @Column('varchar', { name: 'role', nullable: false, default: () => RoleEnum.USER })
-  role: string;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

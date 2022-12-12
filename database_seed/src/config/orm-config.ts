@@ -18,7 +18,7 @@ const ormConfig: DataSourceOptions = Object.freeze({
   connectTimeout: 5000,
   bigint: true,
   // logging: true,
-  synchronize: true,
+  // synchronize: true,
 });
 
 export default ormConfig;
