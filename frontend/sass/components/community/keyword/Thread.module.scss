@@ -20,8 +20,8 @@
 }
 
 .post-time {
-  color: #ccc;
   font-size: 12px;
+  color: #CCCCCC;
 }
 
 .buttons {
@@ -30,16 +30,26 @@
   bottom: 10px;
   display: flex;
   gap: 10px;
-
+  
   button {
-    width: 20px;
-    height: 20px;
-
+    display: flex;
+    align-items: center;
     border: none;
     background: none;
-
+    
     &:hover {
       cursor: pointer;
     }
+    
+    &:first-child {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      
+      p {
+        line-height: 100%;
+      }
+    }
   }
 }
+

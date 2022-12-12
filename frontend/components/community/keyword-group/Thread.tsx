@@ -23,6 +23,7 @@ interface ThreadProps {
 const Thread = ({
   threadId,
   content,
+  childThreadCount,
   createdAt,
   author: { userId, username, profileImageUrl },
   openSidebar,
@@ -55,6 +56,7 @@ const Thread = ({
           className={cx('comment-button')}
           onClick={() => openSidebar(threadId)}
         >
+          {childThreadCount ? <p>{childThreadCount}개의 댓글</p> : null}
           <CommentIcon />
         </button>
         {userId === userData?.userId && (
