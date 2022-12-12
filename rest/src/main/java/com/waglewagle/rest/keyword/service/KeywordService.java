@@ -188,9 +188,7 @@ public class KeywordService {
 
         communityUserRepository
                 .findOptionalByUserIdAndCommunityId(userId, communityId)
-                .ifPresent(__ -> {
-                    throw new UnSubscribedCommunityException();
-                });
+                .orElseThrow(UnSubscribedCommunityException::new);
 
         List<KeywordResponse.KeywordDTO>
                 keywordDTOS = keywordRepository
