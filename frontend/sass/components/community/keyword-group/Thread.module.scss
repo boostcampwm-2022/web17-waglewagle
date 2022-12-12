@@ -1,0 +1,55 @@
+.thread {
+  position: relative;
+  display: flex;
+  width: 100%;
+  padding: 30px 25px;
+  border: 1px solid black;
+  border-radius: 15px;
+  gap: 15px;
+}
+
+.profile-image {
+  border-radius: 5px;
+}
+
+.name-time {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  gap: 5px;
+}
+
+.post-time {
+  font-size: 12px;
+  color: #CCCCCC;
+}
+
+.buttons {
+  position: absolute;
+  right: 20px;
+  bottom: 10px;
+  display: flex;
+  gap: 10px;
+  
+  button {
+    display: flex;
+    align-items: center;
+    border: none;
+    background: none;
+    
+    &:hover {
+      cursor: pointer;
+    }
+    
+    &:first-child {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      
+      p {
+        line-height: 100%;
+      }
+    }
+  }
+}
+

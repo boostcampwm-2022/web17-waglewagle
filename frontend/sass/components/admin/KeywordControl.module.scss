@@ -10,7 +10,7 @@
   &:hover {
     cursor: pointer;
   }
-
+  
   &.selected {
     color: red;
   }
@@ -24,6 +24,10 @@
   border: 1px solid black;
   border-radius: 10px;
   background: none;
+  
+  &:not(:disabled):hover {
+    cursor: pointer;
+  }
 }
 
 .delete-button {
@@ -34,4 +38,8 @@
   border: 1px solid black;
   border-radius: 10px;
   background: none;
+  
+  &:not(:disabled):hover {
+    cursor: pointer;
+  }
 }

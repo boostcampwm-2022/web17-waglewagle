@@ -1,12 +1,11 @@
 import { CommunityData } from '#types/types';
+import { apis } from '@apis/index';
 import { REACT_QUERY_KEY } from '@constants/constants';
 import { useQuery } from '@tanstack/react-query';
-import apis from '../apis/apis';
 
 const useUserCommunityQuery = () => {
-  const getCommunityList = (): Promise<CommunityData[]> => {
-    const data = apis.getUserCommunityList();
-
+  const getCommunityList = async (): Promise<CommunityData[]> => {
+    const { data } = await apis.user.getUserCommunityList();
     return data;
   };
 

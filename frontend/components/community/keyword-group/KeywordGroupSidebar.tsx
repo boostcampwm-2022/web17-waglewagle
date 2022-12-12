@@ -1,15 +1,13 @@
 import { ThreadData } from '#types/types';
-import useThreadListQuery from '@hooks/useThreadListQuery';
+import { useDeleteThreadMutation, useThreadListQuery } from '@hooks/thread';
 import useUserMe from '@hooks/useUserMe';
-import CloseIcon from '@public/images/close.svg';
-import DeleteIcon from '@public/images/delete.svg';
-import styles from '@sass/components/community/keyword/Sidebar.module.scss';
-import { useMutation } from '@tanstack/react-query';
+import CloseIcon from '@public/images/icons/close.svg';
+import DeleteIcon from '@public/images/icons/delete.svg';
+import styles from '@sass/components/community/keyword-group/Sidebar.module.scss';
 import calculateTimeGap from '@utils/calculateTimeGap';
 import classnames from 'classnames/bind';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import apis from '../../../apis/apis';
 import CommentForm from './CommentForm';
 const cx = classnames.bind(styles);
 
@@ -29,18 +27,13 @@ const KeywordGroupSidebar = ({
   const [threadData, setThreadData] = useState<ThreadData>();
   const userData = useUserMe();
   const { data: threadList } = useThreadListQuery(keywordId);
-  const { mutate } = useMutation({
-    mutationFn: (commentId: string) => apis.deleteThread(commentId),
-    onSuccess: () => {
-      setThreadData(threadList?.find((thread) => thread.threadId === threadId));
-    },
-  });
+  const { mutate: deleteComment } = useDeleteThreadMutation();
 
   useEffect(() => {
     if (threadList) {
       setThreadData(threadList?.find((thread) => thread.threadId === threadId));
     }
-  }, [threadList, threadId, isOpen]);
+  }, [threadId, threadList]);
 
   if (!isOpen || !threadList) {
     return <></>;
@@ -89,7 +82,7 @@ const KeywordGroupSidebar = ({
                 width={30}
                 height={30}
               />
-              <div>
+              <div className={cx('right')}>
                 <div className={cx('name-time')}>
                   <p>{childThread.author.username}</p>
                   <p className={cx('post-time')}>
@@ -102,7 +95,7 @@ const KeywordGroupSidebar = ({
                 <button
                   className={cx('delete-button')}
                   onClick={() => {
-                    mutate(childThread.threadId);
+                    deleteComment(childThread.threadId);
                   }}
                 >
                   <DeleteIcon />

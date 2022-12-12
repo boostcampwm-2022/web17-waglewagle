@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
-import styles from '@sass/components/community/CommunityLayout.module.scss';
 import classnames from 'classnames/bind';
+import styles from '@sass/components/community/CommunityLayout.module.scss';
+
 const cx = classnames.bind(styles);
 
 interface CommunityLayoutProps {

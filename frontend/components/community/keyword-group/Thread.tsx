@@ -1,13 +1,12 @@
 import { Author, ThreadData } from '#types/types';
+import { useDeleteThreadMutation } from '@hooks/thread';
 import useUserMe from '@hooks/useUserMe';
-import CommentIcon from '@public/images/comment.svg';
-import DeleteIcon from '@public/images/delete.svg';
-import styles from '@sass/components/community/keyword/Thread.module.scss';
-import { useMutation } from '@tanstack/react-query';
+import CommentIcon from '@public/images/icons/comment.svg';
+import DeleteIcon from '@public/images/icons/delete.svg';
+import styles from '@sass/components/community/keyword-group/Thread.module.scss';
 import calculateTimeGap from '@utils/calculateTimeGap';
 import classnames from 'classnames/bind';
 import Image from 'next/image';
-import apis from '../../../apis/apis';
 const cx = classnames.bind(styles);
 
 interface ThreadProps {
@@ -24,16 +23,13 @@ interface ThreadProps {
 const Thread = ({
   threadId,
   content,
+  childThreadCount,
   createdAt,
   author: { userId, username, profileImageUrl },
   openSidebar,
 }: ThreadProps) => {
-  // setQueryData 통해서 데이터 수정 추가
-  const { mutate } = useMutation({
-    mutationFn: () => apis.deleteThread(threadId),
-  });
-
   const userData = useUserMe();
+  const { mutate: deleteThread } = useDeleteThreadMutation();
 
   return (
     <li className={cx('thread')}>
@@ -60,14 +56,13 @@ const Thread = ({
           className={cx('comment-button')}
           onClick={() => openSidebar(threadId)}
         >
+          {childThreadCount ? <p>{childThreadCount}개의 댓글</p> : null}
           <CommentIcon />
         </button>
         {userId === userData?.userId && (
           <button
             className={cx('delete-button')}
-            onClick={() => {
-              mutate();
-            }}
+            onClick={() => deleteThread(threadId)}
           >
             <DeleteIcon />
           </button>
