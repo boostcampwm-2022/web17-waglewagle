@@ -1,7 +1,14 @@
 import Circle from './Circle';
 
+const INTERSECTION_REPULSIVE_COEFFICIENT = 1;
 const REPULSIVE_COEFFICIENT = 0.6;
 const COLLISION_COEFFICIENT = 0.1;
+
+enum INTERSECTION_TYPES {
+  INTERSECTION = 'intersection',
+  COLLISION = 'collision',
+  NO_COLLISION = 'no collision',
+}
 
 class CircleContainer {
   // TODO: circles private으로 수정하기
@@ -31,10 +38,24 @@ class CircleContainer {
     return vector;
   }
 
-  getRandPos() {
+  getRandPosByMass(mass: number) {
+    const centralX = this.width / 2;
+    const centralY = this.height / 2;
+    const massCoefficient = mass > 50 ? 25 / mass : 1; // 무거우면 범위를 줄인다.
+
     return {
-      x: Math.floor(Math.random() * this.width) * 0.8 + 50,
-      y: Math.floor(Math.random() * this.height) * 0.8 + 50,
+      x:
+        Math.floor(
+          centralX + (Math.random() * this.width - centralX) * massCoefficient,
+        ) *
+          0.9 +
+        50,
+      y:
+        Math.floor(
+          centralY + (Math.random() * this.height - centralY) * massCoefficient,
+        ) *
+          0.9 +
+        50,
     };
   }
 
@@ -48,7 +69,7 @@ class CircleContainer {
       return updatedCircle;
     }
 
-    const { x, y } = this.getRandPos();
+    const { x, y } = this.getRandPosByMass(radius);
     const newCircle = new Circle(
       circleId,
       x,
@@ -69,8 +90,9 @@ class CircleContainer {
       const circleA = this.circles[idArray[i]];
       for (let j = i + 1; j < idArray.length; j++) {
         const circleB = this.circles[idArray[j]];
-        if (this.checkIntersection(circleA, circleB)) {
-          this.handleCollision(circleA, circleB);
+        const intersectionType = this.checkIntersection(circleA, circleB);
+        if (intersectionType !== INTERSECTION_TYPES.NO_COLLISION) {
+          this.handleIntersection(circleA, circleB, intersectionType);
         }
       }
       this.applyGravity(circleA);
@@ -95,74 +117,110 @@ class CircleContainer {
     }
   }
 
-  // 겹침 확인
+  // 충돌 확인
+  // 한 번에 계산하고자 충돌과 겹칩을 같이 확인함.
   checkIntersection(circleA: Circle, circleB: Circle) {
     const distance = Math.hypot(circleA.x - circleB.x, circleA.y - circleB.y);
-    if ((circleA.radius + circleB.radius) * 1.01 >= distance) {
-      return true;
+
+    if (circleA.radius + circleB.radius * 0.9 > distance) {
+      return INTERSECTION_TYPES.INTERSECTION;
     }
 
-    return false;
+    if ((circleA.radius + circleB.radius) * 1.03 >= distance) {
+      return INTERSECTION_TYPES.COLLISION;
+    }
+
+    return INTERSECTION_TYPES.NO_COLLISION;
   }
 
   // 스칼라를 계산해서 Vector를 구혀준다.
-  caculateCollisionScala(
+  caculateIntersectionScala(
     speedA: number,
     speedB: number,
     massA: number,
     massB: number,
     repulsiveForce: number,
+    intersectionType: INTERSECTION_TYPES,
   ) {
-    return (
-      (speedA +
-        (2 * massB * (speedB - speedA)) / (massA + massB) +
-        repulsiveForce * REPULSIVE_COEFFICIENT) *
-      COLLISION_COEFFICIENT
-    );
+    const baseForce =
+      speedA + (2 * massB * (speedB - speedA)) / (massA + massB);
+
+    switch (intersectionType) {
+      case INTERSECTION_TYPES.INTERSECTION:
+        return (
+          (baseForce + repulsiveForce * INTERSECTION_REPULSIVE_COEFFICIENT) *
+          COLLISION_COEFFICIENT
+        );
+
+      case INTERSECTION_TYPES.COLLISION:
+        return (
+          (baseForce + repulsiveForce * REPULSIVE_COEFFICIENT) *
+          COLLISION_COEFFICIENT
+        );
+
+      default:
+        return (
+          (baseForce + repulsiveForce * REPULSIVE_COEFFICIENT) *
+          COLLISION_COEFFICIENT
+        );
+    }
   }
 
-  caculateCollisionVector(circleA: Circle, circleB: Circle) {
+  caculateIntersectionVector(
+    circleA: Circle,
+    circleB: Circle,
+    intersectionType: INTERSECTION_TYPES,
+  ) {
     const distanceX = circleA.x - circleB.x;
     const distanceY = circleA.y - circleB.y;
+
     const afterCircleAVelocity = {
-      x: this.caculateCollisionScala(
+      x: this.caculateIntersectionScala(
         circleA.velocity.x,
         circleB.velocity.x,
         circleA.radius,
         circleB.radius,
         distanceX,
+        intersectionType,
       ),
-      y: this.caculateCollisionScala(
+      y: this.caculateIntersectionScala(
         circleA.velocity.y,
         circleB.velocity.y,
         circleA.radius,
         circleB.radius,
         distanceY,
+        intersectionType,
       ),
     };
     const afterCircleBVelocity = {
-      x: this.caculateCollisionScala(
+      x: this.caculateIntersectionScala(
         circleB.velocity.x,
         circleA.velocity.x,
         circleB.radius,
         circleA.radius,
         -distanceX,
+        intersectionType,
       ),
-      y: this.caculateCollisionScala(
+      y: this.caculateIntersectionScala(
         circleB.velocity.y,
         circleA.velocity.y,
         circleB.radius,
         circleA.radius,
         -distanceY,
+        intersectionType,
       ),
     };
     return { afterCircleAVelocity, afterCircleBVelocity };
   }
 
   // // 겹침 발생시 속도를 변화시킴
-  handleCollision(circleA: Circle, circleB: Circle) {
+  handleIntersection(
+    circleA: Circle,
+    circleB: Circle,
+    intersectionType: INTERSECTION_TYPES,
+  ) {
     const { afterCircleAVelocity, afterCircleBVelocity } =
-      this.caculateCollisionVector(circleA, circleB);
+      this.caculateIntersectionVector(circleA, circleB, intersectionType);
 
     circleA.velocity = afterCircleAVelocity;
     circleB.velocity = afterCircleBVelocity;

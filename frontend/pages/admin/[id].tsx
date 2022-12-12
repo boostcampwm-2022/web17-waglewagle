@@ -1,5 +1,3 @@
-import { useRouter } from 'next/router';
-import { useState } from 'react';
 import {
   AdminLayout,
   AdminMain,
@@ -7,8 +5,10 @@ import {
   KeywordControl,
   UserControl,
 } from '@components/admin';
-import { ADMIN_PAGE_TAB } from '@constants/constants';
 import SeoHead from '@components/common/Head';
+import { ADMIN_PAGE_TAB } from '@constants/constants';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
 import config from '../../config';
 
 const Admin = () => {
@@ -29,10 +29,10 @@ const Admin = () => {
       />
       <AdminSideBar title={title} handleClickTab={handleClickTab} tab={tab} />
       <AdminMain title={title} tab={tab}>
-        {tab === ADMIN_PAGE_TAB.USER_CONTROL ? (
-          <UserControl />
-        ) : (
+        {tab === ADMIN_PAGE_TAB.KEYWORD_CONTROL ? (
           <KeywordControl />
+        ) : (
+          <UserControl />
         )}
       </AdminMain>
     </AdminLayout>

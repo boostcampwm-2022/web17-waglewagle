@@ -1,6 +1,6 @@
 import KeywordGroupSidebar from '@components/community/keyword-group/KeywordGroupSidebar';
-import useKeywordUserListQuery from '@hooks/useKeywordUserListQuery';
-import styles from '@sass/components/community/keyword/KeywordMain.module.scss';
+import { useKeywordUserListQuery } from '@hooks/keyword';
+import styles from '@sass/components/community/keyword-group/KeywordMain.module.scss';
 import classnames from 'classnames/bind';
 import { useState } from 'react';
 import PostThread from './ThreadForm';
@@ -19,7 +19,9 @@ const KeywordGroupMain = ({ keywordId, keyword }: KeywordGroupMainProps) => {
     isOpen: false,
     threadId: '0',
   });
+
   const { data: userList } = useKeywordUserListQuery(keywordId);
+
   const openSidebar = (threadId: string) => {
     setThreadSidebar({ isOpen: true, threadId });
   };

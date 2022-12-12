@@ -1,0 +1,62 @@
+@import '@sass/variables.scss';
+@import '@sass/mixins.scss';
+
+.container {
+  width: 80vw;
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'NanumBugGeugSeong';
+}
+
+.header {
+  display: flex;
+  gap: 20px;
+}
+
+.title {
+  font-size: 2rem;
+}
+
+.reset-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  background-color: transparent;
+  @include button-interaction;
+}
+
+.main {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.keyword-add-section {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.my-keyword-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  hr {
+    width: 100%;
+    margin: 15px;
+  }
+}
+
+.my-keyword-title {
+  font-size: 1.5rem;
+}
