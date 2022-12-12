@@ -1,10 +1,11 @@
-import styles from '@sass/components/community/MainKeywordHandlerLayout.module.scss';
+import { ReactNode } from 'react';
 import classnames from 'classnames/bind';
+import styles from '@sass/components/community/MainKeywordHandlerLayout.module.scss';
+
 const cx = classnames.bind(styles);
-import React from 'react';
 
 interface MainKeywordHandlerLayoutProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 const MainKeywordHandlerLayout = ({

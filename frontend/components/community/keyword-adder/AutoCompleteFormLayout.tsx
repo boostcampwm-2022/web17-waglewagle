@@ -1,6 +1,7 @@
 import { FormEventHandler } from 'react';
 import classnames from 'classnames/bind';
-import styles from '@sass/components/community/AutoCompleteFormLayout.module.scss';
+import styles from '@sass/components/community/keyword-adder/AutoCompleteFormLayout.module.scss';
+
 const cx = classnames.bind(styles);
 
 interface AutoCompleteFormLayoutProps {

@@ -1,25 +1,25 @@
-import { MyKeywordData } from '#types/types';
 import {
-  AutoCompleteFormLayout,
-  SearchResultListLayout,
-} from '@components/community';
+  FormEventHandler,
+  MouseEventHandler,
+  useEffect,
+  useState,
+} from 'react';
+import { useRouter } from 'next/router';
+import classnames from 'classnames/bind';
+import styles from '@sass/components/community/keyword-adder/KeywordAdderLayout.module.scss';
 import {
   useAddKeywordMutation,
   useJoinKeywordMutation,
   useKeywordListQuery,
 } from '@hooks/keyword';
 import useAutoComplete from '@hooks/useAutoComplete';
-import styles from '@sass/components/community/KeywordAdderLayout.module.scss';
 import checkIsExistKeyword from '@utils/checkIsExistKeyword';
-import classnames from 'classnames/bind';
-import { useRouter } from 'next/router';
-import {
-  ChangeEventHandler,
-  FormEventHandler,
-  MouseEventHandler,
-  useEffect,
-  useState,
-} from 'react';
+import { MyKeywordData } from '#types/types';
+import AutoCompleteFormLayout from './AutoCompleteFormLayout';
+import SearchResultListLayout from './SearchResultListLayout';
+import AutoCompleteFormContent from './AutoCompleteForm';
+import SearchResultList from './SearchResultList';
+
 const cx = classnames.bind(styles);
 
 interface KeywordAdderProps {
@@ -28,13 +28,14 @@ interface KeywordAdderProps {
   handleChangePrevKeyword: (prevKeyword: MyKeywordData) => void;
 }
 
-const KeywordAdder = ({
+const KeywordAdderContent = ({
   theme,
   addButtonValue,
   handleChangePrevKeyword,
 }: KeywordAdderProps) => {
   const router = useRouter();
   const communityId: string = router.query.id as string;
+  const [isOpenDropdown, setIsOpenDropDown] = useState<boolean>(false);
 
   const { data: communityKeywordData } = useKeywordListQuery(communityId);
   const { mutate: addKeywordMutate } = useAddKeywordMutation(
@@ -42,10 +43,8 @@ const KeywordAdder = ({
   );
   const { mutate: joinKeywordMutate, isError: isJoinError } =
     useJoinKeywordMutation(handleChangePrevKeyword);
-
   const { searchKeyword, searchResult, changeSearchKeyword } =
     useAutoComplete(communityKeywordData);
-  const [isOpenDropdown, setIsOpenDropDown] = useState<boolean>(false);
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -73,11 +72,8 @@ const KeywordAdder = ({
     changeSearchKeyword('');
   };
 
-  const handleChangeSearchKeyword: ChangeEventHandler<HTMLInputElement> = (
-    e,
-  ) => {
-    setIsOpenDropDown(true);
-    changeSearchKeyword(e.target.value);
+  const handleIsOpenDropDown = (state: boolean) => {
+    setIsOpenDropDown(state);
   };
 
   const handleMouseDownResultItem: MouseEventHandler<HTMLLIElement> = (e) => {
@@ -100,27 +96,22 @@ const KeywordAdder = ({
     >
       {isOpenDropdown && (
         <SearchResultListLayout layoutTheme={theme}>
-          {searchResult.map((word, index) => (
-            <li onMouseDown={handleMouseDownResultItem} key={index}>
-              {word}
-            </li>
-          ))}
+          <SearchResultList
+            searchResult={searchResult}
+            handleMouseDownResultItem={handleMouseDownResultItem}
+          />
         </SearchResultListLayout>
       )}
       <AutoCompleteFormLayout layoutTheme={theme} handleSubmit={handleSubmit}>
-        <input
-          type='text'
-          value={searchKeyword}
-          onChange={handleChangeSearchKeyword}
-          aria-label='관심사 키워드 입력 영역'
-          placeholder='키워드를 입력해주세요.'
+        <AutoCompleteFormContent
+          addButtonValue={addButtonValue}
+          searchKeyword={searchKeyword}
+          handleIsOpenDropDown={handleIsOpenDropDown}
+          changeSearchKeyword={changeSearchKeyword}
         />
-        <button type='submit' aria-label='관심사 키워드 추가 버튼'>
-          {addButtonValue}
-        </button>
       </AutoCompleteFormLayout>
     </div>
   );
 };
 
-export default KeywordAdder;
+export default KeywordAdderContent;

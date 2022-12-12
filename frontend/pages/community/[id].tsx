@@ -1,33 +1,33 @@
-import { KeywordGroupData, MyKeywordData } from '#types/types';
-import { apis } from '@apis/index';
-import { Loading, Modal } from '@components/common';
-import SeoHead from '@components/common/Head';
-import {
-  CommunityHeader,
-  CommunityLayout,
-  KeywordBubbleChart,
-} from '@components/community';
-import { KeywordGroupModalContent } from '@components/community/keyword-group';
-import KeywordAdder from '@components/community/KeywordAdder';
-import MainKeywordHandlerLayout from '@components/community/MainKeywordHandlerLayout';
-import MyKeywordHighlight from '@components/community/MyKeywordHighlight';
-import { KEYWORD_ADDER_THEME, MVP_DEFAULT } from '@constants/constants';
-import useUserMe from '@hooks/useUserMe';
-import AddCircleIcon from '@public/images/icons/add-circle.svg';
-import dynamic from 'next/dynamic';
-import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import dynamic from 'next/dynamic';
+import AddCircleIcon from '@public/images/icons/add-circle.svg';
+import { apis } from '@apis/index';
+import useUserMe from '@hooks/useUserMe';
+import { KeywordGroupData, MyKeywordData } from '#types/types';
+import { KEYWORD_ADDER_THEME, MVP_DEFAULT } from '@constants/constants';
 import config from '../../config';
+import SeoHead from '@components/common/Head';
+import { Loading, Modal } from '@components/common';
+import { CommunityHeader, CommunityLayout } from '@components/community';
+import { KeywordGroupModalContent } from '@components/community/keyword-group';
+import { KeywordAdderContent } from '@components/community/keyword-adder';
+import { MainKeywordHandlerLayout } from '@components/community';
+import { KeywordBubbleChart } from '@components/community/keyword-bubble-chart';
+import MyKeywordHighlight from '@components/community/MyKeywordHighlight';
 
 const LoginModalContent = dynamic(
-  () => import('../../components/common/LoginModalContent'),
+  () => import('@components/common/LoginModalContent'),
   {
     loading: () => <Loading />,
   },
 );
 
 const KeywordAddModalContent = dynamic(
-  () => import('../../components/community/KeywordAddModalContent'),
+  () =>
+    import(
+      '../../components/community/keyword-add-modal/KeywordAddModalContent'
+    ),
   {
     loading: () => <Loading />,
   },
@@ -36,15 +36,17 @@ const KeywordAddModalContent = dynamic(
 const Community = () => {
   const router = useRouter();
   const communityId = router.query.id as string;
-  const userData = useUserMe(communityId);
-  const [isMyKeywordHighlight, setIsMyKeywordHighlight] =
-    useState<boolean>(false);
+
   const [isOpenLoginModal, setIsOpenLoginModal] = useState<boolean>(false);
   const [isOpenKeywordModal, setIsOpenKeywordModal] = useState<boolean>(false);
+  const [isMyKeywordHighlight, setIsMyKeywordHighlight] =
+    useState<boolean>(false);
   const [isOpenKeywordGroupModal, setIsOpenKeywordGroupModal] =
     useState<boolean>(false);
   const [prevKeyword, setPrevKeyword] = useState<MyKeywordData>();
   const [keywordGroupData, setKeywordGroupData] = useState<KeywordGroupData>();
+
+  const userData = useUserMe(communityId);
 
   const handleChangePrevKeyword = (newPrevKeyword: MyKeywordData) => {
     setPrevKeyword(newPrevKeyword);
@@ -55,6 +57,22 @@ const Community = () => {
   ) => {
     setIsOpenKeywordGroupModal(true);
     setKeywordGroupData(newKeywordGroupData);
+  };
+
+  const handleClickEnter = () => {
+    setIsOpenLoginModal(true);
+  };
+
+  const handleClickKeywordModal = () => {
+    setIsOpenKeywordModal(true);
+  };
+
+  const closeKeywordModal = () => {
+    setIsOpenKeywordModal(false);
+  };
+
+  const toggleIsMyKeywordHighlight = () => {
+    setIsMyKeywordHighlight((prev) => !prev);
   };
 
   useEffect(() => {
@@ -76,22 +94,6 @@ const Community = () => {
     }
   }, [userData?.isFirstInCommunity]);
 
-  const handleClickEnter = () => {
-    setIsOpenLoginModal(true);
-  };
-
-  const handleClickKeywordModal = () => {
-    setIsOpenKeywordModal(true);
-  };
-
-  const closeKeywordModal = () => {
-    setIsOpenKeywordModal(false);
-  };
-
-  const toggleIsMyKeywordHighlight = () => {
-    setIsMyKeywordHighlight((prev) => !prev);
-  };
-
   return (
     <CommunityLayout>
       <SeoHead
@@ -110,7 +112,7 @@ const Community = () => {
       />
       {userData && (
         <MainKeywordHandlerLayout>
-          <KeywordAdder
+          <KeywordAdderContent
             theme={KEYWORD_ADDER_THEME.MAIN}
             addButtonValue={<AddCircleIcon />}
             handleChangePrevKeyword={handleChangePrevKeyword}

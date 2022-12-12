@@ -1,8 +1,9 @@
-import { DefaultButton } from '@components/common';
-import { useJoinKeywordMutation } from '@hooks/keyword';
-import styles from '@sass/components/community/KeywordGroupInfoModalContent.module.scss';
-import classnames from 'classnames/bind';
 import { useRouter } from 'next/router';
+import classnames from 'classnames/bind';
+import styles from '@sass/components/community/keyword-bubble-chart/KeywordGroupInfoModalContent.module.scss';
+import { useJoinKeywordMutation } from '@hooks/keyword';
+import { DefaultButton } from '@components/common';
+
 const cx = classnames.bind(styles);
 
 interface KeywordGroupInfoModalContentProps {
