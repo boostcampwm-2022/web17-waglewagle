@@ -68,14 +68,14 @@ public class ThreadService {
 
         Thread parentThread = threadRepository
                 .findById(parentThreadId)
-                .map(thread -> {
-                    if (thread.getParentThread() == null)
+                .map(pThread -> {
+                    if (pThread == null)
                         throw new NoSuchThreadException();
-                    return thread;
-                }).filter(thread ->
-                        thread.getParentThread().getParentThread() == null
-                ).filter(thread ->
-                        Objects.equals(thread.getKeyword().getId(), createDTO.getKeywordId()))
+                    return pThread;
+                }).filter(pThread ->
+                        pThread.getParentThread() == null
+                ).filter(pThread ->
+                        Objects.equals(pThread.getKeyword().getId(), createDTO.getKeywordId()))
                 .orElseThrow(InvalidThreadException::new);
 
 
@@ -85,7 +85,7 @@ public class ThreadService {
                 HttpStatus.CREATED);
 
     }
-    
+
     @Transactional
     public void
     deleteThread(final Long userId,
