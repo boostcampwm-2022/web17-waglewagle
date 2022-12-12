@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import classnames from 'classnames/bind';
-import styles from '@sass/components/community/KeywordGroupEnterModalContent.module.scss';
+import styles from '@sass/components/community/keyword-bubble-chart/KeywordGroupEnterModalContent.module.scss';
 import {
   useDisjoinKeywordMutation,
   useRelatedKeywordList,

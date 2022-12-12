@@ -3,7 +3,7 @@ import { useDeleteThreadMutation } from '@hooks/thread';
 import useUserMe from '@hooks/useUserMe';
 import CommentIcon from '@public/images/comment.svg';
 import DeleteIcon from '@public/images/delete.svg';
-import styles from '@sass/components/community/keyword/Thread.module.scss';
+import styles from '@sass/components/community/keyword-group/Thread.module.scss';
 import calculateTimeGap from '@utils/calculateTimeGap';
 import classnames from 'classnames/bind';
 import Image from 'next/image';
