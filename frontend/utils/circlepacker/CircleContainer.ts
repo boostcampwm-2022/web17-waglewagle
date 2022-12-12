@@ -1,6 +1,6 @@
 import Circle from './Circle';
 
-const REPULSIVE_COEFFICIENT = 0.6;
+const REPULSIVE_COEFFICIENT = 1;
 const COLLISION_COEFFICIENT = 0.1;
 
 class CircleContainer {
