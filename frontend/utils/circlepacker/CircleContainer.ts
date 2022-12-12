@@ -31,10 +31,24 @@ class CircleContainer {
     return vector;
   }
 
-  getRandPos() {
+  getRandPosByMass(mass: number) {
+    const centralX = this.width / 2;
+    const centralY = this.height / 2;
+    const massCoefficient = mass > 50 ? 25 / mass : 1; // 무거우면 범위를 줄인다.
+
     return {
-      x: Math.floor(Math.random() * this.width) * 0.8 + 50,
-      y: Math.floor(Math.random() * this.height) * 0.8 + 50,
+      x:
+        Math.floor(
+          centralX + (Math.random() * this.width - centralX) * massCoefficient,
+        ) *
+          0.9 +
+        50,
+      y:
+        Math.floor(
+          centralY + (Math.random() * this.height - centralY) * massCoefficient,
+        ) *
+          0.9 +
+        50,
     };
   }
 
@@ -48,7 +62,7 @@ class CircleContainer {
       return updatedCircle;
     }
 
-    const { x, y } = this.getRandPos();
+    const { x, y } = this.getRandPosByMass(radius);
     const newCircle = new Circle(
       circleId,
       x,
