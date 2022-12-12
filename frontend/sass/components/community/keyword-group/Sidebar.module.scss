@@ -55,8 +55,12 @@
   gap: 10px;
 }
 
+.right {
+  flex: 1;
+}
+
 .content {
-  width: 80%;
+  width: 90%;
 }
 
 .close-button {
@@ -76,7 +80,7 @@
 .delete-button {
   position: absolute;
   top: 0;
-  right: 10px;
+  right: 0;
   border: none;
   background: none;
   

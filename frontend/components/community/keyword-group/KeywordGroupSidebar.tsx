@@ -82,7 +82,7 @@ const KeywordGroupSidebar = ({
                 width={30}
                 height={30}
               />
-              <div>
+              <div className={cx('right')}>
                 <div className={cx('name-time')}>
                   <p>{childThread.author.username}</p>
                   <p className={cx('post-time')}>
