@@ -34,7 +34,7 @@ const getKeywordUsers = (
     params: { 'keyword-id': keywordId },
   });
 
-export type AddKeywordRequestBody = {
+type AddKeywordRequestBody = {
   keywordName: string;
   communityId: string;
 };
