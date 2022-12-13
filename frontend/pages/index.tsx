@@ -26,15 +26,18 @@ const Home = () => {
   };
 
   useEffect(() => {
-    if (userData && router.isReady) {
-      try {
-        apis.user.joinCommunity(MVP_DEFAULT.COMMUNITY_ID);
-      } catch (e) {
-        alert('알 수 없는 에러가 발생했습니다.');
-      }
-
-      router.push('/main');
+    // try / catch로 depth가 깊어져서 ealry return 사용
+    if (!userData || !router.isReady) {
+      return;
     }
+
+    try {
+      apis.user.joinCommunity(MVP_DEFAULT.COMMUNITY_ID);
+    } catch (e) {
+      alert('알 수 없는 에러가 발생했습니다.');
+    }
+
+    router.push('/main');
   }, [userData, router]);
 
   return (

@@ -77,6 +77,7 @@ const Community = () => {
   };
 
   useEffect(() => {
+    // try / catch로 depth가 깊어져서 ealry return 사용
     if (!userData) {
       return;
     }

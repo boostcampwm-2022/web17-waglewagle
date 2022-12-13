@@ -7,18 +7,37 @@ import {
 } from '@components/admin';
 import SeoHead from '@components/common/Head';
 import { ADMIN_PAGE_TAB } from '@constants/constants';
+import useUserMe from '@hooks/useUserMe';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import config from '../../config';
 
 const Admin = () => {
   const router = useRouter();
+  const communityId = router.query.id as string;
   const [tab, setTab] = useState(0);
   const title = '부스트캠프 7기 커뮤니티';
+
+  const userData = useUserMe(communityId);
 
   const handleClickTab = (tabData: number) => {
     setTab(tabData);
   };
+
+  useEffect(() => {
+    // 조건문이 길어져서 ealry return 사용
+    if (!router.isReady) {
+      return;
+    }
+
+    if (
+      !userData ||
+      (userData.role !== 'ADMIN' && userData.role !== 'MANAGER')
+    ) {
+      alert('권한이 없습니다.');
+      router.push('/main');
+    }
+  }, [userData, router]);
 
   return (
     <AdminLayout>
