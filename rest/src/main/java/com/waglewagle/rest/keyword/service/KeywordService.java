@@ -110,11 +110,10 @@ public class KeywordService {
             NoSuchUserException,
             NoSuchCommunityException {
 
-        Optional
-                .ofNullable(
-                        keywordRepository
-                                .findByKeywordNameAndCommunityId(keywordName, communityId))
+        keywordRepository
+                .findByKeywordNameAndCommunityId(keywordName, communityId)
                 .ifPresent((__) -> {
+                    System.out.println();
                     throw new DuplicatedKeywordException();
                 });
 
