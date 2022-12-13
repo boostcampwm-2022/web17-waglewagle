@@ -45,6 +45,8 @@ const useJoinKeywordMutation = (
           return [...old, prevKeywordData];
         },
       );
+
+      alert(`🎊 ${joinKeywordFullData.keywordName}을 관심사에 추가했습니다!`);
     },
   });
 
