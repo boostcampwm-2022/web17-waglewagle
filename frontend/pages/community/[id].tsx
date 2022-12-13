@@ -77,13 +77,21 @@ const Community = () => {
   };
 
   useEffect(() => {
-    let interval: NodeJS.Timer;
-    if (userData) {
-      apis.user.joinCommunity(MVP_DEFAULT.COMMUNITY_ID);
-      interval = setInterval(() => {
-        apis.user.updateLastActivity();
-      }, 60000);
+    // try / catch로 depth가 깊어져서 ealry return 사용
+    if (!userData) {
+      return;
     }
+
+    const interval = setInterval(() => {
+      apis.user.updateLastActivity();
+    }, 60000);
+
+    try {
+      apis.user.joinCommunity(MVP_DEFAULT.COMMUNITY_ID);
+    } catch (e) {
+      alert('알 수 없는 에러가 발생했습니다.');
+    }
+
     return () => {
       clearInterval(interval);
     };
