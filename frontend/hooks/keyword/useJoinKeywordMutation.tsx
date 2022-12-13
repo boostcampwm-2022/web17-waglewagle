@@ -2,6 +2,7 @@ import { MyKeywordData } from '#types/types';
 import { apis } from '@apis/index';
 import { REACT_QUERY_KEY } from '@constants/constants';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
 import { useRouter } from 'next/router';
 
 // 반환값, 요청 URL이 모두 다르기 때문에 join과 add 쿼리를 분리함.
@@ -47,6 +48,12 @@ const useJoinKeywordMutation = (
       );
 
       alert(`🎊 ${joinKeywordFullData.keywordName}을 관심사에 추가했습니다!`);
+    },
+    onError: (error) => {
+      const message = axios.isAxiosError(error)
+        ? error.response?.data.message
+        : '키워드 관심사 추가 중, 알 수 없는 에러가 발생했어요!';
+      alert(message);
     },
   });
 
