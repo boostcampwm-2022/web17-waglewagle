@@ -27,7 +27,12 @@ const Home = () => {
 
   useEffect(() => {
     if (userData && router.isReady) {
-      apis.user.joinCommunity(MVP_DEFAULT.COMMUNITY_ID);
+      try {
+        apis.user.joinCommunity(MVP_DEFAULT.COMMUNITY_ID);
+      } catch (e) {
+        alert('알 수 없는 에러가 발생했습니다.');
+      }
+
       router.push('/main');
     }
   }, [userData, router]);
