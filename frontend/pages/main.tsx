@@ -18,10 +18,16 @@ const Main = () => {
   const userData = useUserMe();
 
   useEffect(() => {
-    if (userData) {
-      apis.user.joinCommunity(MVP_DEFAULT.COMMUNITY_ID);
-    } else {
+    // try / catch로 depth가 깊어져서 ealry return
+    if (!userData) {
       router.push('/');
+      return;
+    }
+
+    try {
+      apis.user.joinCommunity(MVP_DEFAULT.COMMUNITY_ID);
+    } catch (e) {
+      alert('알 수 없는 에러가 발생했습니다.');
     }
   }, [router, userData]);
 

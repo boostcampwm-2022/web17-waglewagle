@@ -21,6 +21,11 @@ export type JoinKeywordData = {
   communityId: string;
 };
 
+export type DisjoinKeywordData = {
+  keywordId: string;
+  communityId: string;
+};
+
 // TODO: 그냥 rank를 옵셔널로 넣을까
 export type KeywordRelatedData = {
   keywordId: string;
