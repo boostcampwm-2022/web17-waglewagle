@@ -1,8 +1,9 @@
-import { JoinKeywordData, MyKeywordData } from '#types/types';
+import { useRouter } from 'next/router';
+import axios from 'axios';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apis } from '@apis/index';
 import { REACT_QUERY_KEY } from '@constants/constants';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/router';
+import type { JoinKeywordData, MyKeywordData } from '#types/types';
 
 const useDisjoinKeywordMutation = () => {
   const router = useRouter();
@@ -34,6 +35,14 @@ const useDisjoinKeywordMutation = () => {
         (old: MyKeywordData[] | undefined) =>
           updateMyKeywodList(disjoinKeywordData, old),
       );
+
+      alert('관심 해제 했습니다.');
+    },
+    onError: (error) => {
+      const message = axios.isAxiosError(error)
+        ? error.response?.data.message
+        : '키워드 추가 중, 알 수 없는 에러가 발생했어요!';
+      alert(message);
     },
   });
 
