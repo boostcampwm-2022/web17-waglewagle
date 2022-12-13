@@ -5,6 +5,7 @@ import {
   KeywordControl,
   UserControl,
 } from '@components/admin';
+import { Loading } from '@components/common';
 import SeoHead from '@components/common/Head';
 import { ADMIN_PAGE_TAB } from '@constants/constants';
 import useUserMe from '@hooks/useUserMe';
@@ -30,14 +31,15 @@ const Admin = () => {
       return;
     }
 
-    if (
-      !userData ||
-      (userData.role !== 'ADMIN' && userData.role !== 'MANAGER')
-    ) {
+    if (userData && userData.role !== 'ADMIN' && userData.role !== 'MANAGER') {
       alert('권한이 없습니다.');
       router.push('/main');
     }
   }, [userData, router]);
+
+  if (!userData) {
+    return <Loading />;
+  }
 
   return (
     <AdminLayout>

@@ -18,7 +18,7 @@ const Main = () => {
   const userData = useUserMe();
 
   useEffect(() => {
-    // try / catch로 depth가 깊어져서 ealry return 사용
+    // try / catch로 depth가 깊어져서 ealry return
     if (!userData) {
       router.push('/');
       return;
