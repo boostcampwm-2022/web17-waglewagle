@@ -7,7 +7,6 @@ interface TrieNodeInterface {
 
 interface WordProps {
   keyword: string;
-  count: number;
 }
 
 class TrieNode implements TrieNodeInterface {
@@ -31,9 +30,11 @@ class TrieSearchEngine extends SearchEngine {
   }
 
   insert(word: WordProps) {
+    if (!word.keyword.trim()) {
+      return;
+    }
     let currNode = this.headNode;
     for (const char of word.keyword) {
-      // TODO : 아래랑 ealry return 맞춰보기
       if (char in currNode.children) {
         // 있으면 그 노드로 이동함
         currNode = currNode.children[char];
@@ -88,37 +89,14 @@ class TrieSearchEngine extends SearchEngine {
     if (!searchKeywordNode) {
       return [];
     }
-    // 찾아낸 문자열을 검색 target 문자열에 합쳐서 결과를 만든다.
+
     const restStrArray = this.dfsNodeSearch(searchKeywordNode);
     if (!restStrArray) {
       return [];
     }
 
-    const searchResult = restStrArray.map((restStr) => searchKeyword + restStr);
-
-    return searchResult;
+    return restStrArray.map((restStr) => searchKeyword + restStr);
   }
 }
 
 export default TrieSearchEngine;
-
-// 더미 데이터
-const wordList = [
-  { keyword: '가', count: 3 },
-  { keyword: '다', count: 3 },
-  { keyword: '나', count: 3 },
-  { keyword: '가나', count: 3 },
-  { keyword: '가다', count: 3 },
-  { keyword: '가나다', count: 2 },
-  { keyword: '가나라', count: 3 },
-  { keyword: '가나라마', count: 3 },
-];
-
-// TODO: 삭제하기
-// 트라이 자료구조를 만든다.
-const searchEngine = new TrieSearchEngine();
-
-// 트라이 자료구조에 단어를 추가한다.
-wordList.forEach((word) => {
-  searchEngine.insert(word);
-});
