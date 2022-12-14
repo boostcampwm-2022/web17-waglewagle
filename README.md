@@ -78,7 +78,7 @@
 
 ## 백엔드
 
-![java](https://img.shields.io/badge/java-007396.svg?style=for-the-badge&logo=java&logoColor=white) ![Spring](https://img.shields.io/badge/Spring-6DB33F.svg?style=for-the-badge&logo=Spring&logoColor=white) ![SpringBoot](https://img.shields.io/badge/SpringBoot-6DB33F.svg?style=for-the-badge&logo=Spring-Boot&logoColor=white) ![MySQL](https://img.shields.io/badge/MySQL-4479A1.svg?style=for-the-badge&logo=MySQL&logoColor=white) ![JPA](https://img.shields.io/badge/JPA-6DB33F.svg?style=for-the-badge&logo=Spring&logoColor=white) ![JUnit5](https://img.shields.io/badge/JUnit5-25A162.svg?style=for-the-badge&logo=JUnit5&logoColor=white)
+![java](https://img.shields.io/badge/java-007396.svg?style=for-the-badge&logo=java&logoColor=white) ![Spring](https://img.shields.io/badge/Spring-6DB33F.svg?style=for-the-badge&logo=Spring&logoColor=white) ![SpringBoot](https://img.shields.io/badge/SpringBoot-6DB33F.svg?style=for-the-badge&logo=Spring-Boot&logoColor=white) ![MySQL](https://img.shields.io/badge/MySQL-4479A1.svg?style=for-the-badge&logo=MySQL&logoColor=white) ![JPA](https://img.shields.io/badge/JPA-6DB33F.svg?style=for-the-badge&logo=Spring&logoColor=white) ![JUnit5](https://img.shields.io/badge/JUnit5-25A162.svg?style=for-the-badge&logo=JUnit5&logoColor=white) ![Mockito](https://img.shields.io/badge/Mocikto-25A162.svg?style=for-the-badge&logoColor=white)
 
 </div>
 
@@ -112,7 +112,7 @@
 
 ## ETC
 
-![NGINX](https://img.shields.io/badge/NginX-009639.svg?style=for-the-badge&logo=NGINX&logoColor=white) ![Github](https://img.shields.io/badge/Github-181717.svg?style=for-the-badge&logo=Github&logoColor=white) ![GithubActions](https://img.shields.io/badge/GithubActions-2088FF.svg?style=for-the-badge&logo=Github-Actions&logoColor=white) ![Naver](https://img.shields.io/badge/nCloud-03C75A.svg?style=for-the-badge&logo=Naver&logoColor=white) ![Postman](https://img.shields.io/badge/Postman-FF6C37.svg?style=for-the-badge&logo=Postman&logoColor=white) ![Figma](https://img.shields.io/badge/Figma-F24E1E.svg?style=for-the-badge&logo=Figma&logoColor=white) ![Notion](https://img.shields.io/badge/Notion-000000.svg?style=for-the-badge&logo=Notion&logoColor=white)
+![NGINX](https://img.shields.io/badge/NginX-009639.svg?style=for-the-badge&logo=NGINX&logoColor=white) ![Github](https://img.shields.io/badge/Github-181717.svg?style=for-the-badge&logo=Github&logoColor=white) ![GithubActions](https://img.shields.io/badge/GithubActions-2088FF.svg?style=for-the-badge&logo=Github-Actions&logoColor=white) ![Naver](https://img.shields.io/badge/nCloud-03C75A.svg?style=for-the-badge&logo=Naver&logoColor=white) ![Postman](https://img.shields.io/badge/Postman-FF6C37.svg?style=for-the-badge&logo=Postman&logoColor=white)
 
 </div>
 
