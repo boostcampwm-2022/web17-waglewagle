@@ -11,13 +11,12 @@ enum INTERSECTION_TYPES {
 }
 
 class CircleContainer {
-  // TODO: circles private으로 수정하기
   public circles: Record<string, Circle> = {};
 
   constructor(
     private width: number,
     private height: number,
-    private gravityCoefficent: number = 98,
+    private gravityCoefficient: number = 98,
   ) {}
 
   calcInitVector(x: number, y: number) {
@@ -134,7 +133,7 @@ class CircleContainer {
   }
 
   // 스칼라를 계산해서 Vector를 구혀준다.
-  caculateIntersectionScala(
+  calculateIntersectionScala(
     speedA: number,
     speedB: number,
     massA: number,
@@ -166,7 +165,7 @@ class CircleContainer {
     }
   }
 
-  caculateIntersectionVector(
+  calculateIntersectionVector(
     circleA: Circle,
     circleB: Circle,
     intersectionType: INTERSECTION_TYPES,
@@ -175,7 +174,7 @@ class CircleContainer {
     const distanceY = circleA.y - circleB.y;
 
     const afterCircleAVelocity = {
-      x: this.caculateIntersectionScala(
+      x: this.calculateIntersectionScala(
         circleA.velocity.x,
         circleB.velocity.x,
         circleA.radius,
@@ -183,7 +182,7 @@ class CircleContainer {
         distanceX,
         intersectionType,
       ),
-      y: this.caculateIntersectionScala(
+      y: this.calculateIntersectionScala(
         circleA.velocity.y,
         circleB.velocity.y,
         circleA.radius,
@@ -193,7 +192,7 @@ class CircleContainer {
       ),
     };
     const afterCircleBVelocity = {
-      x: this.caculateIntersectionScala(
+      x: this.calculateIntersectionScala(
         circleB.velocity.x,
         circleA.velocity.x,
         circleB.radius,
@@ -201,7 +200,7 @@ class CircleContainer {
         -distanceX,
         intersectionType,
       ),
-      y: this.caculateIntersectionScala(
+      y: this.calculateIntersectionScala(
         circleB.velocity.y,
         circleA.velocity.y,
         circleB.radius,
@@ -220,7 +219,7 @@ class CircleContainer {
     intersectionType: INTERSECTION_TYPES,
   ) {
     const { afterCircleAVelocity, afterCircleBVelocity } =
-      this.caculateIntersectionVector(circleA, circleB, intersectionType);
+      this.calculateIntersectionVector(circleA, circleB, intersectionType);
 
     circleA.velocity = afterCircleAVelocity;
     circleB.velocity = afterCircleBVelocity;
@@ -231,12 +230,12 @@ class CircleContainer {
     const centralY = this.height / 2;
     const gravityX = centralX - circle.x;
     const gravityY = centralY - circle.y;
-    circle.x += gravityX / this.gravityCoefficent;
-    circle.y += gravityY / this.gravityCoefficent;
+    circle.x += gravityX / this.gravityCoefficient;
+    circle.y += gravityY / this.gravityCoefficient;
   }
 
   resize(newWidth: number, newHeight: number) {
-    this.gravityCoefficent = Infinity;
+    this.gravityCoefficient = Infinity;
     const widthFactor = newWidth / this.width;
     const heightFactor = newHeight / this.height;
 
@@ -248,7 +247,7 @@ class CircleContainer {
     }
     this.width = newWidth;
     this.height = newHeight;
-    this.gravityCoefficent = 98;
+    this.gravityCoefficient = 98;
   }
 }
 
