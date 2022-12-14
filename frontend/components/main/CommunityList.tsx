@@ -1,7 +1,7 @@
-import CommunityItem from './CommunityItem';
-import classnames from 'classnames/bind';
-import styles from '@sass/components/main/CommunityList.module.scss';
 import useUserCommunityQuery from '@hooks/useUserCommunityQuery';
+import styles from '@sass/components/main/CommunityList.module.scss';
+import classnames from 'classnames/bind';
+import CommunityItem from './CommunityItem';
 const cx = classnames.bind(styles);
 
 export type Community = {

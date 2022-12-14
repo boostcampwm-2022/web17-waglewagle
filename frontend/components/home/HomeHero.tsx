@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import heroImage from '@public/images/planet.png';
-import classnames from 'classnames/bind';
 import styles from '@sass/components/home/HomeHero.module.scss';
+import classnames from 'classnames/bind';
 const cx = classnames.bind(styles);
 
 const HomeHero = () => {

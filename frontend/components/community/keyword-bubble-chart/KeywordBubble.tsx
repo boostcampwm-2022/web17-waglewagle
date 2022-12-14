@@ -1,12 +1,12 @@
 import { useState, MouseEventHandler } from 'react';
 import { useRouter } from 'next/router';
-import classnames from 'classnames/bind';
-import styles from '@sass/components/community/keyword-bubble-chart/KeywordBubble.module.scss';
-import useUserMe from '@hooks/useUserMe';
-import type { ClickPosData, KeywordGroupData } from '#types/types';
 import MouseModal from '@components/common/MouseModal';
+import useUserMe from '@hooks/useUserMe';
+import styles from '@sass/components/community/keyword-bubble-chart/KeywordBubble.module.scss';
+import classnames from 'classnames/bind';
 import KeywordGroupEnterModalContent from './KeywordGroupEnterModalContent';
 import KeywordGroupInfoModalContent from './KeywordGroupInfoModalContent';
+import type { ClickPosData, KeywordGroupData } from '#types/types';
 
 const cx = classnames.bind(styles);
 

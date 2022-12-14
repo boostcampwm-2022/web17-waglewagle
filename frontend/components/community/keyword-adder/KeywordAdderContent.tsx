@@ -5,20 +5,20 @@ import {
   useState,
 } from 'react';
 import { useRouter } from 'next/router';
-import classnames from 'classnames/bind';
-import styles from '@sass/components/community/keyword-adder/KeywordAdderLayout.module.scss';
 import {
   useAddKeywordMutation,
   useJoinKeywordMutation,
   useKeywordListQuery,
 } from '@hooks/keyword';
 import useAutoComplete from '@hooks/useAutoComplete';
+import styles from '@sass/components/community/keyword-adder/KeywordAdderLayout.module.scss';
 import checkIsExistKeyword from '@utils/checkIsExistKeyword';
-import type { MyKeywordData } from '#types/types';
-import AutoCompleteFormLayout from './AutoCompleteFormLayout';
-import SearchResultListLayout from './SearchResultListLayout';
+import classnames from 'classnames/bind';
 import AutoCompleteFormContent from './AutoCompleteForm';
+import AutoCompleteFormLayout from './AutoCompleteFormLayout';
 import SearchResultList from './SearchResultList';
+import SearchResultListLayout from './SearchResultListLayout';
+import type { MyKeywordData } from '#types/types';
 
 const cx = classnames.bind(styles);
 

@@ -1,6 +1,6 @@
-import classnames from 'classnames/bind';
-import styles from '@sass/components/admin/AdminLayout.module.scss';
 import { ReactNode } from 'react';
+import styles from '@sass/components/admin/AdminLayout.module.scss';
+import classnames from 'classnames/bind';
 const cx = classnames.bind(styles);
 
 interface AdminLayoutProps {

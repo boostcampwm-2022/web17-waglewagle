@@ -1,6 +1,6 @@
-import throttle from '@utils/throttle';
 import { useMemo } from 'react';
 import { useRef, useEffect } from 'react';
+import throttle from '@utils/throttle';
 
 const useSectionScroll = (maxPage: number) => {
   const pageRef = useRef<number>(0); // page에 따라 불필요한 리렌더링이 발생하지 않게하기위해 ref 사용

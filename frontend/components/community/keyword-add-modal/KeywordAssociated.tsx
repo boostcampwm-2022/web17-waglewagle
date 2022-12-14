@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import classnames from 'classnames/bind';
-import styles from '@sass/components/community/keyword-add-modal/KeywordAssociated.module.scss';
+import { Loading } from '@components/common';
 import { RELATED_KEYWORD_NUMBERS } from '@constants/constants';
 import { useRelatedKeywordList } from '@hooks/keyword';
+import styles from '@sass/components/community/keyword-add-modal/KeywordAssociated.module.scss';
+import classnames from 'classnames/bind';
 import type { KeywordRelatedData, MyKeywordData } from '#types/types';
-import { Loading } from '@components/common';
 
 const cx = classnames.bind(styles);
 

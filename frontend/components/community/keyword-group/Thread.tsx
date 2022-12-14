@@ -1,4 +1,4 @@
-import type { Author, ThreadData } from '#types/types';
+import Image from 'next/image';
 import { useDeleteThreadMutation } from '@hooks/thread';
 import useUserMe from '@hooks/useUserMe';
 import CommentIcon from '@public/images/icons/comment.svg';
@@ -6,7 +6,7 @@ import DeleteIcon from '@public/images/icons/delete.svg';
 import styles from '@sass/components/community/keyword-group/Thread.module.scss';
 import calculateTimeGap from '@utils/calculateTimeGap';
 import classnames from 'classnames/bind';
-import Image from 'next/image';
+import type { Author, ThreadData } from '#types/types';
 const cx = classnames.bind(styles);
 
 interface ThreadProps {

@@ -1,8 +1,8 @@
 import { MouseEventHandler } from 'react';
 import { useRouter } from 'next/router';
-import classnames from 'classnames/bind';
-import styles from '@sass/components/community/keyword-add-modal/MyKeyword.module.scss';
 import { useDisjoinKeywordMutation } from '@hooks/keyword';
+import styles from '@sass/components/community/keyword-add-modal/MyKeyword.module.scss';
+import classnames from 'classnames/bind';
 import type { MyKeywordData } from '#types/types';
 
 const cx = classnames.bind(styles);

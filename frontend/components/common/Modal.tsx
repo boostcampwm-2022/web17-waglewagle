@@ -1,13 +1,13 @@
 import { MouseEventHandler, ReactNode, useState } from 'react';
-import ReactDOM from 'react-dom';
-import classnames from 'classnames/bind';
 import styles from '@sass/components/common/Modal.module.scss';
+import classnames from 'classnames/bind';
+import ReactDOM from 'react-dom';
 const cx = classnames.bind(styles);
 
 interface ModalProps {
   isOpenModal: boolean;
-  closeModal(): void;
   children: ReactNode;
+  closeModal(): void;
 }
 
 const Modal = ({ isOpenModal, closeModal, children }: ModalProps) => {

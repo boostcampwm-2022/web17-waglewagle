@@ -1,7 +1,7 @@
+import { useRouter } from 'next/router';
 import useKeywordUserListQuery from '@hooks/keyword/useKeywordUserListQuery';
 import styles from '@sass/components/admin/UserControl.module.scss';
 import classnames from 'classnames/bind';
-import { useRouter } from 'next/router';
 const cx = classnames.bind(styles);
 
 const UserControl = () => {

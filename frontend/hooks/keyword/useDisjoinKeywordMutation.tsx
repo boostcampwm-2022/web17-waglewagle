@@ -1,10 +1,10 @@
 import { useRouter } from 'next/router';
-import axios from 'axios';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apis } from '@apis/index';
 import { REACT_QUERY_KEY } from '@constants/constants';
-import type { AxiosError } from 'axios';
+import axios from 'axios';
 import type { DisjoinKeywordData, MyKeywordData } from '#types/types';
+import type { AxiosError } from 'axios';
 
 const useDisjoinKeywordMutation = () => {
   const router = useRouter();

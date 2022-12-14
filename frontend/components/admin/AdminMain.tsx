@@ -1,7 +1,7 @@
+import { ReactNode } from 'react';
 import { ADMIN_PAGE_TAB } from '@constants/constants';
 import styles from '@sass/components/admin/AdminMain.module.scss';
 import classnames from 'classnames/bind';
-import { ReactNode } from 'react';
 const cx = classnames.bind(styles);
 
 interface AdminMainProps {

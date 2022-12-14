@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { apis } from '@apis/index';
 import { Loading } from '@components/common';
 import SeoHead from '@components/common/Head';
@@ -9,8 +11,6 @@ import {
 } from '@components/main';
 import { MVP_DEFAULT } from '@constants/constants';
 import useUserMe from '@hooks/useUserMe';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import config from '../config';
 
 const Main = () => {

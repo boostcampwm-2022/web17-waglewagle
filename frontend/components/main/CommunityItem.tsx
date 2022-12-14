@@ -1,7 +1,7 @@
 import Image from 'next/image';
-import classnames from 'classnames/bind';
-import styles from '@sass/components/main/CommunityItem.module.scss';
 import { MVP_DEFAULT } from '@constants/constants';
+import styles from '@sass/components/main/CommunityItem.module.scss';
+import classnames from 'classnames/bind';
 const cx = classnames.bind(styles);
 
 interface CommunityItemProps {

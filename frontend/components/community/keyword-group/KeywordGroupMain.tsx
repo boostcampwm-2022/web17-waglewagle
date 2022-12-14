@@ -1,8 +1,8 @@
+import { useState } from 'react';
 import KeywordGroupSidebar from '@components/community/keyword-group/KeywordGroupSidebar';
 import { useKeywordUserListQuery } from '@hooks/keyword';
 import styles from '@sass/components/community/keyword-group/KeywordMain.module.scss';
 import classnames from 'classnames/bind';
-import { useState } from 'react';
 import PostThread from './ThreadForm';
 import ThreadList from './ThreadList';
 const cx = classnames.bind(styles);

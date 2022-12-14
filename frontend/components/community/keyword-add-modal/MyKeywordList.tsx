@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
-import classnames from 'classnames/bind';
-import styles from '@sass/components/community/keyword-add-modal/MyKeywordList.module.scss';
 import { useMyKeywordQuery } from '@hooks/keyword';
+import styles from '@sass/components/community/keyword-add-modal/MyKeywordList.module.scss';
+import classnames from 'classnames/bind';
 import MyKeyword from './MyKeyword';
 
 const cx = classnames.bind(styles);
