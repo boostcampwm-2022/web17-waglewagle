@@ -583,13 +583,14 @@ N = 단어의 개수, M = 문자열 길이 | 사전 작업 시간 복잡도 | �
 
 # ❗️단단한 코드 구조와 트러블 슈팅
 
-## (1) 중구난방 관심사, 혼재된 관심사
+## (1) 중구난방 관심사; 혼재된 관심사
 
 서비스 레이어에 대한 단위 테스트를 구성하려고 시도하였다. 그러나, 테스트 코드보다 먼저 컨트롤러와 서비스 레이어가 가지고 있는 코드의 구조적인 문제점을 발견할 수 있었다. 
 
 컨트롤러 레이어에서도 데이터 검증에 대한 관심사를 가지고 있었고, 서비스 레이어에서도 데이터 검증에 대한 관심사를 가지고 있었다. 거기에 컨트롤러는 서비스 레이어의 검증 과정에서 발생한 예외 상황에 대한 관심사까지 가지고 있어 테스트 코드 작성이 어려웠던 것이다.
 
 ❓ **너무 많은 관심사를 가지고 있던 컨트롤러**
+
 
 ```java
 @ResponseBody
@@ -615,6 +616,7 @@ createKeyword(@RequestBody final KeywordRequest.CreateDTO createDTO) {
 2. 검증과 비즈니스 로직은 하나의 트랜젝션 안에서 동작해야 하는 것 아닐까?
 
 ➡️ **컨트롤러 레이어**에서 가져갔던 비지니스 로직의 흐름 제어라는 **역할, 책임**을 **서비스 레이어**로 **이전**해야 한다.
+
 
 ## (2) 비즈니스 로직의수많은 분기들 : 컨트롤러 예외 처리
 
@@ -643,11 +645,13 @@ public ResponseEntity<Response> controllerMethod() {
 
 ➡️ **실패 분기**, **예외 처리**에 대한 **다른 방법**이 필요하다!
 
+
 # 🔨 해결과정
 
 ## (1) 관심사 분리
 
 ➡️ 컨트롤러 레이어와 서비스 레이어의 **역할과 책임** 재정의하기
+
 
 ### 컨트롤러 레이어
 
@@ -665,6 +669,7 @@ public ResponseEntity<Response> controllerMethod() {
 ## (2) 전역 Exception Handler 도입 (feat. 커스텀 Exception)
 
 ➡️ Spring에서 지원하는 전역적 예외처리 장치 `RestControlllerAdvice` 레이어를 도입
+
 
 ```java
 @RestControllerAdvice
@@ -699,6 +704,7 @@ public ResponseEntity<Response> controllerMethod() {
 
 ❓ 개발자마다 **서로 다른** 예외 메세지를 사용한다면, **새로운 혼란**이 발생하지 않을까?
 
+
 ```java
 public ResponseEntity serviceMethod() {
 	throw new NoSuchElementException("예외 메세지 직접 입력");
@@ -710,6 +716,7 @@ public ResponseEntity serviceMethod() {
 3. Exception Handler가 자신의 책임을 다하기 위해서 다른 레이어의 내부를 알아야 한다면, 해당 레이어의 책임이 과중하고 관심사가 제대로 분리된 상태가 아니라고 판단했다.
 
 ➡️ Exception 객체가 가지는 **메시지**를 **통일**하고, **구체화**해야 한다.
+
 
 ```java
 @Getter
@@ -747,7 +754,7 @@ public EntityDTO serviceMethod() {
 
 # 결과
 
-![스크린샷 2022-12-12 오후 5.13.31.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/416476eb-9463-4613-af17-81b8ef5cf243/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2022-12-12_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_5.13.31.png)
+![스크린샷 2022-12-12 오후 5 13 31](https://user-images.githubusercontent.com/82748285/207597098-afe7184c-9725-4de7-be8c-79aec53651b0.png)
 
 1. 서비스 레이어는 exception 디렉토리를 참조하여 예외 상황에 맞춰 미리 만들어진 적절한 exception을 throw한다.
 2. Exception Handler 레이어는 exception 디렉토리를 참조하여 서비스 레이어에서 전달할 예외 상황에 대해서만 처리해주면 되는, 관심사가 적절히 분리된 상태이다.
@@ -765,8 +772,8 @@ public EntityDTO serviceMethod() {
 1. 특히, 컨트롤러 레이어에 대한 테스트를 진행할 경우, 해당 요청은 Service 레이어와 Repository 레이어를 모두 거치기 때문에 사실상 postman 등의 툴을 통해 실제 요청을 보내는 것과 차이점이 없었다. 
 2. 이 경우, 테스트가 실행 환경에 영향을 받을 수 있어 테스트만을 위한 새로운 환경을 조성해주어야 하며, 모든 테스트에서 적절한 의존성을 주입해야 하기 때문에 하나의 테스트 메서드를 실행할 때에도 모든 의존성을 주입해주어야 해서 테스트 시간이 너무 오래 소요되는 문제가 있었다.
 3. 게다가 컨트롤러 레이어를 테스트하는 과정에서 서비스 레이어와 레포지토리 레이어를 모두 거치기 때문에 테스트 케이스를 실패하더라도 과연 어디서 실패했는 지에 대해서 정확하게 알 수 없는 문제가 있었다.
-	
-➡️ 테스트 환경 내에서 **관심사**를 **분리**하여 각 레이어에 대해 **독립적으로** 테스트를 수행한다.
+
+➡️ 테스트 환경 내에서 **관심사** 를 **분리** 하여 각 레이어에 대해 **독립적으로** 테스트를 수행한다.
 
 ## (2) 의존성을 관리하는 방법
 
@@ -829,21 +836,19 @@ public void changeMember(Long memberId) {
 }
 ```
 
-**삭제 쿼리를 요청**하고 정상적으로 수행 되었음에도 자바 코드 레벨에서 **대상 객체가 생존**해 있는 상황을 확인하였다. 위의 상황을 분석하고 해결하는 과정에서 JPA **‘엔티티 생명주기’**, **‘캐시’** 그리고 **‘트랜잭션’** 까지 넓은 범위의 주제에 대해 학습할 수 있었다.
+**삭제 쿼리를 요청**하고 정상적으로 수행 되었음에도 자바 코드 레벨에서 **대상 객체가 생존** 해 있는 상황을 확인하였다. 위의 상황을 분석하고 해결하는 과정에서 JPA **‘엔티티 생명주기’**, **‘캐시’** 그리고 **‘트랜잭션’** 까지 넓은 범위의 주제에 대해 학습할 수 있었다.
 
 ## ❗️ 문제 원인 : 1차 캐시
 
 가장 먼저, JPA (Hibernate)의 캐시 구조이다.
 
-![https://www.tutorialspoint.com/hibernate/hibernate_caching.htm](https://www.tutorialspoint.com/hibernate/hibernate_caching.htm)](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/f47fdf0b-85bb-4c7c-8ec6-b400c0127570/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2022-12-12_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_11.55.18.png)
-
-![https://www.tutorialspoint.com/hibernate/hibernate_caching.html](https://www.tutorialspoint.com/hibernate/hibernate_caching.html)
+![](https://user-images.githubusercontent.com/82748285/207593135-1756e05c-2d6a-4cfb-a8f9-be2f89f2f232.png)
 
 Hibernate는 두 종류의 캐시를 사용할 수 있다.
 
 - 1차 캐시
     - 영속성 컨텍스트 내부에 존재하는 엔티티를 보관하는 캐시
-    - ***트랜잭션 단위**로 존재하고 공유된다.(”트랜잭션이 시작되고 종료될 때까지 캐시가 유효”)
+    - ***트랜잭션 단위** 로 존재하고 공유된다.(”트랜잭션이 시작되고 종료될 때까지 캐시가 유효”)
     - 트랜잭션안에서 `commit` 혹은 `flush`가 호출되면 1차 캐시의 내용(엔티티의 변경사항)을 데이터베이스에 동기화 한다.
     - 영속성 컨텍스트 자체가 1차 캐시로, 끄고 킬 수 있는 옵션이 아니다.
     - 엔티티 자체를 보관하고 있어 캐시의 반환값이 조회 대상이 되는 객체와 똑같다.(동일성, `==`비교)
@@ -852,14 +857,14 @@ Hibernate는 두 종류의 캐시를 사용할 수 있다.
     - 끄고 킬 수 있는 옵션으로, 2차 캐시 옵션이 켜져있으면, EntityManager를 통해 데이터를 조회할 경우, ‘1차 캐시 → 2차 캐시 → 데이터베이스’순으로 조회를 진행한다.
     - 가지고 있는 **“엔티티를 복사하여”** 반환한다.(`==` 비교에 대해 항상 보장되지는 않음)
 
-위에 서술한 우리가 겪었던 문제는 1차 캐시에 관련된 문제로, **엔티티 메니저를 통하지 않고** 쿼리를 통해 **직접 데이터베이스의 상태를 변경**하여 **1차 캐시에 있는 객체**의 상태와 **데이터베이스의 데이터 상태**간의 차이가 생긴 것 이었다.
+위에 서술한 우리가 겪었던 문제는 1차 캐시에 관련된 문제로, **엔티티 메니저를 통하지 않고** 쿼리를 통해 **직접 데이터베이스의 상태를 변경** 하여 **1차 캐시에 있는 객체** 의 상태와 **데이터베이스의 데이터 상태** 간의 차이가 생긴 것 이었다.
 (기본적으로 엔티티 매니저를 통한 상태변경은, 트랜잭션 종료 시점에 엔티티 매니저가 영속화된 객체의 상태 변경을 자동으로 감지하고 반영하는 ‘더티체킹’이라고 불리는 기법을 통해 진행한다.)
 
 ## 🔨 문제 해결 : 엔티티 생명주기
 
 엔티티 매니저가 관리하는 객체, “엔티티”의 생명주기(엔티티 상태)는 아래와 같다.
 
-![JPA_3_2.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/f6f2cf97-8bce-40dc-ace4-6627623b7abe/JPA_3_2.png)
+<img width="481" alt="JPA_3_2" src="https://user-images.githubusercontent.com/82748285/207594518-c7e5469c-9ca5-4014-9caa-9a73cd449836.png">
 
 1. 비영속(new/transient): 영속성 컨텍스트와 전혀 관계가 없는 상태
 2. 영속(managed): 영속성 컨텍스트에 저장된 상태(영속성 컨텍스트에 의해 관리되는 상태)
@@ -890,6 +895,260 @@ public void changeMember(Long memberId) {
 ```
 
 1차 캐시를 비워준 이후, 예상대로 동작함을 확인할 수 있었다.
+
+</details>
+</details>
+<details>
+  <summary>
+    <h2><b>JPA를 활용한 개발 생산성 증대하기</b></h2>
+  </summary>
+
+
+# JPA를 활용한 개발 생산성 증대하기
+
+객체 중심의 자바에서 기존의 JDBC를 통한 쿼리문 작성은 **복잡하고 반복적인 쿼리문**과 **DAO**의 작성을 강제해왔다. 거기에 더불어 자바 코드 자체를 객체지향적 코드가 아닌, **데이터지향적 코드**로 변질시켜버리는 문제점까지 존재한다.
+
+자바진영 측에서 객체-관계 매핑, ORM을 정의한 스펙 JPA는 위와 같은 문제점들을 해결해주어 자바 개발자들이 편하게 객체지향에 집중할 수 있도록 하고자 등장했다.
+
+이번 프로젝트에 JPA를 도입하는 과정에서 JPQL, QueryDSL 그리고 Spring Data JPA까지 객체지향 쿼리와 여러 관련 기술들을 사용해보았고, 각 기술 별로 **어떤 불편함을 어떻게 해결하였는 지**를 경험하게 되어 해당 내용을 기록하게 되었다.
+
+## JDBC + Native Query(+ DAO)
+
+### JDBC와 Native Query를 사용하여 회원을 조회하려고 하면…”
+
+1. 회원 객체 정의
+
+```java
+public class Member {
+	
+	private String memberId;
+	private String name;
+}
+```
+
+2. 조회용 DAO 작성
+
+```java
+public class MemberDAO {
+
+	public Member find(String memberId) {...}
+}
+```
+
+3. 쿼리 작성
+
+```java
+SELECT MEMBER_ID, NAME FROM MEMBER M WHERE MEMBER_ID = ?
+```
+
+4. JDBC API를 통한 SQL 실행
+
+```java
+ResultSet rs = stmt.executeQuery(sql);
+```
+
+5. 조회 결과를 객체로 매핑
+
+```java
+public Member find(String memberId) {
+	//쿼리 작성
+	//JDBC API를 통한 SQL 실행
+
+	//조회 결과 매핑
+	String memberId = rs.getString("MEMBER_ID");
+	String name = rs.getString("NAME");
+	
+	Member member = new Member();
+	member.setMemberId(memberId);
+	member.setName(name);
+
+	return member;
+}
+```
+
+### 문제점
+
+데이터베이스로부터 단순한 조회를 위해서도 위와 같은 복잡한 과정을 거쳐야한다.(반복적인 DB Connection 요청과 반납 과정은 덤) 단순히 복잡하고 번거롭기만 하다면 다행일지도 모른다. JDBC와 NativeQuery문의 조합은 아래와 같은 문제점들을 내재하고 있다.
+
+- 애플리케이션 레이어와 데이터베이스 레이어간 계층 분할이 제대로 이뤄지지 않는다.
+- SQL에 의존적인 개발을 진행하게 된다.
+    
+    Member 클래스와 Member 테이블에 새로운 멤버 변수(칼럼)가 추가 되었다면,
+    
+    1. 해당 변수에 관련된 쿼리문들을 전부 새로 작성해줘야한다.
+    2. 기존의 많은 쿼리문들에 수정이 발생한다.
+    3. 각 쿼리문별로 **조회하는 변수와 조회하지 않는 변수들이 서로 달라** 비지니스 로직을 어지럽게 한다.
+- 엔티티 객체를 신뢰할 수 없다.
+    
+    Member 클래스에 소속된 팀에대한 정보, Team 객체가 멤버 변수로 추가 되었을 때, 아래와 같은 객체 그래프 탐색 코드는 NPE문제가 발생할 위험이 있다.
+    
+    ```java
+    Team team = member.getTeam(); //NullPointException 발생 가능!
+    ```
+    
+    위의 코드에서 Team클래스가 null이 아님을 확인하기 위해서는 Member를 조회하는 **쿼리문과 DAO를 추가적으로 직접 확인**해 주어야만 한다.
+    
+    ```sql
+    SELECT M.MEMBER_ID, M.NAME, T.TEAM_ID, T.TEAM_NAME
+    FROM MEMBER M
+    JOIN TEAM T
+    	ON M.TEAM_ID = T.TEAM_ID
+    ```
+    
+    ```java
+    ResultSet rs = stmt.executeQuery(sql);
+    
+    String memberId = rs.getString("MEMBER_ID");
+    String memberName = rs.getString("MEMBER_NAME");
+    String teamId = rs.getString("TEAM_ID");
+    String teamName = rs.getString("TEAM_MEMBER");
+    
+    Team team = new Team();
+    team.setTeamId(teamId);
+    team.setTeamName(teamName);
+    Member member = new Member();
+    member.setMemberId(memberId);
+    member.setName(name);
+    member.setTeam(team); //***
+    ...
+    ```
+    
+
+한 문장으로 정리해보면, **“객체지향 언어와 관계형 데이터베이스 간의 패러다임 불일치 문제가 발생 한다.”**
+
+## JPA + JPQL
+
+### 무엇을, 어떻게 해결하였는가 : 패러다임 불일치 문제
+
+![JPA_save.png](https://user-images.githubusercontent.com/82748285/207663852-b1ca0d95-ff95-48d4-a73a-36b4c63c20d3.png)
+
+### JPA
+
+JPA는 개발자가 직접 구현해야 했던 아래의 항목들을 대신 해줌으로써 패러다임 불일치 문제를 해결해준다.
+
+1. 쿼리 결과를 일일이 객체에 매핑
+    
+    데이터베이스 테이블과 자동으로 매핑되는 ‘엔티티’ 객체를 지원.
+    
+2. 데이터지향적으로 작성되던 쿼리문들
+    
+    엔티티와 엔티티의 멤버 변수를 기반으로 JPA가 NativeQuery를 대신 작성 및 수행
+    
+
+이와 같은 JPA의 지원으로, 자바 개발자는 **데이터에 대한 접근 및 조회**에 대한 코드를 **“객체지향 언어, 자바 스타일로”** 작성할 수 있다.
+
+```java
+entityManager.persist(member); //저장
+
+Member member = entityManager.findById(memberId); //조회
+
+Team team = member.getTeam();
+team.getTeamName(); //team을 직접적으로 사용하는 시점에 "추가적인 쿼리를 날려준다."
+```
+
+개발자는 좀 더 **객체지향에 가까운 JPQL**을 사용하여 **JPA에게 데이터 접근, 조작을 부탁**하고, **NativeQuery는 JPA가 대신하여 처리**해주는 구조인 것이다.
+
+### JPQL
+
+JPA에게 데이터 접근, 조작을 부탁하는 쿼리 언어인 JPQL은 다음과 같이 사용할 수 있다.
+
+```java
+Member findById(Long memberId) {
+	return entityManager.createQuery(
+		"SELECT m FROM Member m WHERE m.id = :_memberId, Member.class
+	)
+	.setParameter("_memberId", memberId)
+	.getSingleResult();
+}
+```
+
+### 한계점
+
+하지만 JPQL도 여전히 자바 코드가 아닌, 문자열을 통해서 쿼리문을 작성하기 때문에 쿼리문의 문법적 오류를 컴파일 단계가아닌 런타임 시점에서 밖에 캐치할 수 없고, 다양한 조건의 쿼리문, 즉 동적 쿼리(ex. 복잡하고 다양한 조건의 주문조회)를 작성함에 있어 조건별로 쿼리문을 전부 작성해주어야 하는 불편함이 존재한다.
+(추가적으로 역시, 문자열로 작성된다는 이유로 IDE의 자동완성 기능, Intellisense의 도움을 받을 수 없다는 점도 단점으로 작용한다.)
+
+## QueryDSL
+
+### 무엇을, 어떻게 해결하였는가 : 컴파일 타임의 문법 검사, 동적 쿼리
+
+QueryDSL은 문자열이 아닌 자바 코드를 통해 쿼리문을 작성할 수 있게 해주어 문법 오류를 런타임이 아닌 컴파일 시점에서 확인할 수 있게 해주고, 동적 쿼리를 편하게 작성할 수 있도록 지원하여 개발자의 생산성을 증가시켜 준다.
+
+```java
+public Optinal<Member> findById(Long memberId) {
+	return jpqlQueryFactory
+					.selectFrom(QMember.member)
+					.where(QMember.member.id.eq(memberId))
+					.fetchOne();
+}
+```
+
+```java
+@Getter
+@Builder
+public class OrderSearchCondition {
+	private LocalDate from;
+	private LocalDate to;
+
+	//1. null이 아닌 조건 변수에 대해서만 쿼리문의 조건으로 포함시킨다.
+	//2. 모든 조건 변수가(from, to) null로 채워져 있다면, 모든 레코드가 조회된다.
+	public Predicate makePredicate() {
+		BooleanBuilder booleanBuilder = new BooleanBuilder();
+
+		if (from != null) {
+			booleanBuilder.and(QOrder.order.orderDate.after(from));
+		}
+		if (to != null) {
+			booleanBuilder.and(QOrder.order.orderDate.before.eq(to));
+		}
+
+		return booleanBuilder;
+	}
+}
+...
+```
+
+```java
+public List<Order> searchByCondition(OrderSearchCondition searchCondition) {
+	return jpaQueryFactory
+					.selectFrom(QOrder.order)
+					.where(searchCondition.makePredicate())
+					.fetch();
+}
+```
+
+## Spring Data JPA
+
+### 무엇을, 어떻게 해결하였는가 : 반복되는 기본적인 CRUD
+
+프로젝트를 진행하면 여러 도메인이 생기게 되고, 각각의 도메인들은 그 구조와 역할이 비슷한 CRUD 쿼리문들을 가지게 된다. 이때 Spring Data JPA를 사용하면, 개발자는 **기본적인 CRUD 쿼리문 작성의 지루함**을 피하면서도, **깔끔한 코드**를 통해 **더욱 중요한 도메인 쿼리문에 집중**할 수 있는 이점을 얻을 수 있다.
+
+- Spring Data JPA가 만들어놓은 인터페이스를 확장하는 것만으로 기본적인 CRUD 쿼리문을 지원받을 수 있다.
+    
+    ```java
+    public interface MemberRepository extends JpaRepository<Member, Long> {
+    }
+    ```
+    
+    ```java
+    public boolean isExist(Long memberId) {
+    	return memberRepository.findById(memberId); //...Spring Data JPA가 자동으로 만들어준 구현 메서드
+    }
+    ```
+    
+- Spring Data JPA는 또한, 인터페이스에 정의한 **메소드의 이**름을 기반으로 쿼리문을 자동으로 생성 및 지원해주기 때문에, 기본적인 CRUD이외로 확장하여 사용하기에도 편리하다.
+    
+    ```java
+    public interface MemberRepository extends JpaRepository<Member, Long> {
+    	List<Member> findByGroupId(Long groupId);
+    }
+    ```
+    
+
+위와 같은 사용법 외로, 직접 JPQL 쿼리문을 작성할 수 있도록 해주는 `@Query` 을 지원하기도 하며, QueryDSL과 함께 쓰는것이 가능하여(Spring Data JPA의 커스텀 인터페이스 확장 기능), Spring Data JPA의 편리함을 누리면서도 복잡한 쿼리문까지도 쉽게 작성할 수 있는 개발환경을 조성할 수 있다.
+
+## 결론
+
+JPQL부터 시작해서 QueryDSL, 그리고 Spring Data JPA까지, 순서대로 이번 프로젝트에 적용해 보았는데, 처음부터 남들이 으레 쓴다고 하는, 좋다고 하는 기술들을 무턱대고 적용하지 않고 차례로 적용을 해보았기에 각 단계의 해당 기술들이 **‘어떤 불편함을 어떻게 해소하고자 했는지’**, **‘어떤 장점이 있어 어느 상황에 적재적소로 사용해야하는지’** 더 크게 느낄 수 있는 프로젝트 경험이 될 수 있었다.
 
 </details>
 
