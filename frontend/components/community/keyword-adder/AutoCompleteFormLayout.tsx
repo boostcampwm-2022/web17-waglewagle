@@ -1,6 +1,6 @@
 import { FormEventHandler } from 'react';
-import styles from '@sass/components/community/keyword-adder/AutoCompleteFormLayout.module.scss';
 import classnames from 'classnames/bind';
+import styles from '@sass/components/community/keyword-adder/AutoCompleteFormLayout.module.scss';
 
 const cx = classnames.bind(styles);
 

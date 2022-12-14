@@ -1,5 +1,5 @@
-import styles from '@sass/components/community/keyword-adder/SearchResultListLayout.module.scss';
 import classnames from 'classnames/bind';
+import styles from '@sass/components/community/keyword-adder/SearchResultListLayout.module.scss';
 const cx = classnames.bind(styles);
 
 interface SearchResultListLayoutProps {

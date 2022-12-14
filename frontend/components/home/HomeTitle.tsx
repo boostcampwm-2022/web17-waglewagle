@@ -1,5 +1,5 @@
-import styles from '@sass/components/home/HomeTitle.module.scss';
 import classnames from 'classnames/bind';
+import styles from '@sass/components/home/HomeTitle.module.scss';
 const cx = classnames.bind(styles);
 
 const HomeTitle = () => {

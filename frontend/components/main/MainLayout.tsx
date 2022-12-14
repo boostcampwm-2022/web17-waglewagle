@@ -1,5 +1,5 @@
-import styles from '@sass/components/main/MainLayout.module.scss';
 import classnames from 'classnames/bind';
+import styles from '@sass/components/main/MainLayout.module.scss';
 const cx = classnames.bind(styles);
 
 interface MainLayoutProps {
