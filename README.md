@@ -22,7 +22,6 @@
 
 </div>
 
-<h3> 기술 선정이유 </h3>
 <details>
   <summary>
     <b>Typescript</b>
@@ -83,7 +82,6 @@
 
 </div>
 
-<h3> 기술 선정이유 </h3>
 <details>
   <summary>
     <b>Java / Spring</b>
@@ -118,7 +116,6 @@
 
 </div>
 
-<h3> 기술 선정이유 </h3>
 <details>
   <summary>
     <b>Github action</b>
