@@ -1,5 +1,5 @@
-import classnames from 'classnames/bind';
 import styles from '@sass/components/community/MyKeywordHighlight.module.scss';
+import classnames from 'classnames/bind';
 const cx = classnames.bind(styles);
 
 interface MyKeywordHighlightProps {

@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
-import classnames from 'classnames/bind';
 import styles from '@sass/components/community/MainKeywordHandlerLayout.module.scss';
+import classnames from 'classnames/bind';
 
 const cx = classnames.bind(styles);
 
