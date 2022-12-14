@@ -1,17 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
-import { NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import classnames from 'classnames/bind';
-import styles from '@sass/components/community/keyword-bubble-chart/KeywordBubbleChart.module.scss';
+import { Loading } from '@components/common';
+import { KEYWORD_BUBBLE_MAX_NUMBER } from '@constants/constants';
 import { useKeywordListQuery, useMyKeywordQuery } from '@hooks/keyword';
 import Circle from '@utils/circlepacker/Circle';
-import debounce from '@utils/debounce';
 import CircleContainer from '@utils/circlepacker/CircleContainer';
-import { KEYWORD_BUBBLE_MAX_NUMBER } from '@constants/constants';
-import type { BubbleData, KeywordData, KeywordGroupData } from '#types/types';
-import { Loading } from '@components/common';
+import debounce from '@utils/debounce';
+import { NextPageContext } from 'next';
 import KeywordBubble from './KeywordBubble';
+import type { BubbleData, KeywordData, KeywordGroupData } from '#types/types';
+import styles from '@sass/components/community/keyword-bubble-chart/KeywordBubbleChart.module.scss';
 
 const cx = classnames.bind(styles);
 

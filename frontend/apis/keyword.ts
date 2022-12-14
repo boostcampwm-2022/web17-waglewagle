@@ -1,10 +1,10 @@
+import { instance } from '@apis/instance';
 import type {
   KeywordData,
   KeywordRelatedData,
   KeywordUser,
   MyKeywordData,
 } from '#types/types';
-import { instance } from '@apis/instance';
 import type { AxiosResponse } from 'axios';
 
 const getKeywords = (

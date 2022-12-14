@@ -1,11 +1,11 @@
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import classnames from 'classnames/bind';
 import { apis } from '@apis/index';
 import KeywordDeleteModalContent from '@components/admin/KeywordDeleteModalContent';
 import KeywordMergeModalContent from '@components/admin/KeywordMergeModalContent';
 import { Modal } from '@components/common';
 import styles from '@sass/components/admin/KeywordControl.module.scss';
-import classnames from 'classnames/bind';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
 const cx = classnames.bind(styles);
 
 type Keyword = {

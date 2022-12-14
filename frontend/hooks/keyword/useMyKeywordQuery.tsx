@@ -1,7 +1,7 @@
-import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import { apis } from '@apis/index';
 import { REACT_QUERY_KEY } from '@constants/constants';
+import axios from 'axios';
 import type { MyKeywordData } from '#types/types';
 
 const useMyKeywordQuery = (communityId: string) => {

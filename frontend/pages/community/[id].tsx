@@ -1,4 +1,6 @@
-import type { KeywordGroupData, MyKeywordData } from '#types/types';
+import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
 import { apis } from '@apis/index';
 import { Loading, Modal } from '@components/common';
 import SeoHead from '@components/common/Head';
@@ -16,10 +18,8 @@ import { KEYWORD_ADDER_THEME } from '@constants/constants';
 import useUserCommunityQuery from '@hooks/useUserCommunityQuery';
 import useUserMe from '@hooks/useUserMe';
 import AddCircleIcon from '@public/images/icons/add-circle.svg';
-import dynamic from 'next/dynamic';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
 import config from '../../config';
+import type { KeywordGroupData, MyKeywordData } from '#types/types';
 
 const LoginModalContent = dynamic(
   () => import('@components/common/LoginModalContent'),

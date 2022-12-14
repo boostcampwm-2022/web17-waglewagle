@@ -1,10 +1,10 @@
 import { useRouter } from 'next/router';
-import axios from 'axios';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apis } from '@apis/index';
 import { REACT_QUERY_KEY } from '@constants/constants';
-import type { AxiosError } from 'axios';
+import axios from 'axios';
 import type { AddKeywordData, MyKeywordData } from '#types/types';
+import type { AxiosError } from 'axios';
 
 // 반환값, 요청 URL이 모두 다르기 때문에 join과 add 쿼리를 분리함.
 const useAddKeywordMutation = (

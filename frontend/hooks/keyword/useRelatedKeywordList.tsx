@@ -1,7 +1,7 @@
-import type { MyKeywordData } from '#types/types';
+import { useQuery } from '@tanstack/react-query';
 import { apis } from '@apis/index';
 import { REACT_QUERY_KEY } from '@constants/constants';
-import { useQuery } from '@tanstack/react-query';
+import type { MyKeywordData } from '#types/types';
 
 // 이전 입력 키워드가 없는 상태로 useRelatedKeywordList가 호출될 수 있음.
 // Tanstack Query 내부에서 enabled 설정을 통해 문제를 해결함.

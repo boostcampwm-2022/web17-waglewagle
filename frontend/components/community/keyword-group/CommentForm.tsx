@@ -1,7 +1,7 @@
+import { ChangeEventHandler, FormEventHandler, useState } from 'react';
+import classnames from 'classnames/bind';
 import { useAddCommentMutation } from '@hooks/thread';
 import styles from '@sass/components/community/keyword-group/CommentForm.module.scss';
-import classnames from 'classnames/bind';
-import { ChangeEventHandler, FormEventHandler, useState } from 'react';
 const cx = classnames.bind(styles);
 
 interface CommentFormProps {

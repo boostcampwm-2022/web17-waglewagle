@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import { apis } from '@apis/index';
 import { LoginModalContent, Modal } from '@components/common';
 import SeoHead from '@components/common/Head';
@@ -12,8 +14,6 @@ import HomeDescription from '@components/home/HomeDescription';
 import StartButton from '@components/home/StartButton';
 import { MVP_DEFAULT } from '@constants/constants';
 import useUserMe from '@hooks/useUserMe';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
 import config from '../config';
 
 const Home = () => {

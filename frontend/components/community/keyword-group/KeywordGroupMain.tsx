@@ -1,10 +1,10 @@
+import { useState } from 'react';
+import classnames from 'classnames/bind';
 import KeywordGroupSidebar from '@components/community/keyword-group/KeywordGroupSidebar';
 import { useKeywordUserListQuery } from '@hooks/keyword';
-import styles from '@sass/components/community/keyword-group/KeywordMain.module.scss';
-import classnames from 'classnames/bind';
-import { useState } from 'react';
 import PostThread from './ThreadForm';
 import ThreadList from './ThreadList';
+import styles from '@sass/components/community/keyword-group/KeywordMain.module.scss';
 const cx = classnames.bind(styles);
 
 type Sidebar = { isOpen: boolean; threadId: string };

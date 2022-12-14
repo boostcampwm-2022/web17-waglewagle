@@ -1,6 +1,6 @@
 import { MouseEventHandler, ReactNode } from 'react';
-import ReactDOM from 'react-dom';
 import classnames from 'classnames/bind';
+import ReactDOM from 'react-dom';
 import styles from '@sass/components/common/MouseModal.module.scss';
 const cx = classnames.bind(styles);
 
@@ -8,8 +8,8 @@ interface MouseModalProps {
   left: number | undefined;
   top: number | undefined;
   isOpenModal: boolean;
-  closeModal(): void;
   children: ReactNode;
+  closeModal(): void;
 }
 
 const MouseModal = ({

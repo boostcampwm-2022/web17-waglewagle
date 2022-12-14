@@ -1,8 +1,8 @@
 import { useRouter } from 'next/router';
 import classnames from 'classnames/bind';
-import styles from '@sass/components/community/CommunityKeywordList.module.scss';
-import { useKeywordListQuery } from '@hooks/keyword';
 import { Loading } from '@components/common';
+import { useKeywordListQuery } from '@hooks/keyword';
+import styles from '@sass/components/community/CommunityKeywordList.module.scss';
 
 const cx = classnames.bind(styles);
 

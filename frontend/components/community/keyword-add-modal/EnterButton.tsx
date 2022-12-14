@@ -1,9 +1,9 @@
+import { useRouter } from 'next/router';
 import classnames from 'classnames/bind';
-import styles from '@sass/components/community/keyword-add-modal/EnterButton.module.scss';
 import { apis } from '@apis/index';
 import { useMyKeywordQuery } from '@hooks/keyword';
 import useUserMe from '@hooks/useUserMe';
-import { useRouter } from 'next/router';
+import styles from '@sass/components/community/keyword-add-modal/EnterButton.module.scss';
 
 const cx = classnames.bind(styles);
 
