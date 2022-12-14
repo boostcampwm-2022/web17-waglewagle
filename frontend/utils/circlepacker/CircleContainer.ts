@@ -58,7 +58,7 @@ class CircleContainer {
     };
   }
 
-  addCircle(circleId: string, radius: number, innerText: string) {
+  addCircle(circleId: string, radius: number) {
     if (circleId in this.circles) {
       const updatedCircle = this.circles[circleId];
       if (!updatedCircle) {
@@ -73,7 +73,6 @@ class CircleContainer {
       circleId,
       x,
       y,
-      innerText,
       (radius * this.width) / 2000 + 10,
       this.calcInitVector(x, y),
     );
