@@ -10,7 +10,7 @@
 
 # 📽️ 데모 영상
 
-![데이터 시각화](https://user-images.githubusercontent.com/69471032/205130847-e81aa8e9-1787-455e-9205-1e7d2cbc65d1.gif)
+![데모 영상](https://user-images.githubusercontent.com/30151603/207490055-64eacee7-4547-4c58-860a-753d46c016a7.mp4)
 
 # 🛠️ 기술스택
 
