@@ -158,7 +158,11 @@
 
 </details>
 
-# ⛰️ 핵심 기능 및 도전 과제
+# ⛰️ 기술 도전
+
+<h2 align="center">공통</h2>
+
+- <a href="https://boostcamp-wm.notion.site/24d853953be14d4ebaa1578a78eaf039" target="_blank"><b>데이터 기반의 근거있는 성능 개선</b></a>
 
 <h2 align="center">프론트엔드</h2>
 
