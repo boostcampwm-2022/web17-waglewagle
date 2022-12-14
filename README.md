@@ -497,41 +497,445 @@ N = 단어의 개수, M = 문자열 길이 | 사전 작업 시간 복잡도 | �
 
 <details>
   <summary>
-    <b>실시간 통신 및 접속 상태 확인</b>
+    <h2><b>실시간 서비스 도전기</b></h2>
   </summary>
 
-웹소켓 ⇒ Short Polling 전환 과정까지
+![초대장 손글씨_글자 모아서대지 1](https://user-images.githubusercontent.com/82748285/207518692-04467046-f8a3-4d3a-94ff-bdacd6af7e8a.png)
+
+# 팀 undefined의 실시간 서비스 도전기
+
+## undefined의 목표
+
+- 우리의 목표는 **실시간성을 띄는 서버**를 제작하여 사용자와 사용자 혹은 사용자와 서비스 사이의 **상호작용**을 **강화**하고자 했다.
+- **상호작용**을 **강화**하는 방식으로 사용자의 흥미를 유발하고, 더 높은 참여도를 끌어낼 수 있을 것이라 판단했다.
+
+## undefined의 고민
+
+- 실시간성을 띄는 서버는 어떻게 만들어야 할까?
+    - 우선, 실시간 서비스를 위한 대표적인 프토로콜로 웹소켓을 고민하였다.
+    - 웹 소켓은 일부 구형 브라우저에서 지원하지 않고, disconnect 되었을 때 다시 연결을 시도하는 로직을 클라이언트에서 직접 구현해주어야 한다.
+    - 그러나, [[socket.IO](http://socket.io/)](http://socket.IO) 라이브러리를 사용할 경우, 사용 환경에 따라 폴링을 사용하고, 연결이 해제되었을 때 자동으로 재연결을 시도하는 등 문제 상황에 대한 fallback이 잘 이루어져 있어서 문제가 없을 것으로 판단했다.
+
+## undefined의 진행
+
+- 소켓 서버를 활용하고자 했을 때, 가장 먼저 고민이 되었던 것을 라이브러리 결정이다. Spring 서버에서 웹 소켓 서버를 사용할 경우, 서버와 클라이언트에서 sockjs 라는 새로운 라이브러리를 사용해야 한다는 추가적인 부담이 있었고, socket 서버를 구현하기로 결정하는 과정에서 고려한 라이브러리 또한 [[socket.IO](http://socket.io/)](http://socket.IO) 였기 때문에 소켓 서버는 typescript와 socket.IO로 구현하는 것으로 결정하였다.
+- 소켓을 활용한다는 결정을 하고, REST API 서버에 몰려 있던 API의 일부를 소켓 서버로 migration 하기로 결정하였다.
+    - 실시간성이 필요한 API들을 대상으로 migration을 진행하고자 하였으며, 이에 따라 키워드 생성, 키워드 참여, 유저의 접속 상태 표시, 스레드 생성 및 스레드 삭제 등의 API의 migration이 결정되었다.
+
+## 첫번째 문제, 관심사 분리
+
+### 문제 인식
+
+- 소켓 서버를 활용하면서 가장 먼저 문제로 인식되었던 부분은, **관심사의 분리**이다.
+    - 소켓 서버는 event driven 방식으로 웹소켓이 연결되었을 때, client에 대해서 각각의 이벤트에 대응하는 callback 함수를 달아주는 방식으로 코드를 작성하게 된다.
+    - 이렇게 되면, 소켓이 연결되었을 때 발생할 콜백 함수 내에서 모든 콜백 함수를 달아주게 되고, **모든 관심사가 해당 콜백 함수 내부로 집중**되는 **문제**가 발생할 것으로 판단했다.
+
+### 문제 접근
+
+- 관심사 분리라는 목표를 달성하기 위해, 우리는 우리가 지금껏 만들어왔었던 **REST API** 서버를 참고하였다.  REST API 서버의 경우 각각의 도메인 별로 **controller**와 service, repository 레이어로 구성된 독립된 계층 구조를 가지고 있어 관심사를 쉽게 분리할 수 있었다.
+- 또한, 부스트캠프 과정 중 Express를 활용하여 Controller와 Service, Repository를 분리하려고 시도했던 경험이 있어 이와 유사한 구조로 구현할 수 있을 것이라 판단했다.
+
+### 문제 해결
+
+- 해결 과정에 대한 자세한 내용은 다음 링크로 대체한다.
+
+[[소켓 서버 코드 도메인별로 분리하기(feat. 수직적 레이어 구성)](https://www.notion.so/feat-bad2925c8b6c47b59b87f89568705489)](https://www.notion.so/feat-bad2925c8b6c47b59b87f89568705489) 
+
+## 두번째 문제, 부하와 서버 간의 관심사 분리
+
+### 문제 인식
+
+- 소켓 서버를 구현하면서 마지막으로 문제로 인식되었던 부분은 서버 부하이다. 소켓 서버는 그 특성 상 서버와 클라이언트 사이에서 지속적으로 연결 상태를 유지해야 하고, 이런 연결 자체가 서버에 부하를 줄 수 있다고 생각했다.
+- 또한, 연결에 대한 정보가 메모리에 저장되기 때문에, 추후 스케일 아웃을 고려했을 때 각 소켓 서버들 사이에서 사태를 공유하기 위한 추가적인 조치가 필요할 것으로 판단했다.
+- 마지막으로 실시간성을 띄는 것이 좋을 것이라고 판단한 API들에 대해서 소켓 서버로의 migration을 예상했었지만, migration이 진행되면서 정확히 어떤 API가 실시간성을 띄는 것이 좋은가에 대한 기준이 모호했다는 것을 알게 되었고, 어떤 API를 어떤 서버에 구현해야 하는 지에 대한 의문이 커졌다.
+
+### 문제 접근
+
+- 소켓 통신과 불가분한 문제라고 판단을 내렸다. 소켓 서버에서 구현하고자 하는 양방향 실시간 통신을 구현하기 위해서는 서버와 클라이언트 사이의 지속적인 연결이 불가피했다.
+- 실시간성을 띄는 것이 좋은 API가 어떤 것인가에 대해서 팀원들이 모두 함께 고민했고, 우리가 실시간성을 띄는 서비스를 구현하려고 하는 기본 목적에 대해서 새로 고민하게 되었다.
+- 우리가 가진 고민에 대해서 멘토링을 신청했다.
+
+### 문제 해결
+
+- 멘토링과 우리가 그간 정리했던 고민들을 바탕으로 내렸던 결론은, 우리에게 소켓 서버가 과연 필요할까 였다.
+- 이 의문을 해소하기 위해서 우리는 이전에 미처 하지 못했던 고민을 마주했고, 이에 대한 과정은 다음 링크로 대체한다.
+
+[[😯 WebSocket과 Polling 그리고 SSE](https://www.notion.so/WebSocket-Polling-SSE-c3a83c10a54348e096a44a5de176295d)](https://www.notion.so/WebSocket-Polling-SSE-c3a83c10a54348e096a44a5de176295d)
+
+- 소켓 서버는 더 없이 빠른 실시간성을 보장하지만, 그것을 위한 많은 오버헤드 또한 포함하고 있는 프로토콜이다. 항상 통신이 연결되어 있어야 하므로 그 자체가 부하가 된다.
+- 또한, 소켓 서버는 클라이언트에 연결 상태를 지속적으로 유지하기 때문에 stateless한 통신이 아니다. 즉, 서버에서 클라이언트에 대한 정보를 저장해두고 이를 활용해 통신을 진행하게 된다. 문제는, 서버를 스케일아웃 했을 때 각각의 서버에서 클라이언트에 대한 상태를 공유하거나, 이벤트를 공유해야 하여 추가적인 처리가 필요한 것으로 판단했다.
+- 우리는 이런 문제를 해결하기 위해서 short polling 방식을 활용하여 실시간 통신을 구현하기로 하였다.
+
+## undefined의 실시간 서버
+
+- 현재 우리의 실시간 서버는 short polling을 활용하여 구현된 상태이다.
+- 클라이언트에서는 일정한 시간을 간격으로 서버에 새로운 요청을 보내고, 서버에서 가장 최신의 데이터를 전달하게 된다.
+- 비록 게시글이 생성되자마자 다른 사람에게 바로 전달되지는 못하지만, 그럼에도 불구하고 UX에는 큰 영향이 없을 것으로 판단했다.
+
+[[🏦 기술 부채란 무엇일까? (feat. 웹소켓을 떠나 보내며)](https://www.notion.so/feat-c3e7aef9f9fa47d09cf62bfb1be5998d)](https://www.notion.so/feat-c3e7aef9f9fa47d09cf62bfb1be5998d) 
+
+웹소켓. 여기 잠들다. 🪦
 
 </details>
 <details>
   <summary>
-    <b>연관 키워드 추천 API 구현</b>
+    <h2><b>테스트 코드와 단단한 코드 구조</b></h2>
   </summary>
 
-협업 필터링 알고리즘
+![초대장 손글씨_글자 모아서대지 1](https://user-images.githubusercontent.com/82748285/207518957-e379aa91-f20f-433a-87a3-e0710a4afb4e.png)
+
+# ❗️단단한 코드 구조와 트러블 슈팅
+
+## (1) 중구난방 관심사; 혼재된 관심사
+
+서비스 레이어에 대한 단위 테스트를 구성하려고 시도하였다. 그러나, 테스트 코드보다 먼저 컨트롤러와 서비스 레이어가 가지고 있는 코드의 구조적인 문제점을 발견할 수 있었다. 
+
+컨트롤러 레이어에서도 데이터 검증에 대한 관심사를 가지고 있었고, 서비스 레이어에서도 데이터 검증에 대한 관심사를 가지고 있었다. 거기에 컨트롤러는 서비스 레이어의 검증 과정에서 발생한 예외 상황에 대한 관심사까지 가지고 있어 테스트 코드 작성이 어려웠던 것이다.
+
+<aside>
+❓ **너무 많은 관심사를 가지고 있던 컨트롤러**
+
+</aside>
+
+```java
+@ResponseBody
+@PostMapping()
+public ResponseEntity<KeywordResponse.CreateDTO>
+createKeyword(@RequestBody final KeywordRequest.CreateDTO createDTO) {
+	
+	if (keywordService.isDuplicated(id)) { ...(1): 서비스 메서드 
+    return ...
+  }
+
+	try {
+		Keyword keyword = keywordService.createKeyword(id, ...); ...(2): 서비스 메서드 2
+    return ...
+	} catch {
+    return ...
+  }
+}
+```
+
+1. 서비스 메서서들에 대한 단위 테스트를 진행하는 것만으로 비즈니스 로직의 흐름을 보장할 수 있을까?
+    - 컨트롤러 레이어에서도 비즈니스 로직에 대한 흐름을 제어하고 있다면, 비즈니스 로직이라는 하나의 관심사를 왜 둘이 나누어 가지게 된걸까?
+2. 검증과 비즈니스 로직은 하나의 트랜젝션 안에서 동작해야 하는 것 아닐까?
+
+<aside>
+➡️ **컨트롤러 레이어**에서 가져갔던 비지니스 로직의 흐름 제어라는 **역할, 책임**을 **서비스 레이어**로 **이전**해야 한다.
+
+</aside>
+
+## (2) 비즈니스 로직의수많은 분기들 : 컨트롤러 예외 처리
+
+<aside>
+❓ **try - catch로 뚱뚱해지는 컨트롤러 레이어**
+
+</aside>
+
+```java
+public ResponseEntity<Response> controllerMethod() {
+
+	ResponseEntity res;
+
+	try {
+		res = service.method();
+		return new ResponseEntity<>(res, HttpStatus.OK); ...(3) 성공 분기 3
+	} catch(NoSuchElementException e1) {
+		return new ResponseEntity<>("", HttpStatus.NOT_FOUND); ...(1) 실패 분기 1
+	} catch(IllegalArgumentException e2) {
+		return new ResponseEntity<>("", HttpStatus.BAD_REQUEST); ...(2) 실패 분기 2
+	}
+	......
+}
+```
+
+1. 데이터를 검증하는 로직을 서비스 레이어로 이동시켜 데이터의 검증과 비스니스 로직 실행이 하나의 트랜젝션 안에서 이루어지게 되었다.
+2. 서비스 레이어에서 데이터 검증 중 정상적으로 비즈니스 로직을 실행하면 안된다는 판단이 섰을 때, Exception을 throw하고 이것을 컨트롤러에서 처리해준다면, 이것 역시 컨트롤러의 역할과 책임에 어울리지 않는다고 판단했다.
+    - 이는 첫째로 컨트롤러 레이어의 관심사는 필요한 데이터를 받아서 서비스 레이어로 넘겨주고, 되돌려 받는 반환값을 다시 클라이언트에게 전달해주는 것이라고 생각했기 때문이고, 둘째로는 컨트롤러 레이어에서 서비스 레이어의 메서드가 어떤 Exception을 throw할 지 알고 있어야 하기 때문이다.
+
+<aside>
+➡️ **실패 분기**, **예외 처리**에 대한 **다른 방법**이 필요하다!
+
+</aside>
+
+# 🔨 해결과정
+
+## (1) 관심사 분리
+
+<aside>
+➡️ 컨트롤러 레이어와 서비스 레이어의 **역할과 책임** 재정의하기
+
+</aside>
+
+### 컨트롤러 레이어
+
+1. API 요청을 인식
+2. 요청 매개변수들을 서비스 레이어로 전달
+3. 서비스 레이어에서 반환한 값을 클라이언트로 전달
+
+### 서비스 메서드
+
+1. API 요청에 대한 핵심 비지니스 로직의 실행 및 검증
+2. 레포지토리 레이어에 적절한 데이터를 요청
+3. 실패 케이스에 대해 Exception 발생 처리
+4. 성공 케이스에 대해 적절한 값을 컨트롤러 레이어로 전달
+
+## (2) 전역 Exception Handler 도입 (feat. 커스텀 Exception)
+
+<aside>
+➡️ Spring에서 지원하는 전역적 예외처리 장치 `RestControlllerAdvice` 레이어를 도입
+
+</aside>
+
+```java
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+	@ExceptionHandler(NoSuchElementException.class) ...(1)
+	protected ResponseEntity
+	handleNoSuchElementException(final NoSuchElementException e) {
+		
+		return ResponseEntity.status(HttpStatus.NOT_FOUND);
+	}
+
+	@ExceptionHandler(IllegalArgumentException.class) ...(2)
+	protected ResponseEntity
+	handleIllegalArgumentException(final IllegalArgumentException e) {
+		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST);
+	}
+}
+```
+
+서비스 레이어의 실패 분기에서 발생한 각 예외의 처리를 담당하는 핸들러 메서드를 구현하였다.
+
+```java
+public ResponseEntity<Response> controllerMethod() {
+
+	return new ResponseEntity<>(service.method(), HttpStatus.OK);
+}
+```
+
+컨트롤러 레이어는 서비스 레이어에서 전달받은 값을 클라이언트에 전달하는 역할만 하게 되면서, 훨씬 코드가 간결해졌다.
+
+<aside>
+❓ 개발자마다 **서로 다른** 예외 메세지를 사용한다면, **새로운 혼란**이 발생하지 않을까?
+
+</aside>
+
+```java
+public ResponseEntity serviceMethod() {
+	throw new NoSuchElementException("예외 메세지 직접 입력");
+}
+```
+
+1. 일관적이지 못한 메시지와 다양한 예외 상황에서 일관되지 못하거나 너무 모호한 예외가 발생하게 된다. 
+2. 이것을 Exception Handler에서 처리하기 위해선 서비스 레이어에서 발생시키는 모든 Exception에 대해서 알고 있어야 한다.
+3. Exception Handler가 자신의 책임을 다하기 위해서 다른 레이어의 내부를 알아야 한다면, 해당 레이어의 책임이 과중하고 관심사가 제대로 분리된 상태가 아니라고 판단했다.
+
+<aside>
+➡️ Exception 객체가 가지는 **메시지**를 **통일**하고, **구체화**해야 한다.
+
+</aside>
+
+```java
+@Getter
+@RequiredArgsConstructor
+public enum ExceptionMessage {
+
+    NO_SUCH_KEYWORD("키워드를 찾을 수 없습니다."),
+    ALREADY_JOINED_KEYWORD("이미 가입한 키워드입니다.");
+
+    private final String message;
+}
+```
+
+```java
+public class NoSuchKeywordException extends NoSuchElementException {
+
+    public NoSuchKeywordException() {
+        super(ExceptionMessage.NO_SUCH_KEYWORD.getMessage());
+    }
+}
+```
+
+1. 각 도메인 별로 throw되는 Exception의 역할을 하는 각각의 Exception 클래스를 선언하여 Exception Handler가 가진 과중한 책임을 분리하고자 했다.
+2. Exception message에 대한 enum 클래스를 정의하여 메시지를 통일할 수 있도록 하였다.
+    - 물론, 여전히 Java나 Spring이 제공하는 Exception에 제각각의 메시지를 담는 것을 막을 수 없지만 각 도메인의 휘하의 exception 디렉토리에 관련 클래스를 정의하여 그런 일을 최소화 하고자 했다.
+3. 위에서 정의한 enum 클래스를 기반으로 각각의 상황에 맞는 custom exception을 정의하였다.
+
+```java
+public EntityDTO serviceMethod() {
+	
+	if (!isValid())... 검증 과정
+		throw new NoSuchKeywordException();
+}
+```
+
+# 결과
+
+![스크린샷 2022-12-12 오후 5.13.31.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/416476eb-9463-4613-af17-81b8ef5cf243/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2022-12-12_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_5.13.31.png)
+
+1. 서비스 레이어는 exception 디렉토리를 참조하여 예외 상황에 맞춰 미리 만들어진 적절한 exception을 throw한다.
+2. Exception Handler 레이어는 exception 디렉토리를 참조하여 서비스 레이어에서 전달할 예외 상황에 대해서만 처리해주면 되는, 관심사가 적절히 분리된 상태이다.
+
+# ❗️테스트 코드와 트러블 슈팅
+
+## (1) 어떤 테스트를 진행해야 할까?
+
+컨트롤러 레이어와 서비스 레이어의 관심사를 분리하기 위해 Exception Handler 레이어와 custom Exception 클래스를 정의하였다. 
+
+그 후, 각각의 관심사에 맞게 테스트 코드를 짜려 하였지만, Controller와 Service, Repository 3개의 레이어를 계층적으로 사용하기 있는 현 상태에서 어떤 방식으로 테스트 코드를 작성해야 적절한 지에 대해서 알 수 없었다.
+
+<aside>
+❓ **책임**도, **실행**도 너무 **무거운** 테스트
+
+</aside>
+
+1. 특히, 컨트롤러 레이어에 대한 테스트를 진행할 경우, 해당 요청은 Service 레이어와 Repository 레이어를 모두 거치기 때문에 사실상 postman 등의 툴을 통해 실제 요청을 보내는 것과 차이점이 없었다. 
+2. 이 경우, 테스트가 실행 환경에 영향을 받을 수 있어 테스트만을 위한 새로운 환경을 조성해주어야 하며, 모든 테스트에서 적절한 의존성을 주입해야 하기 때문에 하나의 테스트 메서드를 실행할 때에도 모든 의존성을 주입해주어야 해서 테스트 시간이 너무 오래 소요되는 문제가 있었다.
+3. 게다가 컨트롤러 레이어를 테스트하는 과정에서 서비스 레이어와 레포지토리 레이어를 모두 거치기 때문에 테스트 케이스를 실패하더라도 과연 어디서 실패했는 지에 대해서 정확하게 알 수 없는 문제가 있었다.
+
+<aside>
+➡️ 테스트 환경 내에서 **관심사**를 **분리**하여 각 레이어에 대해 **독립적으로** 테스트를 수행한다.
+
+</aside>
+
+## (2) 의존성을 관리하는 방법
+
+가장 큰 문제는 각각의 계층이 하위 계층을 의존하고 있다는 것이다. 서비스 레이어는 레포지토리 레이어를 의존하며 레포지토리 레이어가 가진 메서드를 실행하고, 그 결과를 비즈니스 로직 중간중간에 사용하게 된다.
+
+물론 실제 환경에서는 서비스 레이어는 레포지토리 레이어가 반환한 결과값에 따라 서로 다른 처리를 해주어야 하므로 레포지토리 레이어가 반환한 결과값이 서비스 레이어의 관심사이지만, 테스트 환경 내에서는 그런 사실이 문제가 된다.
+
+<aside>
+❓ **연쇄적**으로 이어지는 **의존 관계**
+
+</aside>
+
+1. 각 레이어에 대해서 다른 레이어, 혹은 다른 도메인의 같은 레이어를 의존하고 있는 것 자체가 문제라고 판단했다.
+2. 의존성 관계가 연쇄적으로 연결되어 있어 하나를 의존하게 된다면 의존성의 의존성까지 모두 의존하게 되어버려 결과적으로 실제 API 요청을 통한 테스트와 차이점이 없어지게 된다.
+
+<aside>
+➡️ **테스트용** **구현체**를 의존성으로 주입하자.
+
+</aside>
+
+1. Spring은 DI 컨테이너를 활용하여 interface에 대해 의존하도록 하고, 구현체를 매핑하는 방식으로 구현체를 주입한다는 있다는 것을 알고 있었다.
+2. 즉, 테스트 환경에서는 테스트 환경에 걸맞는 의존성의 구현체를 주입해주는 방식으로 해당 문제를 해결할 수 있을 것으로 판단했다.
+
+## (3) 과투자
+
+테스트를 위한 구현체를 따로 구현하여 테스트 환경에서 이용하는 것으로 의존성의 연쇄를 끊을 수 있게 되었지만, 모든 의존성에 대해서 테스트를 위한 구현체를 따로 작성하는 것은 너무 과한 투자라고 판단했다.
+
+예를 들어서 5개의 도메인들이 각각 컨트롤러, 서비스, 레포지토리 레이어의 객체를 하나씩만 가진다고 하더라도 15개의 객체를 모두 구현해주어야 한다는 뜻으로 가상의 유사 어플리케이션을 하나 추가로 더 구현하는 정도로 시간과 노력이 많이 소요될 것으로 판단했다.
+
+<aside>
+❓ **시간**과 **인력**의 **한계**
+
+</aside>
+
+1. 우리는 결국 짧은 시간 안에 어떤 결과물을 내놓아야 하는 프로젝트를 수행하고 있는 입장이다.이 상황에서 가상의 어플리케이션 하나를 더 구현하는 것은 과투자라고 판단했다.
+
+<aside>
+➡️ 그때 그때 작은 **객체**를 만들어주자
+
+</aside>
+
+1. 테스트를 위한 환경을 모든 테스트에 일괄적으로 적용하려다 보니 발생한 문제라고 판단했다. 그 때 그 때 내가 사용할 메서드를 따로 따로 구현할 수 있다면, 훨씬 높은 생산성으로 테스트 코드를 작성할 수 있을 것이다.
+2. 이를 위한 프레임워크로 Mockito를 도입하였고, Mockto의 mock 메서드를 활용해 가짜로 만들어낸 객체를 의존성 주입에 사용하고, 해당 객체의 메서드에 대해서 입력값과 출력값을 임의로 조절하는 방식으로 각각의 테스트 케이스에 맞는 작은 객체를 만들 수 있다.
+
+# 결과와 한계
+
+1. 가짜 객체를 활용하여 의존성을 주입하기 때문에 각각의 레이어에 대해서 간단하게 의존성의 동작을 모사할 수 있었다.
+2. 그러나, 가짜 객체가 입력값에 대해서 어떤 출력값을 내보내는 지에 대해서 검증이 필요할 것으로 판단된다.
+    - 각각의 레이어에서 하위 레이어로 이동하면서 사용했던 입출력 값에 대해서 검증하는 방식으로 진행할 수도 있지만, 이는 점점 더 많은 구체적인 테스트 케이스를 구현해야 하게 되는 결과로 이어지고, 상기 과투자 문제를 다시금 불러일으키게 된다.
 
 </details>
 <details>
   <summary>
-    <b>실시간 게시판 병합 API</b>
+    <h2><b>ORM과 데이터 정합성 유지하기</b></h2>
   </summary>
+![초대장 손글씨_글자 모아서대지 1](https://user-images.githubusercontent.com/82748285/207519126-7e966063-7a52-49d7-8d69-c601cdee011c.png)
 
-- 커뮤니티의 생명주기는 긴데, 키워드들의 생명주기는 짧기 때문에 관리자의 관리가 필요했다.
+## 😵‍💫 문제발생 : 객체 상태와 데이터베이스 상태 간의 차이 발생
 
-</details>
-<details>
-  <summary>
-    <b>서버 성능 측정 및 튜닝</b>
-  </summary>
+JPA를 통해 상태변경 쿼리문(JPQL)을 작성하고 해당 쿼리문의 정상 동작 여부를 확인하고자 디버깅을 통해 확인해보았는데, 예상하지 못한 상황에 마주치게 되었다.
 
-- 항목
-  - 대용량 데이터에 대한 RDB 쿼리 튜닝
-  - 대규모 트래픽에 대한 API 응답시간 튜닝, 서버 안정성 개선
-- 접근 방식
-  - 코드적 접근
-    - API에 관련된 알고리즘(API 서버)
-    - 쿼리문
-    - DB 인덱스 추가
+```java
+@Transactional
+public void changeMember(Long memberId) {
+
+	Member member = memberRepository.findById(memberId);
+	
+	//상태변경 쿼리
+	memberRepository.delete(member);
+	
+	//동작 확인(콘솔 출력, 디버깅 중단점)
+	System.out.println(memberRepository.findById(memberId)); //member객체 출력!(기대값: null)
+}
+```
+
+**삭제 쿼리를 요청**하고 정상적으로 수행 되었음에도 자바 코드 레벨에서 **대상 객체가 생존**해 있는 상황을 확인하였다. 위의 상황을 분석하고 해결하는 과정에서 JPA **‘엔티티 생명주기’**, **‘캐시’** 그리고 **‘트랜잭션’**까지 넓은 범위의 주제에 대해 학습할 수 있었다.
+
+## ❗️ 문제 원인 : 1차 캐시
+
+가장 먼저, JPA (Hibernate)의 캐시 구조이다.
+
+![[https://www.tutorialspoint.com/hibernate/hibernate_caching.htm](https://www.tutorialspoint.com/hibernate/hibernate_caching.htm)](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/f47fdf0b-85bb-4c7c-8ec6-b400c0127570/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2022-12-12_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_11.55.18.png)
+
+[https://www.tutorialspoint.com/hibernate/hibernate_caching.htm](https://www.tutorialspoint.com/hibernate/hibernate_caching.htm)
+
+Hibernate는 두 종류의 캐시를 사용할 수 있다.
+
+- 1차 캐시
+    - 영속성 컨텍스트 내부에 존재하는 엔티티를 보관하는 캐시
+    - ***트랜잭션 단위**로 존재하고 공유된다.(”트랜잭션이 시작되고 종료될 때까지 캐시가 유효”)
+    - 트랜잭션안에서 `commit` 혹은 `flush`가 호출되면 1차 캐시의 내용(엔티티의 변경사항)을 데이터베이스에 동기화 한다.
+    - 영속성 컨텍스트 자체가 1차 캐시로, 끄고 킬 수 있는 옵션이 아니다.
+    - 엔티티 자체를 보관하고 있어 캐시의 반환값이 조회 대상이 되는 객체와 똑같다.(동일성, `==`비교)
+- 2차 캐시
+    - 영속성 컨텍스트 범위가 아닌, 애플리케이션 범위의 캐시(트랜잭션의 시작과 종료가 아닌, 애플리케이션이 시작되고 종료될 때까지 캐시가 유지된다.)
+    - 끄고 킬 수 있는 옵션으로, 2차 캐시 옵션이 켜져있으면, EntityManager를 통해 데이터를 조회할 경우, ‘1차 캐시 → 2차 캐시 → 데이터베이스’순으로 조회를 진행한다.
+    - 가지고 있는 **“엔티티를 복사하여”** 반환한다.(`==` 비교에 대해 항상 보장되지는 않음)
+
+위에 서술한 우리가 겪었던 문제는 1차 캐시에 관련된 문제로, **엔티티 메니저를 통하지 않고** 쿼리를 통해 **직접 데이터베이스의 상태를 변경**하여 **1차 캐시에 있는 객체**의 상태와 **데이터베이스의 데이터 상태**간의 차이가 생긴 것 이었다.
+(기본적으로 엔티티 매니저를 통한 상태변경은, 트랜잭션 종료 시점에 엔티티 매니저가 영속화된 객체의 상태 변경을 자동으로 감지하고 반영하는 ‘더티체킹’이라고 불리는 기법을 통해 진행한다.)
+
+## 🔨 문제 해결 : 엔티티 생명주기
+
+엔티티 매니저가 관리하는 객체, “엔티티”의 생명주기(엔티티 상태)는 아래와 같다.
+
+![JPA_3_2.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/f6f2cf97-8bce-40dc-ace4-6627623b7abe/JPA_3_2.png)
+
+1. 비영속(new/transient): 영속성 컨텍스트와 전혀 관계가 없는 상태
+2. 영속(managed): 영속성 컨텍스트에 저장된 상태(영속성 컨텍스트에 의해 관리되는 상태)
+3. 준영속(detached): 영속성 컨텍스트에 저장되었다가 분리된 상태
+4. 삭제(removed): 삭제된 상태
+
+결국, 데이터베이스의 데이터가 아닌, 영속성 컨텍스트 내의 Managed 상태의 엔티티가 먼저 조회되어 발생한 문제이다. 생태변경 쿼리 이후에 추가적인 쿼리의 정상 동작을 위해서는 1차 캐시(영속성 컨텍스트)의 내용을 비워줄 필요가 있다.
+
+```java
+@Modyfying(clearAutomatically = true)
+void delete(Member member);
+```
+
+`@Modyfying`의 `clearAutomatically` 속성을 사용하여, 상태변경 쿼리 이후에 1차 캐시를 명시적으로 비워줄 수 있다. 
+
+```java
+@Transactional
+public void changeMember(Long memberId) {
+
+	Member member = memberRepository.findById(memberId);
+	
+	//상태변경 쿼리
+	memberRepository.delete(member);
+	
+	//동작 확인(콘솔 출력, 디버깅 중단점)
+	System.out.println(memberRepository.findById(memberId)); //null
+}
+```
+
+1차 캐시를 비워준 이후, 예상대로 동작함을 확인할 수 있었다.
 
 </details>
 
