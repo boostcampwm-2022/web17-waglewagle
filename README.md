@@ -14,6 +14,8 @@
 
 # 🛠️ 기술스택
 
+![stack_summary](https://user-images.githubusercontent.com/30151603/207524130-9ffa94ad-5d2d-4c59-8ba9-643c685beb68.png)
+
 <div align="center">
 
 <h2>프론트엔드</h2>
