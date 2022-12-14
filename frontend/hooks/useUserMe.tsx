@@ -1,4 +1,4 @@
-import { UserData } from '#types/types';
+import type { UserData } from '#types/types';
 import { apis } from '@apis/index';
 import { REACT_QUERY_KEY } from '@constants/constants';
 import { useQuery } from '@tanstack/react-query';

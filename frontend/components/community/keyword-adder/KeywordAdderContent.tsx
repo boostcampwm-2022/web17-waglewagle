@@ -14,7 +14,7 @@ import {
 } from '@hooks/keyword';
 import useAutoComplete from '@hooks/useAutoComplete';
 import checkIsExistKeyword from '@utils/checkIsExistKeyword';
-import { MyKeywordData } from '#types/types';
+import type { MyKeywordData } from '#types/types';
 import AutoCompleteFormLayout from './AutoCompleteFormLayout';
 import SearchResultListLayout from './SearchResultListLayout';
 import AutoCompleteFormContent from './AutoCompleteForm';

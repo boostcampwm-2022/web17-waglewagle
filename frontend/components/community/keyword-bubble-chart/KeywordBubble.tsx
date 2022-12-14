@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import classnames from 'classnames/bind';
 import styles from '@sass/components/community/keyword-bubble-chart/KeywordBubble.module.scss';
 import useUserMe from '@hooks/useUserMe';
-import { ClickPosData, KeywordGroupData } from '#types/types';
+import type { ClickPosData, KeywordGroupData } from '#types/types';
 import MouseModal from '@components/common/MouseModal';
 import KeywordGroupEnterModalContent from './KeywordGroupEnterModalContent';
 import KeywordGroupInfoModalContent from './KeywordGroupInfoModalContent';

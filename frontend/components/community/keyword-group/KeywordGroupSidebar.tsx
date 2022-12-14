@@ -1,4 +1,4 @@
-import { ThreadData } from '#types/types';
+import type { ThreadData } from '#types/types';
 import { useDeleteThreadMutation, useThreadListQuery } from '@hooks/thread';
 import useUserMe from '@hooks/useUserMe';
 import CloseIcon from '@public/images/icons/close.svg';

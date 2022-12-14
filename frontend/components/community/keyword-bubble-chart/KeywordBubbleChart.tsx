@@ -9,7 +9,7 @@ import Circle from '@utils/circlepacker/Circle';
 import debounce from '@utils/debounce';
 import CircleContainer from '@utils/circlepacker/CircleContainer';
 import { KEYWORD_BUBBLE_MAX_NUMBER } from '@constants/constants';
-import { BubbleData, KeywordData, KeywordGroupData } from '#types/types';
+import type { BubbleData, KeywordData, KeywordGroupData } from '#types/types';
 import { Loading } from '@components/common';
 import KeywordBubble from './KeywordBubble';
 

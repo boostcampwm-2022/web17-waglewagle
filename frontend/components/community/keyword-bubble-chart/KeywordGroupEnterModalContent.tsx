@@ -6,7 +6,7 @@ import {
   useDisjoinKeywordMutation,
   useRelatedKeywordList,
 } from '@hooks/keyword';
-import { KeywordGroupData, KeywordRelatedData } from '#types/types';
+import type { KeywordGroupData, KeywordRelatedData } from '#types/types';
 import { DefaultButton } from '@components/common';
 
 const cx = classnames.bind(styles);

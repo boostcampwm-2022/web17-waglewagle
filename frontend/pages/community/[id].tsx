@@ -1,4 +1,4 @@
-import { KeywordGroupData, MyKeywordData } from '#types/types';
+import type { KeywordGroupData, MyKeywordData } from '#types/types';
 import { apis } from '@apis/index';
 import { Loading, Modal } from '@components/common';
 import SeoHead from '@components/common/Head';

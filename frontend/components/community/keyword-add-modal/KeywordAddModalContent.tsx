@@ -1,6 +1,6 @@
 import classnames from 'classnames/bind';
 import styles from '@sass/components/community/keyword-add-modal/KeywordAddModalContent.module.scss';
-import { MyKeywordData } from '#types/types';
+import type { MyKeywordData } from '#types/types';
 import { KEYWORD_ADDER_THEME } from '@constants/constants';
 import { KeywordAdderContent } from '../keyword-adder';
 import KeywordAssociated from './KeywordAssociated';

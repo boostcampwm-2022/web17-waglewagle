@@ -1,4 +1,4 @@
-import { Author, ThreadData } from '#types/types';
+import type { Author, ThreadData } from '#types/types';
 import { useDeleteThreadMutation } from '@hooks/thread';
 import useUserMe from '@hooks/useUserMe';
 import CommentIcon from '@public/images/icons/comment.svg';
