@@ -18,6 +18,11 @@ const EnterButton = ({ closeKeywordModal }: EnterButtonProps) => {
   const { data: myKeywordList } = useMyKeywordQuery(communityId);
 
   const handleClickEnter = async () => {
+    if (myKeywordList.length < 3) {
+      alert('키워드를 세 개 이상 추가해주세요.');
+      return;
+    }
+
     await apis.user.updateFirstVisitInCommunity(communityId);
     closeKeywordModal();
   };
@@ -26,14 +31,16 @@ const EnterButton = ({ closeKeywordModal }: EnterButtonProps) => {
     <>
       {userData?.isFirstInCommunity ? (
         <button
-          disabled={myKeywordList.length > 0 ? false : true}
           onClick={handleClickEnter}
-          className={cx('enter-button')}
+          className={cx('enter-button', { enabled: myKeywordList.length > 2 })}
         >
           입장하기
         </button>
       ) : (
-        <button onClick={closeKeywordModal} className={cx('enter-button')}>
+        <button
+          onClick={closeKeywordModal}
+          className={cx('enter-button', 'enabled')}
+        >
           닫기
         </button>
       )}

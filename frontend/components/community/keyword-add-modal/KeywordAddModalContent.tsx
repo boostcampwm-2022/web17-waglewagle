@@ -7,6 +7,7 @@ import ModalKeywordAdderLayout from './ModalKeywordAdderLayout';
 import MyKeywordList from './MyKeywordList';
 import type { MyKeywordData } from '#types/types';
 import styles from '@sass/components/community/keyword-add-modal/KeywordAddModalContent.module.scss';
+import useAutoComplete from '@hooks/useAutoComplete';
 
 const cx = classnames.bind(styles);
 

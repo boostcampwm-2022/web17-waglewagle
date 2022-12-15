@@ -15,12 +15,12 @@ import { KeywordBubbleChart } from '@components/community/keyword-bubble-chart';
 import { KeywordGroupModalContent } from '@components/community/keyword-group';
 import MyKeywordHighlight from '@components/community/MyKeywordHighlight';
 import { KEYWORD_ADDER_THEME } from '@constants/constants';
+import useJoinBoostcampCommunity from '@hooks/useJoinBoostcampCommunity';
 import useUserCommunityQuery from '@hooks/useUserCommunityQuery';
 import useUserMe from '@hooks/useUserMe';
 import AddCircleIcon from '@public/images/icons/add-circle.svg';
 import config from '../../config';
 import type { KeywordGroupData, MyKeywordData } from '#types/types';
-import useJoinBoostcampCommunity from '@hooks/useJoinBoostcampCommunity';
 
 const LoginModalContent = dynamic(
   () => import('@components/common/LoginModalContent'),
@@ -114,7 +114,9 @@ const Community = () => {
         handleClickKeywordModal={handleClickKeywordModal}
         handleClickEnter={handleClickEnter}
       />
-      <CommunityKeywordList />
+      <CommunityKeywordList
+        handleChangeKeywordGroupData={handleChangeKeywordGroupData}
+      />
       <KeywordBubbleChart
         isMyKeywordHighlight={isMyKeywordHighlight}
         handleChangeKeywordGroupData={handleChangeKeywordGroupData}
