@@ -28,6 +28,9 @@ export class CommunityUser extends BaseEntity {
   })
   communityUsername: string | null;
 
+  @Column('boolean', { name: 'is_first_visit', nullable: false, default: true })
+  isFirstVisit: boolean;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
