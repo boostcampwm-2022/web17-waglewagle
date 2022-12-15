@@ -1,13 +1,13 @@
 import '@sass/globals.scss';
+import { useState } from 'react';
+import type { AppProps } from 'next/app';
+import Script from 'next/script';
 import {
   QueryClient,
   QueryClientProvider,
   Hydrate,
 } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import type { AppProps } from 'next/app';
-import Script from 'next/script';
-import { useState } from 'react';
 
 const App = ({ Component, pageProps }: AppProps) => {
   const [queryClient] = useState<QueryClient>(() => new QueryClient());

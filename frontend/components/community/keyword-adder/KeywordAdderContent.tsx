@@ -6,7 +6,6 @@ import {
 } from 'react';
 import { useRouter } from 'next/router';
 import classnames from 'classnames/bind';
-import styles from '@sass/components/community/keyword-adder/KeywordAdderLayout.module.scss';
 import {
   useAddKeywordMutation,
   useJoinKeywordMutation,
@@ -14,11 +13,12 @@ import {
 } from '@hooks/keyword';
 import useAutoComplete from '@hooks/useAutoComplete';
 import checkIsExistKeyword from '@utils/checkIsExistKeyword';
-import { MyKeywordData } from '#types/types';
-import AutoCompleteFormLayout from './AutoCompleteFormLayout';
-import SearchResultListLayout from './SearchResultListLayout';
 import AutoCompleteFormContent from './AutoCompleteForm';
+import AutoCompleteFormLayout from './AutoCompleteFormLayout';
 import SearchResultList from './SearchResultList';
+import SearchResultListLayout from './SearchResultListLayout';
+import type { MyKeywordData } from '#types/types';
+import styles from '@sass/components/community/keyword-adder/KeywordAdderLayout.module.scss';
 
 const cx = classnames.bind(styles);
 

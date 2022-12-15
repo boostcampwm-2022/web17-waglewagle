@@ -1,7 +1,7 @@
+import { useCallback, useEffect, useState } from 'react';
 import classnames from 'classnames/bind';
 import styles from '@sass/components/home/HomeDescription.module.scss';
 const cx = classnames.bind(styles);
-import { useEffect, useState, useCallback } from 'react';
 
 interface IntersectionObserverOption {
   root?: Element | Document;

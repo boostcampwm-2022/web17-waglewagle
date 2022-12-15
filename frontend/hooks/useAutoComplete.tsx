@@ -1,6 +1,6 @@
-import TrieSearchEngine from '@utils/searchEngine/TrieSearchEngine';
-import { KeywordData } from '../types/types';
 import { useEffect, useState } from 'react';
+import TrieSearchEngine from '@utils/searchEngine/TrieSearchEngine';
+import type { KeywordData } from '#types/types';
 
 // 외부변수를 사용해서 모든 useAutoComplete가 같은 엔진을 사용하도록함.
 const searchEngine = new TrieSearchEngine();
@@ -26,7 +26,6 @@ const useAutoComplete = (keywordList: KeywordData[] | undefined) => {
       keywordList.forEach((keywordData) => {
         searchEngine.insert({
           keyword: keywordData.keywordName,
-          count: keywordData.memberCount,
         });
       });
 

@@ -10,7 +10,6 @@ class Circle {
     public id: string,
     public x: number,
     public y: number,
-    public innerText: string,
     public radius: number,
     public velocity: Vector,
   ) {}
@@ -23,7 +22,6 @@ class Circle {
     };
   }
 
-  // TODO: 비트 연산 써보기
   reduceVelocity() {
     this.velocity.x /= FRICTION;
     this.velocity.y /= FRICTION;

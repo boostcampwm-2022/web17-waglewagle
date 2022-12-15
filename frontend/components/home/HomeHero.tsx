@@ -1,6 +1,6 @@
 import Image from 'next/image';
-import heroImage from '@public/images/planet.png';
 import classnames from 'classnames/bind';
+import heroImage from '@public/images/planet.png';
 import styles from '@sass/components/home/HomeHero.module.scss';
 const cx = classnames.bind(styles);
 

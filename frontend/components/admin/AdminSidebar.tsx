@@ -1,6 +1,6 @@
+import classnames from 'classnames/bind';
 import { ADMIN_PAGE_TAB } from '@constants/constants';
 import styles from '@sass/components/admin/AdminSidebar.module.scss';
-import classnames from 'classnames/bind';
 const cx = classnames.bind(styles);
 
 interface AdminSidebarProps {

@@ -1,9 +1,9 @@
-import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import { apis } from '@apis/index';
 import { REACT_QUERY_KEY } from '@constants/constants';
-import type { AxiosError } from 'axios';
+import axios from 'axios';
 import type { KeywordData } from '#types/types';
+import type { AxiosError } from 'axios';
 
 // TS를 통해서 communityId가 들어오므로 useKeywordListFromCommuntyQuery라는 이름에서 간소화하였음. 추후 혼동이 생길 수 있으면 변경 가능.
 const useKeywordListQuery = (communityId: string) => {

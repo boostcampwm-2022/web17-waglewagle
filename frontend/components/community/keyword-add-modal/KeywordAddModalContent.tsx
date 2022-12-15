@@ -1,12 +1,12 @@
 import classnames from 'classnames/bind';
-import styles from '@sass/components/community/keyword-add-modal/KeywordAddModalContent.module.scss';
-import { MyKeywordData } from '#types/types';
 import { KEYWORD_ADDER_THEME } from '@constants/constants';
 import { KeywordAdderContent } from '../keyword-adder';
-import KeywordAssociated from './KeywordAssociated';
-import MyKeywordList from './MyKeywordList';
 import EnterButton from './EnterButton';
+import KeywordAssociated from './KeywordAssociated';
 import ModalKeywordAdderLayout from './ModalKeywordAdderLayout';
+import MyKeywordList from './MyKeywordList';
+import type { MyKeywordData } from '#types/types';
+import styles from '@sass/components/community/keyword-add-modal/KeywordAddModalContent.module.scss';
 
 const cx = classnames.bind(styles);
 

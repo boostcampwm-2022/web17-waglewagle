@@ -1,6 +1,6 @@
 import React from 'react';
-import styles from '@sass/components/home/HomeDescription.module.scss';
 import classnames from 'classnames/bind';
+import styles from '@sass/components/home/HomeDescription.module.scss';
 const cx = classnames.bind(styles);
 
 const Sun = React.forwardRef((_, ref: React.Ref<SVGSVGElement>) => {
