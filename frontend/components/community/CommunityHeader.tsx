@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import classnames from 'classnames/bind';
-import styles from '@sass/components/community/CommunityHeader.module.scss';
 import useUserMe from '@hooks/useUserMe';
+import styles from '@sass/components/community/CommunityHeader.module.scss';
 
 const cx = classnames.bind(styles);
 

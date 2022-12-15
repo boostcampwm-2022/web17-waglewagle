@@ -1,17 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
-import { NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import classnames from 'classnames/bind';
-import styles from '@sass/components/community/keyword-bubble-chart/KeywordBubbleChart.module.scss';
+import { Loading } from '@components/common';
+import { KEYWORD_BUBBLE_MAX_NUMBER } from '@constants/constants';
 import { useKeywordListQuery, useMyKeywordQuery } from '@hooks/keyword';
 import Circle from '@utils/circlepacker/Circle';
-import debounce from '@utils/debounce';
 import CircleContainer from '@utils/circlepacker/CircleContainer';
-import { KEYWORD_BUBBLE_MAX_NUMBER } from '@constants/constants';
-import { BubbleData, KeywordData, KeywordGroupData } from '#types/types';
-import { Loading } from '@components/common';
+import debounce from '@utils/debounce';
+import { NextPageContext } from 'next';
 import KeywordBubble from './KeywordBubble';
+import type { BubbleData, KeywordData, KeywordGroupData } from '#types/types';
+import styles from '@sass/components/community/keyword-bubble-chart/KeywordBubbleChart.module.scss';
 
 const cx = classnames.bind(styles);
 
@@ -42,9 +42,12 @@ const KeywordBubbleChart = ({
   // 여기에서는 slice된 keywordData를 가지고 있기 때문에 fetched와 별도의 상태로 관리됨.
 
   const getBubbleData = (keywordData: KeywordData, circleData: Circle) => {
-    const isJoined = myKeywordList.some(
-      (myKeyword) => myKeyword.keywordId === keywordData.keywordId,
-    );
+    const isJoined =
+      myKeywordList.length > 0
+        ? myKeywordList.some(
+            (myKeyword) => myKeyword.keywordId === keywordData.keywordId,
+          )
+        : false;
     return {
       keywordId: keywordData.keywordId,
       keyword: keywordData.keywordName,
@@ -92,7 +95,6 @@ const KeywordBubbleChart = ({
       const circleData = circleContainerRef.current!.addCircle(
         keywordData.keywordId,
         radius,
-        keywordData.keywordName,
       );
 
       return getBubbleData(keywordData, circleData);

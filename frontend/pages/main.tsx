@@ -1,4 +1,5 @@
-import { apis } from '@apis/index';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { Loading } from '@components/common';
 import SeoHead from '@components/common/Head';
 import {
@@ -7,21 +8,19 @@ import {
   MainLayout,
   MainTitle,
 } from '@components/main';
-import { MVP_DEFAULT } from '@constants/constants';
 import useUserMe from '@hooks/useUserMe';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import useJoinBoostcampCommunity from '@hooks/useJoinBoostcampCommunity';
 import config from '../config';
 
 const Main = () => {
   const router = useRouter();
   const userData = useUserMe();
+  useJoinBoostcampCommunity();
 
   useEffect(() => {
-    if (userData) {
-      apis.user.joinCommunity(MVP_DEFAULT.COMMUNITY_ID);
-    } else {
+    if (!userData) {
       router.push('/');
+      return;
     }
   }, [router, userData]);
 

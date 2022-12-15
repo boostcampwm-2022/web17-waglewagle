@@ -1,14 +1,14 @@
-import classnames from 'classnames/bind';
-import styles from '@sass/components/home/HomeDescription.module.scss';
 import { MouseEventHandler, useEffect, useRef, useState } from 'react';
-import useScrollDrawSvg from '@hooks/useScrollDrawSvg';
-import useScrollChangeColor from '@hooks/useScrollChangeOpacity';
-import useSectionScroll from '@hooks/useSectionScroll';
-import IntroduceProduct from '../common/svg/IntroduceProduct';
+import Image from 'next/image';
+import classnames from 'classnames/bind';
+import IntroduceTeam from '@components/common/svg/IntroduceTeam';
 import QuestionProblem from '@components/common/svg/QuestionProblem';
 import QuestionSolution from '@components/common/svg/QuestionSolution';
-import IntroduceTeam from '@components/common/svg/IntroduceTeam';
-import Image from 'next/image';
+import useScrollChangeColor from '@hooks/useScrollChangeOpacity';
+import useScrollDrawSvg from '@hooks/useScrollDrawSvg';
+import useSectionScroll from '@hooks/useSectionScroll';
+import IntroduceProduct from '../common/svg/IntroduceProduct';
+import styles from '@sass/components/home/HomeDescription.module.scss';
 const cx = classnames.bind(styles);
 
 const HomeDescription = () => {

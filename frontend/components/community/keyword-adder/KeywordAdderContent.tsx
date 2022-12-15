@@ -6,7 +6,6 @@ import {
 } from 'react';
 import { useRouter } from 'next/router';
 import classnames from 'classnames/bind';
-import styles from '@sass/components/community/keyword-adder/KeywordAdderLayout.module.scss';
 import {
   useAddKeywordMutation,
   useJoinKeywordMutation,
@@ -14,11 +13,12 @@ import {
 } from '@hooks/keyword';
 import useAutoComplete from '@hooks/useAutoComplete';
 import checkIsExistKeyword from '@utils/checkIsExistKeyword';
-import { MyKeywordData } from '#types/types';
-import AutoCompleteFormLayout from './AutoCompleteFormLayout';
-import SearchResultListLayout from './SearchResultListLayout';
 import AutoCompleteFormContent from './AutoCompleteForm';
+import AutoCompleteFormLayout from './AutoCompleteFormLayout';
 import SearchResultList from './SearchResultList';
+import SearchResultListLayout from './SearchResultListLayout';
+import type { MyKeywordData } from '#types/types';
+import styles from '@sass/components/community/keyword-adder/KeywordAdderLayout.module.scss';
 
 const cx = classnames.bind(styles);
 
@@ -46,8 +46,22 @@ const KeywordAdderContent = ({
   const { searchKeyword, searchResult, changeSearchKeyword } =
     useAutoComplete(communityKeywordData);
 
+  // 이후 키워드의 유효성 검사를 할 항목이 생기면 추가하기
+  // 현재는 빈 항목을 제외한 내용이 없어서 정규표현식 사용하지 않음.
+  const isValidateKeyword = (keyword: string) => {
+    if (keyword.trim() === '') {
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
+    if (!isValidateKeyword(searchKeyword)) {
+      alert('유효하지 않은 키워드 입니다.');
+      return;
+    }
 
     // 키워드가 커뮤니티에 존재하는지 확인하여 id 혹은 false를 반환하는 함수
     const keywordId = checkIsExistKeyword(searchKeyword, communityKeywordData);

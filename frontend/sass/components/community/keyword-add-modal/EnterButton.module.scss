@@ -5,7 +5,15 @@
   width: 120px;
   height: 30px;
   border-radius: 10px;
-  border: 1px solid $charcoal-color;
+  border: 1px solid rgba(0, 0, 0, 0.3);
   background-color: $off-white-color;
+  color: rgba(0, 0, 0, 0.3);
+  transition: 0.2s all ease-in;
+}
+
+.enabled {
+  border: 1px solid black;
+  color: black;
+
   @include button-interaction;
 }

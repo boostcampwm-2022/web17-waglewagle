@@ -1,7 +1,7 @@
+import { useRouter } from 'next/router';
+import classnames from 'classnames/bind';
 import { useKeywordDeleteMutation } from '@hooks/keyword';
 import styles from '@sass/components/admin/KeywordDeleteModalContent.module.scss';
-import classnames from 'classnames/bind';
-import { useRouter } from 'next/router';
 const cx = classnames.bind(styles);
 
 type Keyword = {

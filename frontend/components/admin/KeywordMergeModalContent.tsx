@@ -1,8 +1,8 @@
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+import classnames from 'classnames/bind';
 import { useKeywordMergeMutation } from '@hooks/keyword';
 import styles from '@sass/components/admin/KeywordMergeModalContent.module.scss';
-import classnames from 'classnames/bind';
-import { useRouter } from 'next/router';
-import { useState } from 'react';
 const cx = classnames.bind(styles);
 
 type Keyword = {

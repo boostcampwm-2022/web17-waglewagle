@@ -1,7 +1,7 @@
 import classnames from 'classnames/bind';
-import styles from '@sass/components/common/LoginModalContent.module.scss';
 import GithubIcon from '@public/images/icons/github.svg';
 import config from '../../config';
+import styles from '@sass/components/common/LoginModalContent.module.scss';
 const cx = classnames.bind(styles);
 
 const LoginModalContent = () => {

@@ -1,8 +1,16 @@
-import { MyKeywordData } from '#types/types';
+import { useRouter } from 'next/router';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apis } from '@apis/index';
 import { REACT_QUERY_KEY } from '@constants/constants';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/router';
+import axios from 'axios';
+import type { MyKeywordData } from '#types/types';
+import type { AxiosError } from 'axios';
+
+type JoinKeywordFullData = {
+  keywordId: string;
+  communityId: string;
+  keywordName: string;
+};
 
 // 반환값, 요청 URL이 모두 다르기 때문에 join과 add 쿼리를 분리함.
 const useJoinKeywordMutation = (
@@ -13,11 +21,9 @@ const useJoinKeywordMutation = (
   const queryClient = useQueryClient();
 
   // mutationFn
-  const mutateJoinKeyword = async (joinKeywordFullData: {
-    keywordId: string;
-    communityId: string;
-    keywordName: string;
-  }) => {
+  const mutateJoinKeyword = async (
+    joinKeywordFullData: JoinKeywordFullData,
+  ) => {
     const joinKeywordData = {
       keywordId: joinKeywordFullData.keywordId,
       communityId: joinKeywordFullData.communityId,
@@ -25,7 +31,25 @@ const useJoinKeywordMutation = (
     await apis.keyword.joinKeyword(joinKeywordData);
   };
 
-  const { mutate, isError, error } = useMutation({
+  // MykeywordList에 방금 추가한 단어를 추가함.
+  const addMyKeyword = (newKeyword: MyKeywordData) => {
+    queryClient.setQueryData(
+      [REACT_QUERY_KEY.MY_KEYWORD_LIST, communityId],
+      (old: MyKeywordData[] | undefined) => {
+        if (!old) {
+          return [newKeyword];
+        }
+
+        return [...old, newKeyword];
+      },
+    );
+  };
+
+  const { mutate, isError, error } = useMutation<
+    void,
+    AxiosError,
+    JoinKeywordFullData
+  >({
     mutationFn: mutateJoinKeyword,
     onSuccess: (_, joinKeywordFullData) => {
       const prevKeywordData: MyKeywordData = {
@@ -34,17 +58,15 @@ const useJoinKeywordMutation = (
       };
       handlePrevKeyword && handlePrevKeyword(prevKeywordData);
 
-      // MykeywordList에 방금 추가한 단어를 추가함.
-      queryClient.setQueryData(
-        [REACT_QUERY_KEY.MY_KEYWORD_LIST, communityId],
-        (old: MyKeywordData[] | undefined) => {
-          if (!old) {
-            return [prevKeywordData];
-          }
+      addMyKeyword(prevKeywordData);
 
-          return [...old, prevKeywordData];
-        },
-      );
+      alert(`🎊 ${joinKeywordFullData.keywordName}을 관심사에 추가했습니다!`);
+    },
+    onError: (error) => {
+      const message = axios.isAxiosError(error)
+        ? error.response?.data.message
+        : '키워드 관심사 추가 중, 알 수 없는 에러가 발생했어요!';
+      alert(message);
     },
   });
 

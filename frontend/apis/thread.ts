@@ -1,5 +1,5 @@
-import type { ThreadData } from '#types/types';
 import { instance } from '@apis/instance';
+import type { ThreadData } from '#types/types';
 import type { AxiosResponse } from 'axios';
 
 const getKeywordThreads = (

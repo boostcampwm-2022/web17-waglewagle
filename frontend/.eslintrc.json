@@ -38,6 +38,58 @@
     "prettier/prettier": "warn",
     "linebreak-style": ["error", "unix"],
     "quotes": ["error", "single"],
-    "semi": ["error", "always"]
+    "semi": ["error", "always"],
+    "import/order": [
+      "warn",
+      {
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index",
+          "object",
+          "type"
+        ],
+        "pathGroups": [
+          {
+            "pattern": "next/**",
+            "group": "builtin",
+            "position": "before"
+          },
+          {
+            "pattern": "react",
+            "group": "builtin",
+            "position": "before"
+          },
+          {
+            "pattern": "@tanstack/**",
+            "group": "external",
+            "position": "before"
+          },
+          {
+            "pattern": "classnames/**",
+            "group": "external",
+            "position": "before"
+          },
+          {
+            "pattern": "@**",
+            "group": "internal",
+            "position": "before"
+          },
+          {
+            "pattern": "@sass/**",
+            "group": "type",
+            "position": "after"
+          }
+        ],
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        },
+        "pathGroupsExcludedImportTypes": ["react"]
+      }
+    ]
   }
 }

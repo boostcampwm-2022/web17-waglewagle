@@ -1,5 +1,6 @@
-import { apis } from '@apis/index';
-import { LoginModalContent, Modal } from '@components/common';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { Loading, LoginModalContent, Modal } from '@components/common';
 import SeoHead from '@components/common/Head';
 import {
   HomeChevronDown,
@@ -10,26 +11,26 @@ import {
 } from '@components/home';
 import HomeDescription from '@components/home/HomeDescription';
 import StartButton from '@components/home/StartButton';
-import { MVP_DEFAULT } from '@constants/constants';
 import useUserMe from '@hooks/useUserMe';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import useJoinBoostcampCommunity from '@hooks/useJoinBoostcampCommunity';
 import config from '../config';
 
 const Home = () => {
   const router = useRouter();
   const [isOpenLoginModal, setIsOpenLoginModal] = useState<boolean>(false);
   const userData = useUserMe();
+  useJoinBoostcampCommunity();
 
   const openLoginModal = () => {
     setIsOpenLoginModal(true);
   };
 
   useEffect(() => {
-    if (userData && router.isReady) {
-      apis.user.joinCommunity(MVP_DEFAULT.COMMUNITY_ID);
-      router.push('/main');
+    if (!userData) {
+      return;
     }
+
+    router.push('/main');
   }, [userData, router]);
 
   return (

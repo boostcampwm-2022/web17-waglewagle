@@ -1,15 +1,15 @@
 .list-container {
   position: absolute;
-  height: 50vh;
-  width: 150px;
-  overflow: scroll;
-  display: flex;
-  flex-direction: column;
-  margin-left: 20px;
-  margin-top: 50px;
-  transition: 0.3s all ease-in-out;
   z-index: 9;
+  display: flex;
+  overflow-y: scroll;
+  flex-direction: column;
+  width: 150px;
+  height: 50vh;
+  margin-top: 50px;
+  margin-left: 20px;
   color: black;
+  transition: 0.3s all ease-in-out;
 
   &:hover {
     height: 80vh;
@@ -19,11 +19,15 @@
 .list-title {
   position: fixed;
   margin-left: 20px;
-  font-size: 1.8rem;
   font-family: 'NanumBugGeugSeong';
+  font-size: 1.8rem;
 }
 
 .list-item {
-  font-size: 1.5rem;
   font-family: 'NanumBugGeugSeong';
+  font-size: 1.5rem;
+
+  &:hover {
+    cursor: pointer;
+  }
 }
