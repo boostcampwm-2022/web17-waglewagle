@@ -1,0 +1,26 @@
+.community-list {
+  display: grid;
+  width: 1320px;
+  margin: 5% auto;
+  padding: 0 20px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+}
+
+@media (max-width: 1320px) {
+  .community-list {
+    width: 100%;
+  }
+}
+
+@media (max-width: 767px) {
+  .community-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 575px) {
+  .community-list {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}

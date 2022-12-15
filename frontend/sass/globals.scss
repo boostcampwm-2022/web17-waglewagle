@@ -1,0 +1,43 @@
+@import '@sass/normalize';
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+
+@font-face {
+  font-family: 'NanumBugGeugSeong';
+  src: url('../public/fonts/NanumBugGeugSeong.woff2') format('woff2');
+  font-display: swap;
+}
+
+html {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+
+    &::-webkit-scrollbar {
+      width: 10px;
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      background-color: rgba(0, 0, 0.5);
+    }
+  }
+}
+
+html,
+body,
+#__next {
+  width: 100%;
+  height: 100%;
+  scroll-behavior: smooth;
+  background-color: #fcfcfc;
+  color: #112a4a;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+li {
+  list-style: none;
+}

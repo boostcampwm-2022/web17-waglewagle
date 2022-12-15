@@ -1,0 +1,37 @@
+.keyword-list {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.keyword {
+  &:hover {
+    cursor: pointer;
+  }
+  
+  &.selected {
+    color: red;
+  }
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  max-width: 500px;
+  margin-top: 20px;
+  gap: 10px;
+  
+  button {
+    padding: 5px 10px;
+    border: 1px solid black;
+    border-radius: 10px;
+    background: none;
+    
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}

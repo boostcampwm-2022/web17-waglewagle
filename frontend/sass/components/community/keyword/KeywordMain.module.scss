@@ -1,0 +1,39 @@
+.main {
+  width: calc(100% - 250px);
+  height: 100%;
+  padding: 45px 35px;
+  border: 1px solid black;
+  border-radius: 15px;
+}
+
+.content {
+  display: flex;
+  height: calc(100% - 80px);
+  gap: 10px;
+
+  div:first-child {
+    flex: 1;
+  }
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 24px;
+  font-family: 'NanumBugGeugSeong';
+  gap: 18px;
+}
+
+.title {
+  font-size: 50px;
+}
+
+.user-count {
+  font-size: 24px;
+}
+
+@media (max-width: 1320px) {
+  .main {
+    width: 100%;
+  }
+}
