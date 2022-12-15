@@ -1,0 +1,43 @@
+name: Backend CI/CD
+
+on:
+  pull_request:
+    branches:
+      - be/release
+    types:
+      - closed
+
+env:
+  REST_DEPLOY_DIRNAME: rest_deploy
+  REST_CLONE_URL: https://github.com/boostcampwm-2022/web17-waglewagle.git
+  REST_CLONE_BRANCH: be/release
+  REST_SECRET_YML_PATH: rest/src/main/resources/secret.yml
+  REST_REST_APPLICATION_OAUTH_YML_PATH: rest/src/main/resources/application-oauth.yml
+  REST_GRADLEW_PATH: /root/rest_deploy/rest/gradlew
+
+jobs:
+  cicd:
+    if: ${{ github.event.pull_request.merged }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: connect server instance by ssh
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REST_HOST }}
+          username: ${{ secrets.REST_USERNAME }}
+          password: ${{ secrets.REST_PASSWORD }}
+          port: ${{ secrets.REST_PORT }}
+          script: |
+            sudo add-apt-repository ppa:openjdk-r/ppa -y
+            sudo apt-get update -y
+            sudo apt install openjdk-11-jdk
+
+            rm -rf ${{ env.REST_DEPLOY_DIRNAME }}
+            git clone -b ${{ env.REST_CLONE_BRANCH }} --single-branch ${{ env.REST_CLONE_URL }} ${{ env.REST_DEPLOY_DIRNAME }}
+            echo '${{ secrets.REST_SECRET_YML }}' > ${{ env.REST_DEPLOY_DIRNAME }}/${{ env.REST_SECRET_YML_PATH }}
+            echo '${{ secrets.REST_APPLICATION_OAUTH_YML }}' > ${{ env.REST_DEPLOY_DIRNAME }}/${{ env.REST_REST_APPLICATION_OAUTH_YML_PATH }}
+            cd ${{ env.REST_DEPLOY_DIRNAME }}/rest/
+            ./gradlew bootJar
+            fuser -k -n tcp 8080
+            nohup java -jar build/libs/*.jar > nohup.out 2> nohup.err < /dev/null &

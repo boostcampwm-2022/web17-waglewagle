@@ -1,0 +1,5 @@
+spring:
+  config:
+    import:
+      - classpath:general.yml
+      - classpath:secret.yml
