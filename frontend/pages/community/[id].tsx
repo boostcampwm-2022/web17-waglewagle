@@ -20,6 +20,7 @@ import useUserMe from '@hooks/useUserMe';
 import AddCircleIcon from '@public/images/icons/add-circle.svg';
 import config from '../../config';
 import type { KeywordGroupData, MyKeywordData } from '#types/types';
+import useJoinBoostcampCommunity from '@hooks/useJoinBoostcampCommunity';
 
 const LoginModalContent = dynamic(
   () => import('@components/common/LoginModalContent'),
@@ -41,6 +42,7 @@ const KeywordAddModalContent = dynamic(
 const Community = () => {
   const router = useRouter();
   const communityId = router.query.id as string;
+  useJoinBoostcampCommunity();
 
   const [isOpenLoginModal, setIsOpenLoginModal] = useState<boolean>(false);
   const [isOpenKeywordModal, setIsOpenKeywordModal] = useState<boolean>(false);
@@ -84,14 +86,6 @@ const Community = () => {
   useEffect(() => {
     if (!userData) {
       return;
-    }
-
-    if (
-      !userCommunityList.some(
-        (community) => community.communityId === communityId,
-      )
-    ) {
-      apis.user.joinCommunity(communityId);
     }
 
     const interval = setInterval(() => {
