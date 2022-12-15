@@ -1,0 +1,4 @@
+export enum ADMIN_PAGE_TAB {
+  USER_CONTROL = 0,
+  KEYWORD_CONTROL = 1,
+}
