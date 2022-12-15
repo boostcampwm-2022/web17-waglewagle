@@ -1,0 +1,147 @@
+@import '@sass/animations.scss';
+
+.description {
+  height: 400vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.description-article {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.description-background {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.description-title,
+.description-paragraph,
+.doodle-by-man {
+  opacity: 0;
+  transition: all 0.5s ease-in;
+}
+
+.description-title {
+  margin: 30px;
+  font-size: 2.5rem;
+  font-family: 'NanumBugGeugSeong';
+}
+
+.description-paragraph {
+  max-width: 600px;
+  line-height: 160%;
+  text-indent: 10px;
+  font-size: 1.1rem;
+
+  &:last-child {
+    margin-top: 30px;
+    font-style: italic;
+  }
+}
+
+.go-back-button {
+  margin-top: 30px;
+  border: none;
+  background-color: transparent;
+  font-size: 1.5rem;
+  font-family: 'NanumBugGeugSeong';
+  transition: 0.3s all linear;
+
+  &:hover {
+    cursor: pointer;
+    transform: translateY(-5px);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.opacity-changed {
+  .description-title,
+  .description-paragraph {
+    opacity: 1;
+  }
+
+  .doodle-by-man {
+    animation: 0.5s linear 1s forwards fadeIn;
+  }
+}
+
+.svg-drawing {
+  fill: none;
+  stroke-width: 0px;
+  path {
+    fill: none;
+  }
+}
+
+.svg-active {
+  stroke-width: 1px;
+  path {
+    stroke: black;
+    stroke-dasharray: var(--length);
+    stroke-dashoffset: var(--length);
+    animation: drawPath var(--duration) forwards;
+    animation-delay: var(--delay);
+  }
+}
+
+@keyframes drawPath {
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.parallex-image {
+  z-index: -1;
+  position: absolute;
+
+  @media screen and (max-width: 1024px) {
+    visibility: hidden;
+  }
+}
+
+.thinking-image {
+  bottom: 5px;
+  right: 50px;
+}
+
+.friendly-image {
+  bottom: 50px;
+  left: 100px;
+}
+
+.doodle-by-man {
+  position: absolute;
+  bottom: 319px;
+  right: 120px;
+  font-family: 'NanumBugGeugSeong';
+  font-size: 1.2rem;
+}
+
+.drawing-man-image {
+  position: fixed;
+  opacity: 0;
+
+  bottom: 50px;
+  right: 50px;
+
+  transition: 0.5s all ease-in-out;
+}
+
+.showing {
+  opacity: 1;
+  transform: translateY(-10px);
+}
