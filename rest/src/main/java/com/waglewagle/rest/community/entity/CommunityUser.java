@@ -49,7 +49,7 @@ public class CommunityUser {
 
     public void
     updateProfile(final CommunityUserRequest.UpdateProfileDTO updateProfileDTO) {
-        
+
         communityUsername = updateProfileDTO.getUsername();
         profileImageUrl = updateProfileDTO.getProfileImageUrl();
     }

@@ -13,6 +13,7 @@ public class CommunityResponse {
         private String communityId;
         private String title;
         private String description;
+        private Integer memberCount = 0;
 
         public static CommunityDTO of(final Community community) {
             CommunityDTO communityDTO = new CommunityDTO();
@@ -20,6 +21,10 @@ public class CommunityResponse {
             communityDTO.title = community.getTitle();
             communityDTO.description = community.getSummary();
             return communityDTO;
+        }
+
+        public void addMemberCount() {
+            memberCount++;
         }
     }
 }
