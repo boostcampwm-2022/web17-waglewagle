@@ -1,0 +1,16 @@
+.layout {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  width: 80vw;
+  height: 80vh;
+  gap: 25px;
+}
+
+@media (max-width: 1320px) {
+  .layout {
+    flex-direction: column;
+    flex-direction: column-reverse;
+  }
+}

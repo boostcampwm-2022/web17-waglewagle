@@ -1,0 +1,33 @@
+@import '@sass/animations.scss';
+
+.background {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(2px);
+  animation: fadeIn 0.25s ease-in;
+  z-index: 10;
+
+  &.close {
+    animation: fadeOut 0.25s ease-out;
+    pointer-events: none;
+  }
+}
+
+.contents {
+  padding: 50px;
+  border-radius: 10px;
+  background-color: #ffffff;
+  animation: fadeIn 0.25s ease-in, slideDown 0.25s ease-in;
+
+  &.close {
+    animation: fadeOut 0.25s ease-out, slideUp 0.25s ease-out;
+    pointer-events: none;
+  }
+}

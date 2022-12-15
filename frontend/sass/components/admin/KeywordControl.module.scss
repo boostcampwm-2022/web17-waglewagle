@@ -1,0 +1,45 @@
+.keyword-list {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.keyword {
+  &:hover {
+    cursor: pointer;
+  }
+  
+  &.selected {
+    color: red;
+  }
+}
+
+.merge-button {
+  position: absolute;
+  bottom: 60px;
+  left: 60px;
+  padding: 10px;
+  border: 1px solid black;
+  border-radius: 10px;
+  background: none;
+  
+  &:not(:disabled):hover {
+    cursor: pointer;
+  }
+}
+
+.delete-button {
+  position: absolute;
+  right: 60px;
+  bottom: 60px;
+  padding: 10px;
+  border: 1px solid black;
+  border-radius: 10px;
+  background: none;
+  
+  &:not(:disabled):hover {
+    cursor: pointer;
+  }
+}

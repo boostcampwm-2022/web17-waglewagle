@@ -1,0 +1,31 @@
+@import '@sass/variables.scss';
+@import '@sass/mixins.scss';
+
+.community-item {
+  transition: all 0.1s linear;
+  @include enlarge-button-interaction;
+}
+
+.profile-wrapper {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  margin-bottom: 5%;
+  border: 1px solid $charcoal-color;
+  border-radius: 10%;
+
+  &::after {
+    display: block;
+    padding-top: 100%;
+    content: '';
+  }
+}
+
+.title {
+  margin-bottom: 2%;
+  font-weight: 400;
+}
+
+.user-count {
+  color: #cccccc;
+}
