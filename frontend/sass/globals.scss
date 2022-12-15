@@ -1,0 +1,39 @@
+@import '@sass/normalize';
+
+@font-face {
+  font-family: 'Nanum BugGeugSeong';
+  src: url('../public/fonts/nanum buggeugseong.ttf');
+}
+
+html {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+html,
+body {
+  background-color: #fcfcfc;
+  color: #112a4a;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+li {
+  list-style: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    background: #112a4a;
+    color: #fcfcfc;
+  }
+}
