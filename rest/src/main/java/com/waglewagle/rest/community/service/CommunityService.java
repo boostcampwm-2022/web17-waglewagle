@@ -48,7 +48,7 @@ public class CommunityService {
                 .findAllByCommunityIds(communityIds);
 
         HashMap<Long, CommunityResponse.CommunityDTO> idToDTO = new HashMap<>();
-        
+
         communityDTOS.forEach(communityDTO -> {
             idToDTO.put(Long.parseLong(communityDTO.getCommunityId()), communityDTO);
         });
@@ -73,6 +73,7 @@ public class CommunityService {
                 .orElseThrow(NoSuchUserException::new);
 
         Community community = Community.from(title, description, user);
+        communityUserRepository.save(CommunityUser.from(user, community));
         communityRepository.save(community);
 
         return new PreResponseDTO<>(
