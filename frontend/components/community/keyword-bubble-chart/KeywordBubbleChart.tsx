@@ -42,9 +42,12 @@ const KeywordBubbleChart = ({
   // 여기에서는 slice된 keywordData를 가지고 있기 때문에 fetched와 별도의 상태로 관리됨.
 
   const getBubbleData = (keywordData: KeywordData, circleData: Circle) => {
-    const isJoined = myKeywordList.some(
-      (myKeyword) => myKeyword.keywordId === keywordData.keywordId,
-    );
+    const isJoined =
+      myKeywordList.length > 0
+        ? myKeywordList.some(
+            (myKeyword) => myKeyword.keywordId === keywordData.keywordId,
+          )
+        : false;
     return {
       keywordId: keywordData.keywordId,
       keyword: keywordData.keywordName,
