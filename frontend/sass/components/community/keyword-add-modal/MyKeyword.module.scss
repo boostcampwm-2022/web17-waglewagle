@@ -1,0 +1,29 @@
+@import '@sass/variables.scss';
+@import '@sass/mixins.scss';
+
+.keyword-item {
+  position: relative;
+  height: 30px;
+  display: flex;
+  gap: 3px;
+  padding: 5px 10px;
+  border: 1px solid $charcoal-color;
+  border-radius: 20px;
+  font-family: 'Noto Sans Kor', sans-serif;
+  font-size: 0.9rem;
+}
+
+.delete-button {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+
+  width: 15px;
+  height: 15px;
+  background-color: $red-color;
+  color: $off-white-color;
+  border: none;
+  border-radius: 50%;
+  font-size: 10px;
+  @include button-interaction;
+}

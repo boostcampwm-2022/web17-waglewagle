@@ -1,0 +1,9 @@
+@import '@sass/animations.scss';
+
+.image-container {
+  margin: 20px;
+
+  img {
+    animation: spin infinite 30s linear;
+  }
+}

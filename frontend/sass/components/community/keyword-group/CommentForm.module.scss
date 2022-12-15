@@ -1,0 +1,24 @@
+@import '@sass/mixins.scss';
+
+.form {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid black;
+  border-radius: 10px;
+}
+
+.button {
+  padding: 5px 10px;
+  border: 1px solid black;
+  border-radius: 10px;
+  background: none;
+
+  @include button-interaction;
+}
