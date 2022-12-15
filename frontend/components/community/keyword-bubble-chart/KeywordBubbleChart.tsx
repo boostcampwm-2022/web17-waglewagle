@@ -92,7 +92,6 @@ const KeywordBubbleChart = ({
       const circleData = circleContainerRef.current!.addCircle(
         keywordData.keywordId,
         radius,
-        keywordData.keywordName,
       );
 
       return getBubbleData(keywordData, circleData);
