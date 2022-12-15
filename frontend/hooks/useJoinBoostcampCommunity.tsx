@@ -1,5 +1,5 @@
-import { apis } from '@apis/index';
 import { useEffect } from 'react';
+import { apis } from '@apis/index';
 import useUserCommunityQuery from './useUserCommunityQuery';
 import useUserMe from './useUserMe';
 
@@ -9,14 +9,14 @@ const useJoinBoostcampCommunity = () => {
   const { data: userCommunityList } = useUserCommunityQuery();
 
   useEffect(() => {
-    if (!userData) {
+    if (!userData || !userCommunityList) {
       return;
     }
 
     if (!userCommunityList.some((community) => community.communityId === '1')) {
       apis.user.joinCommunity('1');
     }
-  }, [userData]);
+  }, [userData, userCommunityList]);
 };
 
 export default useJoinBoostcampCommunity;
