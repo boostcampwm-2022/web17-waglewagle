@@ -1,0 +1,56 @@
+config:
+  target: "https://www.waglewagle.link"
+  phases:
+    - name: "my-corps"
+      duration: 300
+      arrivalRate: 50
+scenarios:
+  - name: "user/me"
+    flow:
+      - get:
+          url: "/api/v1/user/me?community-id=1" #폴링 X (put 마지막 상태 기록, 폴링, 10초)
+          cookie:
+            user_id: 33
+    weight: 10
+  - name: "user/keyword(users in keyword)"
+    flow:
+      - get:
+          url: "/api/v1/user/keyword?keyword-id=1" #폴링, 1분
+          cookie:
+            user_id: 33
+    weight: 8
+  - name: "user/community(users in community)"
+    flow:
+      - get:
+          url: "/api/v1/user/community?community-id=1" #Only 관리자 페이지(폴링 ㄴ)
+          cookie:
+            user_id: 33
+    weight: 8
+  - name: "thread/keyword(threads in keyword)"
+    flow:
+      - get:
+          url: "/api/v1/thread/keyword?keyword-id=1" #폴링, 5~10초
+          cookie:
+            user_id: 33
+    weight: 8
+  - name: "keyword/user(keyword user's peek(in community))"
+    flow:
+      - get:
+          url: "/api/v1/keyword/user/1" #폴링 X
+          cookie:
+            user_id: 33
+    weight: 1
+  - name: "keyword/community(keywords in community)"
+    flow:
+      - get:
+          url: "/api/v1/keyword/1" #폴링, 5초
+          cookie:
+            user_id: 33
+    weight: 8
+  - name: "keyword/associations"
+    flow:
+      - get:
+          url: "/api/v1/keyword/associations?keyword-id=1" #폴링 ㄴ
+          cookie:
+            user_id: 33
+    weight: 2
