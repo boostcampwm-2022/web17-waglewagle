@@ -1,0 +1,51 @@
+.container {
+  min-width: 200px;
+  padding: 5px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: center;
+}
+
+.description {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  font-family: 'NanumBugGeugSeong';
+}
+
+.title {
+  font-size: 1.7rem;
+}
+
+.count {
+  font-size: 1.2rem;
+}
+
+.disjoin {
+  border: none;
+  background-color: transparent;
+  text-decoration: underline;
+  color: gray;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.related-keyword {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 10px;
+
+  ul {
+    display: flex;
+    gap: 10px;
+
+    li {
+      padding: 7px 10px;
+      border: 1px solid black;
+      border-radius: 15px;
+    }
+  }
+}

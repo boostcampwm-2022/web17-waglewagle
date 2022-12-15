@@ -1,0 +1,8 @@
+@import '@sass/variables.scss';
+
+.modal {
+  width: 300px;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+}

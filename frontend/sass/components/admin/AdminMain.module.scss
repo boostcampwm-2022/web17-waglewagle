@@ -1,0 +1,22 @@
+.main {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 50px;
+
+  header h3 {
+    display: inline-block;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #000000;
+    font-size: 1.2rem;
+  }
+
+  section {
+    flex: 1;
+    width: 100%;
+    padding: 40px;
+    border: 1px solid #000000;
+    border-radius: 20px;
+  }
+}

@@ -1,0 +1,45 @@
+.thread {
+  position: relative;
+  display: flex;
+  width: 100%;
+  padding: 30px 25px;
+  border: 1px solid black;
+  border-radius: 15px;
+  gap: 15px;
+}
+
+.profile-image {
+  border-radius: 5px;
+}
+
+.name-time {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  gap: 5px;
+}
+
+.post-time {
+  color: #ccc;
+  font-size: 12px;
+}
+
+.buttons {
+  position: absolute;
+  right: 20px;
+  bottom: 10px;
+  display: flex;
+  gap: 10px;
+
+  button {
+    width: 20px;
+    height: 20px;
+
+    border: none;
+    background: none;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}

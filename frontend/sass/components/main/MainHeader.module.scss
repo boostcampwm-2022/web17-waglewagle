@@ -1,0 +1,24 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 20px;
+
+  .user-button {
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: none;
+    transition: all 0.2s;
+
+    &:hover {
+      cursor: pointer;
+      transform: scale(1.05);
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+}
