@@ -1,5 +1,5 @@
-import { apis } from '@apis/index';
 import { useQuery } from '@tanstack/react-query';
+import { apis } from '@apis/index';
 import type { KeywordUser } from '#types/types';
 
 const useKeywordUserListQuery = (communityId: string) => {

@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import classnames from 'classnames/bind';
-import styles from '@sass/components/community/keyword-bubble-chart/KeywordGroupEnterModalContent.module.scss';
+import { DefaultButton } from '@components/common';
 import {
   useDisjoinKeywordMutation,
   useRelatedKeywordList,
 } from '@hooks/keyword';
-import { KeywordGroupData, KeywordRelatedData } from '#types/types';
-import { DefaultButton } from '@components/common';
+import type { KeywordGroupData, KeywordRelatedData } from '#types/types';
+import styles from '@sass/components/community/keyword-bubble-chart/KeywordGroupEnterModalContent.module.scss';
 
 const cx = classnames.bind(styles);
 

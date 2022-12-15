@@ -1,8 +1,8 @@
+import { useEffect, useState } from 'react';
 import classnames from 'classnames/bind';
+import drawSVG from '@utils/drawSVG';
 import styles from '@sass/components/home/HomeDescription.module.scss';
 const cx = classnames.bind(styles);
-import { useEffect, useState } from 'react';
-import drawSVG from '@utils/drawSVG';
 
 interface IntersectionObserverOption {
   root?: Element | Document;

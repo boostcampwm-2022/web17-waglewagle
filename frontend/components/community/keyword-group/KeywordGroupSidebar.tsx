@@ -1,14 +1,14 @@
-import { ThreadData } from '#types/types';
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import classnames from 'classnames/bind';
 import { useDeleteThreadMutation, useThreadListQuery } from '@hooks/thread';
 import useUserMe from '@hooks/useUserMe';
 import CloseIcon from '@public/images/icons/close.svg';
 import DeleteIcon from '@public/images/icons/delete.svg';
-import styles from '@sass/components/community/keyword-group/Sidebar.module.scss';
 import calculateTimeGap from '@utils/calculateTimeGap';
-import classnames from 'classnames/bind';
-import Image from 'next/image';
-import { useEffect, useState } from 'react';
 import CommentForm from './CommentForm';
+import type { ThreadData } from '#types/types';
+import styles from '@sass/components/community/keyword-group/Sidebar.module.scss';
 const cx = classnames.bind(styles);
 
 interface SidebarProps {

@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import {
   AdminLayout,
   AdminMain,
@@ -9,8 +11,6 @@ import { Loading } from '@components/common';
 import SeoHead from '@components/common/Head';
 import { ADMIN_PAGE_TAB } from '@constants/constants';
 import useUserMe from '@hooks/useUserMe';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
 import config from '../../config';
 
 const Admin = () => {

@@ -1,21 +1,26 @@
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
-import AddCircleIcon from '@public/images/icons/add-circle.svg';
+import { useRouter } from 'next/router';
 import { apis } from '@apis/index';
-import useUserMe from '@hooks/useUserMe';
-import { KeywordGroupData, MyKeywordData } from '#types/types';
-import { KEYWORD_ADDER_THEME, MVP_DEFAULT } from '@constants/constants';
-import config from '../../config';
-import SeoHead from '@components/common/Head';
 import { Loading, Modal } from '@components/common';
-import { CommunityHeader, CommunityLayout } from '@components/community';
-import { KeywordGroupModalContent } from '@components/community/keyword-group';
-import { KeywordAdderContent } from '@components/community/keyword-adder';
-import { MainKeywordHandlerLayout } from '@components/community';
-import { KeywordBubbleChart } from '@components/community/keyword-bubble-chart';
-import MyKeywordHighlight from '@components/community/MyKeywordHighlight';
+import SeoHead from '@components/common/Head';
+import {
+  CommunityHeader,
+  CommunityLayout,
+  MainKeywordHandlerLayout,
+} from '@components/community';
 import CommunityKeywordList from '@components/community/CommunityKeywordList';
+import { KeywordAdderContent } from '@components/community/keyword-adder';
+import { KeywordBubbleChart } from '@components/community/keyword-bubble-chart';
+import { KeywordGroupModalContent } from '@components/community/keyword-group';
+import MyKeywordHighlight from '@components/community/MyKeywordHighlight';
+import { KEYWORD_ADDER_THEME } from '@constants/constants';
+import useJoinBoostcampCommunity from '@hooks/useJoinBoostcampCommunity';
+import useUserCommunityQuery from '@hooks/useUserCommunityQuery';
+import useUserMe from '@hooks/useUserMe';
+import AddCircleIcon from '@public/images/icons/add-circle.svg';
+import config from '../../config';
+import type { KeywordGroupData, MyKeywordData } from '#types/types';
 
 const LoginModalContent = dynamic(
   () => import('@components/common/LoginModalContent'),
@@ -37,6 +42,7 @@ const KeywordAddModalContent = dynamic(
 const Community = () => {
   const router = useRouter();
   const communityId = router.query.id as string;
+  useJoinBoostcampCommunity();
 
   const [isOpenLoginModal, setIsOpenLoginModal] = useState<boolean>(false);
   const [isOpenKeywordModal, setIsOpenKeywordModal] = useState<boolean>(false);
@@ -47,6 +53,7 @@ const Community = () => {
   const [prevKeyword, setPrevKeyword] = useState<MyKeywordData>();
   const [keywordGroupData, setKeywordGroupData] = useState<KeywordGroupData>();
 
+  const { data: userCommunityList } = useUserCommunityQuery();
   const userData = useUserMe(communityId);
 
   const handleChangePrevKeyword = (newPrevKeyword: MyKeywordData) => {
@@ -77,25 +84,17 @@ const Community = () => {
   };
 
   useEffect(() => {
-    // try / catch로 depth가 깊어져서 ealry return 사용
     if (!userData) {
       return;
     }
 
     const interval = setInterval(() => {
       apis.user.updateLastActivity();
-    }, 60000);
-
-    try {
-      apis.user.joinCommunity(MVP_DEFAULT.COMMUNITY_ID);
-    } catch (e) {
-      alert('알 수 없는 에러가 발생했습니다.');
-    }
-
+    }, 10000);
     return () => {
       clearInterval(interval);
     };
-  }, [userData]);
+  }, [userData, userCommunityList, communityId]);
 
   useEffect(() => {
     if (userData?.isFirstInCommunity) {
@@ -115,7 +114,9 @@ const Community = () => {
         handleClickKeywordModal={handleClickKeywordModal}
         handleClickEnter={handleClickEnter}
       />
-      <CommunityKeywordList />
+      <CommunityKeywordList
+        handleChangeKeywordGroupData={handleChangeKeywordGroupData}
+      />
       <KeywordBubbleChart
         isMyKeywordHighlight={isMyKeywordHighlight}
         handleChangeKeywordGroupData={handleChangeKeywordGroupData}

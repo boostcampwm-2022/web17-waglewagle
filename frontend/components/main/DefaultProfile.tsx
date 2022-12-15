@@ -1,6 +1,6 @@
 import Image from 'next/image';
-import styles from '@sass/components/main/DefaultProfile.module.scss';
 import classnames from 'classnames/bind';
+import styles from '@sass/components/main/DefaultProfile.module.scss';
 const cx = classnames.bind(styles);
 
 const DefaultProfile = () => {

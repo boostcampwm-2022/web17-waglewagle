@@ -1,6 +1,6 @@
+import { instance } from './instance';
 import type { CommunityData, UserData } from '#types/types';
 import type { AxiosResponse } from 'axios';
-import { instance } from './instance';
 
 const getUserData = (communityId?: string): Promise<AxiosResponse<UserData>> =>
   instance.get('/v1/user/me', {

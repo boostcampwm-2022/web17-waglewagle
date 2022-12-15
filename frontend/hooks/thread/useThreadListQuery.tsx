@@ -1,8 +1,8 @@
-import type { ThreadData } from '#types/types';
-import { apis } from '@apis/index';
 import { useQuery } from '@tanstack/react-query';
-import type { AxiosError } from 'axios';
+import { apis } from '@apis/index';
 import axios from 'axios';
+import type { ThreadData } from '#types/types';
+import type { AxiosError } from 'axios';
 
 const useThreadListQuery = (keywordId: string) => {
   const { data, isLoading, isFetching } = useQuery<ThreadData[], AxiosError>(

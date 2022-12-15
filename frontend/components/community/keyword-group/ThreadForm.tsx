@@ -1,7 +1,8 @@
+import { ChangeEventHandler, FormEventHandler, useState } from 'react';
+import classnames from 'classnames/bind';
 import { useAddThreadMutation } from '@hooks/thread';
 import styles from '@sass/components/community/keyword-group/ThreadForm.module.scss';
-import classnames from 'classnames/bind';
-import { ChangeEventHandler, FormEventHandler, useState } from 'react';
+import isEmptyInput from '@utils/isEmptyInput';
 const cx = classnames.bind(styles);
 
 interface ThreadFormProps {
@@ -22,6 +23,9 @@ const ThreadForm = ({ keywordId }: ThreadFormProps) => {
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
+    if (isEmptyInput(contentInputData)) {
+      return;
+    }
     addThread();
     setContentInputData('');
   };
