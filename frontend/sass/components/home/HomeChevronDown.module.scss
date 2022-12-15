@@ -1,0 +1,10 @@
+.chevron--description {
+  margin-top: 50px;
+
+  transition: all 0.2s ease-in;
+
+  &:hover {
+    cursor: pointer;
+    transform: translateY(5px);
+  }
+}
