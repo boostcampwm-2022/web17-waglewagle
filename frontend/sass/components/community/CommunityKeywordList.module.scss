@@ -26,4 +26,8 @@
 .list-item {
   font-family: 'NanumBugGeugSeong';
   font-size: 1.5rem;
+
+  &:hover {
+    cursor: pointer;
+  }
 }
