@@ -11,27 +11,24 @@ enum INTERSECTION_TYPES {
 }
 
 class CircleContainer {
-  public circles: Record<string, Circle> = {};
+  private _circles: Record<string, Circle> = {};
+  private gravityCoefficient = 98;
 
-  constructor(
-    private width: number,
-    private height: number,
-    private gravityCoefficient: number = 98,
-  ) {}
+  constructor(private width: number, private height: number) {}
 
-  getRandPosByMass(mass: number) {
+  private getRandPosByMass(mass: number) {
     const centralX = this.width / 2;
     const centralY = this.height / 2;
     const massCoefficient = mass > 50 ? 25 / mass : 1; // 무거우면 범위를 줄인다.
 
     return {
-      x:
+      randomX:
         Math.floor(
           centralX + (Math.random() * this.width - centralX) * massCoefficient,
         ) *
           0.9 +
         50,
-      y:
+      randomY:
         Math.floor(
           centralY + (Math.random() * this.height - centralY) * massCoefficient,
         ) *
@@ -40,7 +37,7 @@ class CircleContainer {
     };
   }
 
-  calcInitVector(x: number, y: number) {
+  private calcInitVector(x: number, y: number) {
     const centralX = this.width / 2;
     const centralY = this.height / 2;
     const vector = {
@@ -60,7 +57,7 @@ class CircleContainer {
 
   // 충돌 확인
   // 한 번에 계산하고자 충돌과 겹칩을 같이 확인함.
-  checkIntersection(circleA: Circle, circleB: Circle) {
+  private checkIntersection(circleA: Circle, circleB: Circle) {
     const distance = Math.hypot(circleA.x - circleB.x, circleA.y - circleB.y);
 
     if (circleA.radius + circleB.radius * 0.9 > distance) {
@@ -75,7 +72,7 @@ class CircleContainer {
   }
 
   // 겹침 발생시 속도를 변화시킴
-  handleIntersection(
+  private handleIntersection(
     circleA: Circle,
     circleB: Circle,
     intersectionType: INTERSECTION_TYPES,
@@ -87,7 +84,7 @@ class CircleContainer {
     circleB.velocity = afterCircleBVelocity;
   }
 
-  calculateIntersectionVector(
+  private calculateIntersectionVector(
     circleA: Circle,
     circleB: Circle,
     intersectionType: INTERSECTION_TYPES,
@@ -135,7 +132,7 @@ class CircleContainer {
   }
 
   // 스칼라를 계산해서 Vector를 구혀준다.
-  calculateIntersectionScala(
+  private calculateIntersectionScala(
     speedA: number,
     speedB: number,
     massA: number,
@@ -167,7 +164,7 @@ class CircleContainer {
     }
   }
 
-  handleWallCollision(circle: Circle) {
+  private handleWallCollision(circle: Circle) {
     if (
       circle.x - circle.radius <= 0 ||
       circle.x + circle.radius >= this.width
@@ -183,7 +180,7 @@ class CircleContainer {
     }
   }
 
-  applyGravity(circle: Circle) {
+  private applyGravity(circle: Circle) {
     const centralX = this.width / 2;
     const centralY = this.height / 2;
     const gravityX = centralX - circle.x;
@@ -192,13 +189,17 @@ class CircleContainer {
     circle.y += gravityY / this.gravityCoefficient;
   }
 
+  get circles() {
+    return this._circles;
+  }
+
   resize(newWidth: number, newHeight: number) {
     this.gravityCoefficient = Infinity;
     const widthFactor = newWidth / this.width;
     const heightFactor = newHeight / this.height;
 
-    for (const id in this.circles) {
-      const circle = this.circles[id];
+    for (const id in this._circles) {
+      const circle = this._circles[id];
       circle.x *= widthFactor;
       circle.y *= heightFactor;
       circle.radius *= widthFactor;
@@ -208,9 +209,13 @@ class CircleContainer {
     this.gravityCoefficient = 98;
   }
 
-  addCircle(circleId: string, radius: number) {
-    if (circleId in this.circles) {
-      const updatedCircle = this.circles[circleId];
+  addCircle(
+    circleId: string,
+    radius: number,
+    initPos?: { x: number; y: number },
+  ) {
+    if (circleId in this._circles) {
+      const updatedCircle = this._circles[circleId];
       if (!updatedCircle) {
         throw new Error('없는 원입니다.');
       }
@@ -218,7 +223,16 @@ class CircleContainer {
       return updatedCircle;
     }
 
-    const { x, y } = this.getRandPosByMass(radius);
+    let x, y;
+    if (initPos) {
+      x = initPos.x;
+      y = initPos.y;
+    } else {
+      const { randomX, randomY } = this.getRandPosByMass(radius);
+      x = randomX;
+      y = randomY;
+    }
+
     const newCircle = new Circle(
       circleId,
       x,
@@ -226,18 +240,18 @@ class CircleContainer {
       (radius * this.width) / 2000 + 10,
       this.calcInitVector(x, y),
     );
-    this.circles[circleId] = newCircle;
+    this._circles[circleId] = newCircle;
 
     return newCircle;
   }
 
   // 화면 갱신
   update() {
-    const idArray = Object.keys(this.circles);
+    const idArray = Object.keys(this._circles);
     for (let i = 0; i < idArray.length; i++) {
-      const circleA = this.circles[idArray[i]];
+      const circleA = this._circles[idArray[i]];
       for (let j = i + 1; j < idArray.length; j++) {
-        const circleB = this.circles[idArray[j]];
+        const circleB = this._circles[idArray[j]];
         const intersectionType = this.checkIntersection(circleA, circleB);
         if (intersectionType !== INTERSECTION_TYPES.NO_COLLISION) {
           this.handleIntersection(circleA, circleB, intersectionType);
