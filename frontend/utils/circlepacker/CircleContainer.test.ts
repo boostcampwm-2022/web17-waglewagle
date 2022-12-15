@@ -14,15 +14,20 @@ const calcDistance = (point1: Coordinates, point2: Coordinates) =>
 
 describe('CircleContainer', () => {
   let circleContainer: CircleContainer;
-  const containerWidth = 1000;
-  const containerHeight = 1000;
+  const CONTAINER_MOCK_WIDTH = 1000; // window.innerWidth를 Mocking 함.
+  const CONTAINER_MOCK_HEIGHT = 1000; // window.innerHeight을 Mocking 함.
 
   beforeEach(() => {
-    circleContainer = new CircleContainer(containerWidth, containerHeight);
+    circleContainer = new CircleContainer(
+      CONTAINER_MOCK_WIDTH,
+      CONTAINER_MOCK_HEIGHT,
+    );
   });
 
-  it('초기화', () => {
+  it('CircleContainer 초기화 테스트', () => {
     expect(circleContainer.circles).toEqual({});
+    expect(circleContainer['width']).toEqual(CONTAINER_MOCK_WIDTH);
+    expect(circleContainer['height']).toEqual(CONTAINER_MOCK_HEIGHT);
   });
 
   it('하나의 원을 생성한다.', () => {
@@ -34,7 +39,10 @@ describe('CircleContainer', () => {
   it('생성된 원은 중심 방향의 속도를 가진다.', () => {
     circleContainer.addCircle('1', 1);
     const initialCircle = { ...circleContainer.circles['1'] };
-    const centerPosition = { x: containerWidth / 2, y: containerHeight / 2 };
+    const centerPosition = {
+      x: CONTAINER_MOCK_WIDTH / 2,
+      y: CONTAINER_MOCK_HEIGHT / 2,
+    };
     expect(calcSlope(initialCircle, centerPosition)).toBeCloseTo(
       initialCircle.velocity.y / initialCircle.velocity.x,
     );
