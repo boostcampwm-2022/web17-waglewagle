@@ -1,3 +1,5 @@
+@import '@sass/mixins.scss';
+
 .form {
   display: flex;
   align-items: flex-end;
@@ -18,7 +20,5 @@
   border-radius: 10px;
   background: none;
 
-  &:hover {
-    cursor: pointer;
-  }
+  @include button-interaction;
 }
