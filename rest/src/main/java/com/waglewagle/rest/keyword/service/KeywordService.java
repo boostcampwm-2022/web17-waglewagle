@@ -124,6 +124,9 @@ public class KeywordService {
         Community community = communityRepository
                 .findById(communityId)
                 .orElseThrow(NoSuchCommunityException::new);
+        communityUserRepository
+                .findOptionalByUserIdAndCommunityId(userId, communityId)
+                .orElseThrow(UnSubscribedCommunityException::new);
 
         KeywordVO.CreateVO createVO = KeywordVO.CreateVO.from(user, community, keywordName);
         Keyword keyword = Keyword.of(createVO);
@@ -133,11 +136,11 @@ public class KeywordService {
 
         keyword.addKeywordUser(keywordUser);
 
-        keywordRepository.save(keyword);
+        Keyword savedKeyword = keywordRepository.save(keyword);
 
 
         return new PreResponseDTO<>(
-                KeywordResponse.KeywordDTO.of(keyword),
+                KeywordResponse.KeywordDTO.of(savedKeyword),
                 HttpStatus.CREATED);
     }
 
