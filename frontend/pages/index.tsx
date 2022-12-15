@@ -12,12 +12,14 @@ import {
 import HomeDescription from '@components/home/HomeDescription';
 import StartButton from '@components/home/StartButton';
 import useUserMe from '@hooks/useUserMe';
+import useJoinBoostcampCommunity from '@hooks/useJoinBoostcampCommunity';
 import config from '../config';
 
 const Home = () => {
   const router = useRouter();
   const [isOpenLoginModal, setIsOpenLoginModal] = useState<boolean>(false);
   const userData = useUserMe();
+  useJoinBoostcampCommunity();
 
   const openLoginModal = () => {
     setIsOpenLoginModal(true);
@@ -30,10 +32,6 @@ const Home = () => {
 
     router.push('/main');
   }, [userData, router]);
-
-  if (!userData) {
-    return <Loading />;
-  }
 
   return (
     <HomeLayout>

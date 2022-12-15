@@ -9,11 +9,13 @@ import {
   MainTitle,
 } from '@components/main';
 import useUserMe from '@hooks/useUserMe';
+import useJoinBoostcampCommunity from '@hooks/useJoinBoostcampCommunity';
 import config from '../config';
 
 const Main = () => {
   const router = useRouter();
   const userData = useUserMe();
+  useJoinBoostcampCommunity();
 
   useEffect(() => {
     if (!userData) {
