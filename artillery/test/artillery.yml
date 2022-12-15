@@ -1,0 +1,21 @@
+config:
+  target: 'http://localhost:8080'
+  phases:
+    - name: warm-up
+      duration: 20
+      arrivalRate: 10
+
+    - name: ramp-up load
+      duration: 30
+      arrivalRate: 10
+      rampTo: 50
+
+    - name: sustained load
+      duration: 30
+      arrivalRate: 50
+
+scenarios:
+  - name: 커뮤니티 키워드 목록 조회
+    flow:
+      - get:
+          url: /api/v1/keyword/1

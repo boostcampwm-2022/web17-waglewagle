@@ -1,0 +1,28 @@
+config:
+  target: "https://www.waglewagle.link"
+  phases:
+    - name: "my-corps"
+      duration: 300
+      arrivalRate: 100
+scenarios:
+  - name: "user/keyword(users in keyword)"
+    flow:
+      - get:
+          url: "/api/v1/user/keyword?keyword-id=1"
+          cookie:
+            user_id: 33
+    weight: 1
+  - name: "thread/keyword(threads in keyword)"
+    flow:
+      - get:
+          url: "/api/v1/thread/keyword?keyword-id=1"
+          cookie:
+            user_id: 33
+    weight: 12
+  - name: "keyword/community(keywords in community)"
+    flow:
+      - get:
+          url: "/api/v1/keyword/1"
+          cookie:
+            user_id: 33
+    weight: 12
