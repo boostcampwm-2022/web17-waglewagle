@@ -37,9 +37,9 @@ out/
 .vscode/
 
 src/main/resources/secret.yml
-src/main/generated/
-src/main/resources/application-oauth.yml
-
 src/test/resources/secret.yml
 
+src/main/generated/
+
 ./logs/
+./was-logs/
