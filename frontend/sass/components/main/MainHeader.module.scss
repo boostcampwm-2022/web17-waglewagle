@@ -1,0 +1,25 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+
+  .user-button {
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: none;
+    background-image: url('/images/person.svg');
+    background-position: center center;
+    background-size: contain;
+    transition: all 0.1s linear;
+
+    &:hover {
+      cursor: pointer;
+      transform: scale(1.01);
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+}
