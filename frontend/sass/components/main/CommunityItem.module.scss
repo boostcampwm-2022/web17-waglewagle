@@ -1,24 +1,40 @@
 @import '@sass/variables.scss';
+@import '@sass/mixins.scss';
+
+.community-item {
+  box-shadow: 0 2px 1px -1px rgb(0 0 0 / 20%), 0 1px 1px 0 rgb(0 0 0 / 14%), 0 1px 3px 0 rgb(0 0 0 / 12%);
+  padding-bottom: 20px;
+  border-radius: 5px;
+  overflow: hidden;
+  background-color: #ffffff;
+  transition: .2s;
+
+  &:hover {
+    transform: scale(1.01);
+  }
+
+  &:active {
+    transform: scale(0.99);
+  }
+}
 
 .profile-wrapper {
   position: relative;
   overflow: hidden;
-  width: 100%;
   margin-bottom: 20px;
-  border: 1px solid $charcoal-color;
-  border-radius: 10%;
-  background-color: #ffffff;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 3;
 }
 
 .title {
+  margin-left: 10px;
   margin-bottom: 5px;
   color: $charcoal-color;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 400;
 }
 
 .user-count {
+  margin-left: 10px;
   color: #aaaaaa;
-  font-size: 16px;
+  font-size: 12px;
 }
