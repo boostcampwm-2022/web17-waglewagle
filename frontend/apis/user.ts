@@ -14,6 +14,13 @@ const getUserCommunityList = (): Promise<AxiosResponse<CommunityData[]>> =>
 
 const updateLastActivity = () => instance.put('/v1/user/last-activity');
 
+const getCommunityUserList = (
+  communityId: string,
+): Promise<AxiosResponse<UserData[]>> =>
+  instance.get('/v1/user/community', {
+    params: { 'community-id': communityId },
+  });
+
 const joinCommunity = (communityId: string) =>
   instance.post('/v1/community-user', {
     communityId,
@@ -26,6 +33,7 @@ export const user = {
   getUserData,
   getUserCommunityList,
   updateLastActivity,
+  getCommunityUserList,
   joinCommunity,
   updateFirstVisitInCommunity,
 };

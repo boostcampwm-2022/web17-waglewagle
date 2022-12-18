@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import classnames from 'classnames/bind';
 import useUserMe from '@hooks/useUserMe';
 import styles from '@sass/components/community/CommunityHeader.module.scss';
@@ -21,7 +22,9 @@ const CommunityHeader = ({
   return (
     <header className={cx('header')}>
       <div className={cx('left-header')}>
-        <Image src='/images/logo.png' alt='로고' width={30} height={30} />
+        <Link href={'/main'}>
+          <Image src='/images/logo.png' alt='로고' width={30} height={30} />
+        </Link>
         <h2>{title}</h2>
       </div>
       <div className={cx('buttons')}>
