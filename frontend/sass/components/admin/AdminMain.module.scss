@@ -6,17 +6,17 @@
 
   header h3 {
     display: inline-block;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     padding-bottom: 10px;
-    border-bottom: 1px solid #000000;
     font-size: 1.2rem;
+    font-weight: 700;
   }
 
   section {
+    box-shadow: 0 2px 1px -1px rgb(0 0 0 / 20%), 0 1px 1px 0 rgb(0 0 0 / 14%), 0 1px 3px 0 rgb(0 0 0 / 12%);
     flex: 1;
     width: 100%;
     padding: 40px;
-    border: 1px solid #000000;
-    border-radius: 20px;
+    border-radius: 5px;
   }
 }

@@ -10,7 +10,7 @@
   &:hover {
     cursor: pointer;
   }
-  
+
   &.selected {
     color: red;
   }
@@ -21,10 +21,10 @@
   bottom: 60px;
   left: 60px;
   padding: 10px;
-  border: 1px solid black;
-  border-radius: 10px;
+  border: none;
+  border-radius: 5px;
   background: none;
-  
+
   &:not(:disabled):hover {
     cursor: pointer;
   }
@@ -35,10 +35,10 @@
   right: 60px;
   bottom: 60px;
   padding: 10px;
-  border: 1px solid black;
-  border-radius: 10px;
+  border: none;
+  border-radius: 5px;
   background: none;
-  
+
   &:not(:disabled):hover {
     cursor: pointer;
   }
