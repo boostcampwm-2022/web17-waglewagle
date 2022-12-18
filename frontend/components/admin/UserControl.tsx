@@ -1,13 +1,24 @@
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import classnames from 'classnames/bind';
-import useKeywordUserListQuery from '@hooks/keyword/useKeywordUserListQuery';
+import { apis } from '@apis/index';
 import styles from '@sass/components/admin/UserControl.module.scss';
+import { UserData } from '#types/types';
+
 const cx = classnames.bind(styles);
 
 const UserControl = () => {
   const router = useRouter();
-  const { id } = router.query;
-  const { data: userList } = useKeywordUserListQuery(id as string);
+  const { id: communityId } = router.query;
+  const [userList, setUserList] = useState<UserData[]>([]);
+
+  useEffect(() => {
+    if (communityId) {
+      apis.user
+        .getCommunityUserList(communityId as string)
+        .then(({ data }) => setUserList(data));
+    }
+  }, [communityId]);
 
   return (
     <>
