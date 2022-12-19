@@ -55,7 +55,6 @@ const Community = () => {
 
   const { data: userCommunityList } = useUserCommunityQuery();
   const userData = useUserMe(communityId);
-
   const handleChangePrevKeyword = (newPrevKeyword: MyKeywordData) => {
     setPrevKeyword(newPrevKeyword);
   };
