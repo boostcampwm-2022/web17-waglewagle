@@ -1,5 +1,5 @@
 const isEmptyInput = (input: string) => {
-  if (input === '') {
+  if (input.trim() === '') {
     return true;
   }
 
