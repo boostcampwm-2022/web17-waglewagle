@@ -1,4 +1,4 @@
-import { useState, MouseEventHandler } from 'react';
+import { useState, MouseEventHandler, useRef, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import classnames from 'classnames/bind';
 import MouseModal from '@components/common/MouseModal';
@@ -39,6 +39,7 @@ const KeywordBubble = ({
   const [isOpenKeywordModal, setIsOpenKeywordModal] = useState<boolean>(false);
   const [modalPosData, setModalPosData] = useState<ClickPosData>();
   const userData = useUserMe(communityId);
+  const mouseModalRef = useRef<HTMLDivElement | null>(null);
 
   const closeKeywordModal = () => {
     setTimeout(() => {
@@ -47,11 +48,47 @@ const KeywordBubble = ({
   };
 
   const handleClick: MouseEventHandler<HTMLDivElement> = (e) => {
-    if (!isOpenKeywordModal) {
-      setModalPosData({ x: e.clientX, y: e.clientY });
-      setIsOpenKeywordModal(true);
+    // 이중 if문이 사용될 가능성이 있어서 ealry return 사용
+    if (isOpenKeywordModal) {
+      return;
     }
+
+    setModalPosData({ x: e.clientX, y: e.clientY });
+    setIsOpenKeywordModal(true);
   };
+
+  // TODO: 리팩토링하기
+  useEffect(() => {
+    // if문이 중첩되기 때문에 early return함.
+    if (!isOpenKeywordModal || !mouseModalRef.current || !modalPosData) {
+      return;
+    }
+
+    const newModalPosData = { x: modalPosData.x, y: modalPosData.y };
+
+    if (
+      mouseModalRef.current.offsetWidth + modalPosData.x >
+      window.innerWidth
+    ) {
+      newModalPosData.x -= mouseModalRef.current.offsetWidth;
+    }
+
+    if (
+      mouseModalRef.current.offsetHeight + modalPosData.y >
+      window.innerHeight
+    ) {
+      newModalPosData.y -= mouseModalRef.current.offsetHeight;
+    }
+
+    if (
+      newModalPosData.x === modalPosData.x &&
+      newModalPosData.y === modalPosData.y
+    ) {
+      return;
+    }
+
+    setModalPosData(newModalPosData);
+  }, [isOpenKeywordModal, modalPosData]);
 
   return (
     <div
@@ -72,6 +109,7 @@ const KeywordBubble = ({
         top={modalPosData?.y}
         isOpenModal={isOpenKeywordModal}
         closeModal={() => setIsOpenKeywordModal(false)}
+        ref={mouseModalRef}
       >
         {isJoined ? (
           <KeywordGroupEnterModalContent
