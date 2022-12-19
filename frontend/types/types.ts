@@ -54,6 +54,7 @@ export type CommunityData = {
   communityId: string;
   title: string;
   description: string;
+  memberCount: number;
 };
 
 export type Author = {
