@@ -10,13 +10,13 @@ interface CommunityItemProps {
   id: string;
   profileURL?: string;
   title: string;
-  userCount: number;
+  memberCount: number;
 }
 
 const CommunityItem = ({
   profileURL,
   title,
-  userCount,
+  memberCount,
 }: CommunityItemProps) => {
   return (
     <li className={cx('community-item')}>
@@ -30,7 +30,7 @@ const CommunityItem = ({
           />
         </div>
         <h3 className={cx('title')}>{title}</h3>
-        <p className={cx('user-count')}>{userCount}명 참여 중</p>
+        <p className={cx('user-count')}>{memberCount}명 참여 중</p>
       </Link>
     </li>
   );
