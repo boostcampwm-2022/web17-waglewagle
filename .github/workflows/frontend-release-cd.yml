@@ -1,4 +1,4 @@
-name: Frontend CI
+name: Frontend release branch CD
 
 on:
   pull_request:
