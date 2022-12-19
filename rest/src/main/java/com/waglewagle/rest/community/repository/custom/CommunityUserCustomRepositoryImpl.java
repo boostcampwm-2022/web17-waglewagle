@@ -6,6 +6,7 @@ import com.waglewagle.rest.community.entity.QCommunityUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -40,5 +41,15 @@ public class CommunityUserCustomRepositoryImpl implements CommunityUserCustomRep
                         .where(QCommunityUser.communityUser.community.id.eq(communityId))
                         .fetchOne()
         );
+    }
+
+    public List<CommunityUser>
+    findAllByCommunityIds(final List<Long> communityIds) {
+        return jpqlQueryFactory
+                .select(QCommunityUser.communityUser)
+                .from(QCommunityUser.communityUser)
+                .where(QCommunityUser.communityUser.community.id.in(communityIds))
+                .fetch();
+
     }
 }
