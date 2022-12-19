@@ -8,6 +8,10 @@
   transition: 0.5s linear;
   will-change: transform;
 
+  &:hover {
+    z-index: 9;
+  }
+
   div {
     display: flex;
     align-items: center;
@@ -19,11 +23,11 @@
     transition: 0.3s ease-in;
 
     &:hover {
-      z-index: 9;
       border: 1px solid $primary-color;
       background-color: $off-white-color;
       cursor: pointer;
       transform: scale(1.2);
+
       span {
         color: $primary-color;
       }

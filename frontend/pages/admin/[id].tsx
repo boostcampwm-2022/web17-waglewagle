@@ -49,7 +49,7 @@ const Admin = () => {
         url={`${config.HOST}${router.asPath}`}
       />
       <AdminSideBar title={title} handleClickTab={handleClickTab} tab={tab} />
-      <AdminMain title={title} tab={tab}>
+      <AdminMain tab={tab}>
         {tab === ADMIN_PAGE_TAB.KEYWORD_CONTROL ? (
           <KeywordControl />
         ) : (

@@ -9,7 +9,7 @@ const DefaultProfile = () => {
       <h3>마이페이지</h3>
       <div className={cx('profile-wrapper')}>
         <Image
-          src={'/images/default-profile.png'}
+          src={'/images/waglewagle.jpeg'}
           alt='커뮤니티 이미지'
           width={100}
           height={100}
