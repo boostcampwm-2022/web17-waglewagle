@@ -1,7 +1,9 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import classnames from 'classnames/bind';
 import { MVP_DEFAULT } from '@constants/constants';
 import styles from '@sass/components/main/CommunityItem.module.scss';
+
 const cx = classnames.bind(styles);
 
 interface CommunityItemProps {
@@ -18,17 +20,18 @@ const CommunityItem = ({
 }: CommunityItemProps) => {
   return (
     <li className={cx('community-item')}>
-      <a href={MVP_DEFAULT.MAIN_PROFILE_URL}>
+      <Link href={MVP_DEFAULT.MAIN_PROFILE_URL}>
         <div className={cx('profile-wrapper')}>
           <Image
             src={profileURL ? profileURL : '/images/boostcamp.png'}
             alt='부스트캠프 이미지'
-            fill
+            layout='fill'
+            objectFit='cover'
           />
         </div>
-      </a>
-      <h3 className={cx('title')}>{title}</h3>
-      <p className={cx('user-count')}>{userCount}명 참여 중</p>
+        <h3 className={cx('title')}>{title}</h3>
+        <p className={cx('user-count')}>{userCount}명 참여 중</p>
+      </Link>
     </li>
   );
 };
