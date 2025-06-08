@@ -10,7 +10,7 @@
 
 # 📽️ 데모 영상
 
-<img src="https://user-images.githubusercontent.com/30151603/207490055-64eacee7-4547-4c58-860a-753d46c016a7.mp4"/>
+[![와글와글 데모영상](http://img.youtube.com/vi/QCVN5GFgMwc/0.jpg)](https://www.youtube.com/watch?v=QCVN5GFgMwc)
 
 # 🛠️ 기술스택
 
